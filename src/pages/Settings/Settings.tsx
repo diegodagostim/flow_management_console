@@ -3,228 +3,446 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setAdapter } from '@/app/store'
 import type { RootState } from '@/app/store'
 import { GDPRCompliance } from '@/components/common/GDPRCompliance'
-import { Database, Settings as SettingsIcon, User, Building2, Shield, Save } from 'lucide-react'
+import { 
+  Database, 
+  Settings as SettingsIcon, 
+  User, 
+  Building2, 
+  Shield, 
+  Save, 
+  Server,
+  Globe,
+  Users,
+  Key,
+  Mail,
+  Phone,
+  MapPin,
+  AlertCircle,
+  CheckCircle,
+  Info
+} from 'lucide-react'
 
 export function Settings() {
   const dispatch = useDispatch();
   const currentAdapter = useSelector((state: RootState) => state.storage.adapter);
   const [supabaseUrl, setSupabaseUrl] = useState(import.meta.env.VITE_SUPABASE_URL || '');
   const [supabaseKey, setSupabaseKey] = useState(import.meta.env.VITE_SUPABASE_ANON_KEY || '');
+  const [companyData, setCompanyData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    address: ''
+  });
 
   const handleAdapterChange = (adapter: 'local' | 'supabase') => {
     dispatch(setAdapter(adapter))
   }
 
+  const handleCompanyChange = (field: string, value: string) => {
+    setCompanyData(prev => ({ ...prev, [field]: value }));
+  }
+
+  const handleSaveCompany = () => {
+    console.log('Company details saved:', companyData);
+  }
+
+  const handleSaveSupabase = () => {
+    console.log('Supabase configuration saved');
+  }
+
   return (
-    <div className="row">
-      <div className="col-12">
-        {/* Header */}
-        <div className="d-flex align-items-center mb-4">
-          <div className="avatar avatar-sm me-3">
-            <span className="avatar-initial rounded bg-label-primary">
-              <SettingsIcon className="h-4 w-4" />
-            </span>
-          </div>
-          <div>
-            <h4 className="mb-1">Settings</h4>
-            <p className="text-muted mb-0">Manage your application configuration</p>
+    <div className="container-fluid settings-page">
+      {/* Page Header */}
+      <div className="row mb-4">
+        <div className="col-12">
+          <div className="d-flex align-items-center">
+            <div className="avatar avatar-lg me-3">
+              <span className="avatar-initial rounded bg-label-primary">
+                <SettingsIcon className="h-5 w-5" />
+              </span>
+            </div>
+            <div>
+              <h3 className="mb-1 fw-semibold">Settings</h3>
+              <p className="text-muted mb-0">Manage your application configuration and preferences</p>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div className="row">
-          {/* Application Registration */}
-          <div className="col-lg-6 mb-4">
-            <div className="card h-100">
-              <div className="card-header">
-                <h6 className="card-title mb-0">
-                  <SettingsIcon className="h-4 w-4 me-2" />
-                  Application Registration
-                </h6>
-                <p className="text-muted small mb-0">Configure data storage and application settings</p>
-              </div>
-              <div className="card-body">
-                <div className="mb-4">
-                  <h6 className="mb-3">Data Storage</h6>
-                  <div className="mb-3">
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="radio"
-                        name="storage"
-                        id="local"
-                        value="local"
-                        checked={currentAdapter === 'local'}
-                        onChange={() => handleAdapterChange('local')}
-                      />
-                      <label className="form-check-label d-flex align-items-center" htmlFor="local">
-                        <Database className="h-4 w-4 me-2" />
-                        Local Storage (Browser)
-                      </label>
-                    </div>
-                  </div>
-                  <div className="mb-3">
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="radio"
-                        name="storage"
-                        id="supabase"
-                        value="supabase"
-                        checked={currentAdapter === 'supabase'}
-                        onChange={() => handleAdapterChange('supabase')}
-                      />
-                      <label className="form-check-label d-flex align-items-center" htmlFor="supabase">
-                        <Database className="h-4 w-4 me-2" />
-                        Supabase (Cloud Database)
-                      </label>
-                    </div>
-                  </div>
-                  <div className="alert alert-info">
-                    <small>
-                      {currentAdapter === 'local' 
-                        ? 'Data is stored locally in your browser. This is perfect for personal use and testing.'
-                        : 'Data is stored in the cloud using Supabase. This allows for data synchronization across devices.'
-                      }
-                    </small>
-                  </div>
-                </div>
-
-                {currentAdapter === 'supabase' && (
-                  <div>
-                    <h6 className="mb-3">Supabase Configuration</h6>
-                    <div className="mb-3">
-                      <label htmlFor="supabase-url" className="form-label">Supabase URL</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="supabase-url"
-                        value={supabaseUrl}
-                        onChange={(e) => setSupabaseUrl(e.target.value)}
-                        placeholder="https://your-project.supabase.co"
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="supabase-key" className="form-label">Supabase Anon Key</label>
-                      <input
-                        type="password"
-                        className="form-control"
-                        id="supabase-key"
-                        value={supabaseKey}
-                        onChange={(e) => setSupabaseKey(e.target.value)}
-                        placeholder="Your Supabase anon key"
-                      />
-                    </div>
-                    <button 
-                      className="btn btn-primary"
-                      onClick={() => {
-                        console.log('Supabase configuration saved');
-                      }}
-                    >
-                      <Save className="h-4 w-4 me-2" />
-                      Save Configuration
-                    </button>
-                  </div>
-                )}
-              </div>
+      {/* Settings Tabs */}
+      <div className="row">
+        <div className="col-12">
+          <div className="card">
+            <div className="card-header border-bottom">
+              <ul className="nav nav-tabs card-header-tabs" role="tablist">
+                <li className="nav-item" role="presentation">
+                  <button 
+                    className="nav-link active" 
+                    id="general-tab" 
+                    data-bs-toggle="tab" 
+                    data-bs-target="#general" 
+                    type="button" 
+                    role="tab"
+                  >
+                    <SettingsIcon className="h-4 w-4 me-2" />
+                    General
+                  </button>
+                </li>
+                <li className="nav-item" role="presentation">
+                  <button 
+                    className="nav-link" 
+                    id="company-tab" 
+                    data-bs-toggle="tab" 
+                    data-bs-target="#company" 
+                    type="button" 
+                    role="tab"
+                  >
+                    <Building2 className="h-4 w-4 me-2" />
+                    Company
+                  </button>
+                </li>
+                <li className="nav-item" role="presentation">
+                  <button 
+                    className="nav-link" 
+                    id="users-tab" 
+                    data-bs-toggle="tab" 
+                    data-bs-target="#users" 
+                    type="button" 
+                    role="tab"
+                  >
+                    <Users className="h-4 w-4 me-2" />
+                    Users
+                  </button>
+                </li>
+                <li className="nav-item" role="presentation">
+                  <button 
+                    className="nav-link" 
+                    id="security-tab" 
+                    data-bs-toggle="tab" 
+                    data-bs-target="#security" 
+                    type="button" 
+                    role="tab"
+                  >
+                    <Shield className="h-4 w-4 me-2" />
+                    Security
+                  </button>
+                </li>
+              </ul>
             </div>
-          </div>
+            <div className="card-body">
+              <div className="tab-content" id="settingsTabContent">
+                {/* General Settings Tab */}
+                <div className="tab-pane fade show active" id="general" role="tabpanel">
+                  <div className="row">
+                    {/* Data Storage Settings */}
+                    <div className="col-lg-8 mb-4">
+                      <div className="card border-0 bg-light">
+                        <div className="card-header bg-transparent border-0 pb-0">
+                          <h5 className="card-title mb-2 d-flex align-items-center">
+                            <Database className="h-5 w-5 me-2 text-primary" />
+                            Data Storage Configuration
+                          </h5>
+                          <p className="text-muted small mb-0">Choose how your data is stored and managed</p>
+                        </div>
+                        <div className="card-body">
+                          <div className="row">
+                            <div className="col-md-6 mb-4">
+                              <div className="card h-100 border-0 shadow-sm">
+                                <div className="card-body text-center">
+                                  <div className="avatar avatar-xl mx-auto mb-3">
+                                    <span className="avatar-initial rounded bg-label-info">
+                                      <Server className="h-6 w-6" />
+                                    </span>
+                                  </div>
+                                  <h6 className="mb-2">Local Storage</h6>
+                                  <p className="text-muted small mb-3">Store data in your browser</p>
+                                  <div className="form-check d-flex justify-content-center">
+                                    <input
+                                      className="form-check-input"
+                                      type="radio"
+                                      name="storage"
+                                      id="local"
+                                      value="local"
+                                      checked={currentAdapter === 'local'}
+                                      onChange={() => handleAdapterChange('local')}
+                                    />
+                                    <label className="form-check-label ms-2" htmlFor="local">
+                                      Use Local Storage
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="col-md-6 mb-4">
+                              <div className="card h-100 border-0 shadow-sm">
+                                <div className="card-body text-center">
+                                  <div className="avatar avatar-xl mx-auto mb-3">
+                                    <span className="avatar-initial rounded bg-label-success">
+                                      <Globe className="h-6 w-6" />
+                                    </span>
+                                  </div>
+                                  <h6 className="mb-2">Supabase Cloud</h6>
+                                  <p className="text-muted small mb-3">Store data in the cloud</p>
+                                  <div className="form-check d-flex justify-content-center">
+                                    <input
+                                      className="form-check-input"
+                                      type="radio"
+                                      name="storage"
+                                      id="supabase"
+                                      value="supabase"
+                                      checked={currentAdapter === 'supabase'}
+                                      onChange={() => handleAdapterChange('supabase')}
+                                    />
+                                    <label className="form-check-label ms-2" htmlFor="supabase">
+                                      Use Supabase
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
 
-          {/* Company Details */}
-          <div className="col-lg-6 mb-4">
-            <div className="card h-100">
-              <div className="card-header">
-                <h6 className="card-title mb-0">
-                  <Building2 className="h-4 w-4 me-2" />
-                  Company Details
-                </h6>
-                <p className="text-muted small mb-0">Manage your company information and branding</p>
-              </div>
-              <div className="card-body">
-                <div className="mb-3">
-                  <label htmlFor="company-name" className="form-label">Company Name</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="company-name"
-                    placeholder="Enter company name"
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="company-email" className="form-label">Company Email</label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="company-email"
-                    placeholder="Enter company email"
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="company-phone" className="form-label">Company Phone</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="company-phone"
-                    placeholder="Enter company phone"
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="company-address" className="form-label">Company Address</label>
-                  <textarea
-                    className="form-control"
-                    id="company-address"
-                    rows={4}
-                    placeholder="Enter company address"
-                  />
-                </div>
-                <button className="btn btn-primary">
-                  <Save className="h-4 w-4 me-2" />
-                  Save Company Details
-                </button>
-              </div>
-            </div>
-          </div>
+                          {/* Storage Info Alert */}
+                          <div className="alert alert-info d-flex align-items-start">
+                            <Info className="h-4 w-4 me-2 mt-1" />
+                            <div>
+                              <strong>Current Storage:</strong> {currentAdapter === 'local' 
+                                ? 'Data is stored locally in your browser. Perfect for personal use and testing.'
+                                : 'Data is stored in the cloud using Supabase. Allows for data synchronization across devices.'
+                              }
+                            </div>
+                          </div>
 
-          {/* User Management */}
-          <div className="col-lg-6 mb-4">
-            <div className="card h-100">
-              <div className="card-header">
-                <h6 className="card-title mb-0">
-                  <User className="h-4 w-4 me-2" />
-                  User Management
-                </h6>
-                <p className="text-muted small mb-0">Manage user accounts and permissions</p>
-              </div>
-              <div className="card-body">
-                <div className="text-center py-4">
-                  <User className="h-12 w-12 text-muted mb-3" />
-                  <p className="text-muted mb-3">
-                    User management features will be available when authentication is implemented.
-                  </p>
-                  <div className="d-grid gap-2">
-                    <button className="btn btn-outline-primary" disabled>
-                      Add User
-                    </button>
-                    <button className="btn btn-outline-secondary" disabled>
-                      Manage Permissions
-                    </button>
+                          {/* Supabase Configuration */}
+                          {currentAdapter === 'supabase' && (
+                            <div className="mt-4">
+                              <h6 className="mb-3 d-flex align-items-center">
+                                <Key className="h-4 w-4 me-2" />
+                                Supabase Configuration
+                              </h6>
+                              <div className="row">
+                                <div className="col-md-6 mb-3">
+                                  <label htmlFor="supabase-url" className="form-label">Project URL</label>
+                                  <input
+                                    type="url"
+                                    className="form-control"
+                                    id="supabase-url"
+                                    value={supabaseUrl}
+                                    onChange={(e) => setSupabaseUrl(e.target.value)}
+                                    placeholder="https://your-project.supabase.co"
+                                  />
+                                </div>
+                                <div className="col-md-6 mb-3">
+                                  <label htmlFor="supabase-key" className="form-label">Anon Key</label>
+                                  <input
+                                    type="password"
+                                    className="form-control"
+                                    id="supabase-key"
+                                    value={supabaseKey}
+                                    onChange={(e) => setSupabaseKey(e.target.value)}
+                                    placeholder="Your Supabase anon key"
+                                  />
+                                </div>
+                              </div>
+                              <button 
+                                className="btn btn-primary"
+                                onClick={handleSaveSupabase}
+                              >
+                                <Save className="h-4 w-4 me-2" />
+                                Save Configuration
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Quick Stats */}
+                    <div className="col-lg-4 mb-4">
+                      <div className="card border-0 bg-light">
+                        <div className="card-header bg-transparent border-0 pb-0">
+                          <h6 className="card-title mb-2">Quick Stats</h6>
+                        </div>
+                        <div className="card-body">
+                          <div className="d-flex align-items-center mb-3">
+                            <div className="avatar avatar-sm me-3">
+                              <span className="avatar-initial rounded bg-label-success">
+                                <CheckCircle className="h-4 w-4" />
+                              </span>
+                            </div>
+                            <div>
+                              <p className="mb-0 fw-semibold">Storage Active</p>
+                              <small className="text-muted">{currentAdapter === 'local' ? 'Local Storage' : 'Supabase Cloud'}</small>
+                            </div>
+                          </div>
+                          <div className="d-flex align-items-center mb-3">
+                            <div className="avatar avatar-sm me-3">
+                              <span className="avatar-initial rounded bg-label-primary">
+                                <Database className="h-4 w-4" />
+                              </span>
+                            </div>
+                            <div>
+                              <p className="mb-0 fw-semibold">Data Sync</p>
+                              <small className="text-muted">{currentAdapter === 'local' ? 'Disabled' : 'Enabled'}</small>
+                            </div>
+                          </div>
+                          <div className="d-flex align-items-center">
+                            <div className="avatar avatar-sm me-3">
+                              <span className="avatar-initial rounded bg-label-warning">
+                                <AlertCircle className="h-4 w-4" />
+                              </span>
+                            </div>
+                            <div>
+                              <p className="mb-0 fw-semibold">Status</p>
+                              <small className="text-muted">All systems operational</small>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
 
-          {/* Privacy & Security */}
-          <div className="col-lg-6 mb-4">
-            <div className="card h-100">
-              <div className="card-header">
-                <h6 className="card-title mb-0">
-                  <Shield className="h-4 w-4 me-2" />
-                  Privacy & Security
-                </h6>
-                <p className="text-muted small mb-0">GDPR compliance and data protection settings</p>
-              </div>
-              <div className="card-body">
-                <GDPRCompliance />
+                {/* Company Settings Tab */}
+                <div className="tab-pane fade" id="company" role="tabpanel">
+                  <div className="row">
+                    <div className="col-lg-8">
+                      <div className="card border-0 bg-light">
+                        <div className="card-header bg-transparent border-0 pb-0">
+                          <h5 className="card-title mb-2 d-flex align-items-center">
+                            <Building2 className="h-5 w-5 me-2 text-primary" />
+                            Company Information
+                          </h5>
+                          <p className="text-muted small mb-0">Manage your company details and branding</p>
+                        </div>
+                        <div className="card-body">
+                          <div className="row">
+                            <div className="col-md-6 mb-3">
+                              <label htmlFor="company-name" className="form-label">
+                                <Building2 className="h-4 w-4 me-1" />
+                                Company Name
+                              </label>
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="company-name"
+                                value={companyData.name}
+                                onChange={(e) => handleCompanyChange('name', e.target.value)}
+                                placeholder="Enter company name"
+                              />
+                            </div>
+                            <div className="col-md-6 mb-3">
+                              <label htmlFor="company-email" className="form-label">
+                                <Mail className="h-4 w-4 me-1" />
+                                Company Email
+                              </label>
+                              <input
+                                type="email"
+                                className="form-control"
+                                id="company-email"
+                                value={companyData.email}
+                                onChange={(e) => handleCompanyChange('email', e.target.value)}
+                                placeholder="Enter company email"
+                              />
+                            </div>
+                            <div className="col-md-6 mb-3">
+                              <label htmlFor="company-phone" className="form-label">
+                                <Phone className="h-4 w-4 me-1" />
+                                Company Phone
+                              </label>
+                              <input
+                                type="tel"
+                                className="form-control"
+                                id="company-phone"
+                                value={companyData.phone}
+                                onChange={(e) => handleCompanyChange('phone', e.target.value)}
+                                placeholder="Enter company phone"
+                              />
+                            </div>
+                            <div className="col-md-6 mb-3">
+                              <label htmlFor="company-address" className="form-label">
+                                <MapPin className="h-4 w-4 me-1" />
+                                Company Address
+                              </label>
+                              <textarea
+                                className="form-control"
+                                id="company-address"
+                                rows={3}
+                                value={companyData.address}
+                                onChange={(e) => handleCompanyChange('address', e.target.value)}
+                                placeholder="Enter company address"
+                              />
+                            </div>
+                          </div>
+                          <div className="d-flex justify-content-end">
+                            <button className="btn btn-primary" onClick={handleSaveCompany}>
+                              <Save className="h-4 w-4 me-2" />
+                              Save Company Details
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Users Settings Tab */}
+                <div className="tab-pane fade" id="users" role="tabpanel">
+                  <div className="row">
+                    <div className="col-lg-8">
+                      <div className="card border-0 bg-light">
+                        <div className="card-header bg-transparent border-0 pb-0">
+                          <h5 className="card-title mb-2 d-flex align-items-center">
+                            <Users className="h-5 w-5 me-2 text-primary" />
+                            User Management
+                          </h5>
+                          <p className="text-muted small mb-0">Manage user accounts and permissions</p>
+                        </div>
+                        <div className="card-body text-center py-5">
+                          <div className="avatar avatar-xl mx-auto mb-4">
+                            <span className="avatar-initial rounded bg-label-secondary">
+                              <User className="h-8 w-8" />
+                            </span>
+                          </div>
+                          <h5 className="mb-3">User Management Coming Soon</h5>
+                          <p className="text-muted mb-4">
+                            Advanced user management features will be available when authentication is fully implemented.
+                          </p>
+                          <div className="d-grid gap-2 d-md-flex justify-content-md-center">
+                            <button className="btn btn-outline-primary" disabled>
+                              <User className="h-4 w-4 me-2" />
+                              Add User
+                            </button>
+                            <button className="btn btn-outline-secondary" disabled>
+                              <Shield className="h-4 w-4 me-2" />
+                              Manage Permissions
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Security Settings Tab */}
+                <div className="tab-pane fade" id="security" role="tabpanel">
+                  <div className="row">
+                    <div className="col-lg-8">
+                      <div className="card border-0 bg-light">
+                        <div className="card-header bg-transparent border-0 pb-0">
+                          <h5 className="card-title mb-2 d-flex align-items-center">
+                            <Shield className="h-5 w-5 me-2 text-primary" />
+                            Privacy & Security
+                          </h5>
+                          <p className="text-muted small mb-0">GDPR compliance and data protection settings</p>
+                        </div>
+                        <div className="card-body">
+                          <GDPRCompliance />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

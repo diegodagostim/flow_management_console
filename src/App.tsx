@@ -20,7 +20,11 @@ import {
   Activity,
   ArrowUpRight,
   Eye,
-  Settings as SettingsIcon
+  Settings as SettingsIcon,
+  MoreVertical,
+  Wallet,
+  ChevronUp,
+  Clock
 } from 'lucide-react'
 
 function Dashboard() {
@@ -42,7 +46,7 @@ function Dashboard() {
       <div className="col-lg-8 mb-4 order-0">
         <div className="card">
           <div className="d-flex align-items-end row">
-            <div className="col-sm-7">
+            <div className="col-12">
               <div className="card-body">
                 <h5 className="card-title text-primary">Welcome to Flow Management Console! 🎉</h5>
                 <p className="mb-4">
@@ -59,16 +63,6 @@ function Dashboard() {
                     View All
                   </Link>
                 </div>
-              </div>
-            </div>
-            <div className="col-sm-5 text-center text-sm-left">
-              <div className="card-body pb-0 px-0 px-md-4">
-                <img
-                  src="/assets/img/illustrations/man-with-laptop-light.png"
-                  height="140"
-                  alt="Welcome Illustration"
-                  className="img-fluid"
-                />
               </div>
             </div>
           </div>
@@ -96,7 +90,7 @@ function Dashboard() {
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
-                      <i className="bx bx-dots-vertical-rounded"></i>
+                      <MoreVertical className="h-4 w-4" />
                     </button>
                     <div className="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
                       <Link className="dropdown-item" to="/clients">
@@ -111,7 +105,7 @@ function Dashboard() {
                 <span className="fw-semibold d-block mb-1">Total Clients</span>
                 <h3 className="card-title mb-2">{totalClients}</h3>
                 <small className={`fw-semibold ${recentClients > 0 ? 'text-success' : 'text-muted'}`}>
-                  <i className={`bx ${recentClients > 0 ? 'bx-up-arrow-alt' : 'bx-minus'}`}></i> 
+                  <ChevronUp className="h-4 w-4 me-1" /> 
                   {recentClients > 0 ? `+${recentClients} this week` : 'No recent activity'}
                 </small>
               </div>
@@ -135,7 +129,7 @@ function Dashboard() {
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
-                      <i className="bx bx-dots-vertical-rounded"></i>
+                      <MoreVertical className="h-4 w-4" />
                     </button>
                     <div className="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
                       <a className="dropdown-item" href="javascript:void(0);">
@@ -150,7 +144,7 @@ function Dashboard() {
                 <span>Total Suppliers</span>
                 <h3 className="card-title text-nowrap mb-1">0</h3>
                 <small className="text-info fw-semibold">
-                  <i className="bx bx-time"></i> Coming Soon
+                  <Clock className="h-4 w-4 me-1" /> Coming Soon
                 </small>
               </div>
             </div>
@@ -224,12 +218,12 @@ function Dashboard() {
                 </div>
 
                 <div className="d-flex px-xxl-4 px-lg-2 p-4 gap-xxl-3 gap-lg-1 gap-3 justify-content-between">
-                  <div className="d-flex">
-                    <div className="me-2">
-                      <span className="badge bg-label-primary p-2">
-                        <i className="bx bx-dollar text-primary"></i>
-                      </span>
-                    </div>
+                         <div className="d-flex">
+                           <div className="me-2">
+                             <span className="badge bg-label-primary p-2">
+                               <DollarSign className="h-4 w-4" style={{ color: '#20b2aa' }} />
+                             </span>
+                           </div>
                     <div className="d-flex flex-column">
                       <small>{new Date().getFullYear()}</small>
                       <h6 className="mb-0">${totalClients * 1000}</h6>
@@ -238,7 +232,7 @@ function Dashboard() {
                   <div className="d-flex">
                     <div className="me-2">
                       <span className="badge bg-label-info p-2">
-                        <i className="bx bx-wallet text-info"></i>
+                        <Wallet className="h-4 w-4 text-info" />
                       </span>
                     </div>
                     <div className="d-flex flex-column">
@@ -274,7 +268,7 @@ function Dashboard() {
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
-                      <i className="bx bx-dots-vertical-rounded"></i>
+                      <MoreVertical className="h-4 w-4" />
                     </button>
                     <div className="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt4">
                       <a className="dropdown-item" href="javascript:void(0);">View More</a>
@@ -285,7 +279,7 @@ function Dashboard() {
                 <span className="d-block mb-1">Revenue</span>
                 <h3 className="card-title text-nowrap mb-2">${totalClients * 1000}</h3>
                 <small className={`fw-semibold ${totalClients > 0 ? 'text-success' : 'text-muted'}`}>
-                  <i className={`bx ${totalClients > 0 ? 'bx-up-arrow-alt' : 'bx-minus'}`}></i> 
+                  <ChevronUp className="h-4 w-4 me-1" /> 
                   {totalClients > 0 ? `+${totalClients * 100}%` : 'No data'}
                 </small>
               </div>
@@ -309,7 +303,7 @@ function Dashboard() {
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
-                      <i className="bx bx-dots-vertical-rounded"></i>
+                      <MoreVertical className="h-4 w-4" />
         </button>
                     <div className="dropdown-menu" aria-labelledby="cardOpt1">
                       <a className="dropdown-item" href="javascript:void(0);">View More</a>
@@ -320,7 +314,7 @@ function Dashboard() {
                 <span className="fw-semibold d-block mb-1">Growth</span>
                 <h3 className="card-title mb-2">{totalClients > 0 ? Math.round((totalClients / 10) * 100) : 0}%</h3>
                 <small className={`fw-semibold ${totalClients > 0 ? 'text-success' : 'text-muted'}`}>
-                  <i className={`bx ${totalClients > 0 ? 'bx-up-arrow-alt' : 'bx-minus'}`}></i> 
+                  <ChevronUp className="h-4 w-4 me-1" /> 
                   {totalClients > 0 ? '+100%' : 'No data'}
                 </small>
               </div>
@@ -337,7 +331,7 @@ function Dashboard() {
                     </div>
                     <div className="mt-sm-auto">
                       <small className={`text-nowrap fw-semibold ${totalClients > 0 ? 'text-success' : 'text-muted'}`}>
-                        <i className={`bx ${totalClients > 0 ? 'bx-chevron-up' : 'bx-minus'}`}></i> 
+                        <ChevronUp className="h-4 w-4 me-1" /> 
                         {totalClients > 0 ? 'Active' : 'Setup'}
                       </small>
                       <h3 className="mb-0">{totalClients}</h3>
