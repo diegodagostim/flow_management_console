@@ -1,73 +1,148 @@
-import { useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useClient, useCreateClient, useUpdateClient } from '@/hooks/useClient'
-import type { CreateClientInput, UpdateClientInput } from '@/core/models/Client'
-import { ClientSchema } from '@/core/models/Client'
-import { ArrowLeft, Save } from 'lucide-react'
-import { PageHeader } from '@/components/navigation/PageHeader'
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { 
+  Save, 
+  ArrowLeft, 
+  User, 
+  Building2, 
+  Mail, 
+  Phone, 
+  MapPin,
+  AlertCircle,
+  CheckCircle
+} from 'lucide-react';
+import { PageHeader } from '@/components/navigation/PageHeader';
+import { useClient, useCreateClient, useUpdateClient } from '@/hooks/useClientManagement';
+import type { CreateClientInput, UpdateClientInput } from '@/core/models/ClientManagement';
 
 export function ClientForm() {
-  const navigate = useNavigate()
-  const { id } = useParams<{ id: string }>()
-  const isEditing = !!id
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const isEditing = !!id;
 
-  const { data: client, isLoading: isLoadingClient } = useClient(id || '')
-  const createClientMutation = useCreateClient()
-  const updateClientMutation = useUpdateClient()
-
-  const form = useForm<CreateClientInput | UpdateClientInput>({
-    resolver: zodResolver(ClientSchema.partial()),
-    defaultValues: {
-      name: '',
-      email: '',
-      phone: '',
-      company: '',
-      address: {
-        street: '',
-        city: '',
-        state: '',
-        zipCode: '',
-        country: '',
-      },
+  const [formData, setFormData] = useState<CreateClientInput>({
+    name: '',
+    email: '',
+    company: '',
+    phone: '',
+    address: {
+      street: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      country: '',
     },
-  })
+    status: 'active',
+    tier: 'basic',
+  });
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { data: client, isLoading } = useClient(id || '');
+  const createClientMutation = useCreateClient();
+  const updateClientMutation = useUpdateClient();
 
   useEffect(() => {
     if (isEditing && client) {
-      form.reset(client)
+      setFormData({
+        name: client.name,
+        email: client.email,
+        company: client.company,
+        phone: client.phone || '',
+        address: client.address || {
+          street: '',
+          city: '',
+          state: '',
+          zipCode: '',
+          country: '',
+        },
+        status: client.status,
+        tier: client.tier,
+      });
     }
-  }, [isEditing, client, form])
+  }, [isEditing, client]);
 
-  const onSubmit = async (data: CreateClientInput | UpdateClientInput) => {
+  const handleInputChange = (field: string, value: any) => {
+    if (field.includes('.')) {
+      const [parent, child] = field.split('.');
+      setFormData(prev => ({
+        ...prev,
+        [parent]: {
+          ...(prev[parent as keyof typeof prev] as any),
+          [child]: value,
+        },
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [field]: value,
+      }));
+    }
+    
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'Client name is required';
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+
+    if (!formData.company.trim()) {
+      newErrors.company = 'Company name is required';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
-      if (isEditing && id) {
-        await updateClientMutation.mutateAsync({ id, input: data as UpdateClientInput })
+      if (isEditing) {
+        await updateClientMutation.mutateAsync({
+          id: id!,
+          input: formData as UpdateClientInput,
+        });
       } else {
-        await createClientMutation.mutateAsync(data as CreateClientInput)
+        await createClientMutation.mutateAsync(formData);
       }
-      navigate('/clients')
+      navigate('/clients');
     } catch (error) {
-      console.error('Failed to save client:', error)
+      console.error('Failed to save client:', error);
+    } finally {
+      setIsSubmitting(false);
     }
-  }
+  };
 
-  if (isEditing && isLoadingClient) {
+  if (isLoading) {
     return (
-      <div className="row">
-        <div className="col-12">
-          <div className="card">
-            <div className="card-body text-center py-5">
-              <div className="spinner-border text-primary mb-3" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
-              <h6 className="text-muted">Loading client data...</h6>
-            </div>
+      <div className="container-fluid">
+        <div className="text-center py-5">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
           </div>
+          <p className="text-muted mt-2">Loading client data...</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -75,7 +150,7 @@ export function ClientForm() {
       {/* Page Header */}
       <PageHeader 
         title={isEditing ? 'Edit Client' : 'Add New Client'}
-        subtitle={isEditing ? 'Update client information' : 'Enter client details to get started'}
+        subtitle={isEditing ? 'Update client information' : 'Create a new client profile'}
         breadcrumbs={[
           { label: 'Home', path: '/' },
           { label: 'Clients', path: '/clients' },
@@ -83,153 +158,237 @@ export function ClientForm() {
         ]}
       />
 
-      <div className="row">
-        <div className="col-12">
-
-        {/* Form */}
-        <div className="card">
-          <div className="card-body">
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              {/* Basic Information */}
-              <div className="mb-4">
-                <h6 className="mb-3 text-primary border-bottom pb-2">Basic Information</h6>
+      <form onSubmit={handleSubmit}>
+        <div className="row">
+          {/* Basic Information */}
+          <div className="col-lg-8">
+            <div className="card border-0 shadow-sm mb-4">
+              <div className="card-header bg-transparent border-0 pb-2">
+                <h6 className="card-title mb-0 d-flex align-items-center">
+                  <User className="h-5 w-5 text-primary me-2" />
+                  Basic Information
+                </h6>
+              </div>
+              <div className="card-body">
                 <div className="row">
                   <div className="col-md-6 mb-3">
-                    <label htmlFor="name" className="form-label">
+                    <label className="form-label">
                       Client Name <span className="text-danger">*</span>
                     </label>
                     <input
-                      id="name"
-                      {...form.register('name')}
-                      className="form-control"
+                      type="text"
+                      className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+                      value={formData.name}
+                      onChange={(e) => handleInputChange('name', e.target.value)}
                       placeholder="Enter client name"
                     />
-                    {form.formState.errors.name && (
-                      <div className="text-danger small mt-1">{form.formState.errors.name.message}</div>
+                    {errors.name && (
+                      <div className="invalid-feedback d-flex align-items-center">
+                        <AlertCircle className="h-4 w-4 me-1" />
+                        {errors.name}
+                      </div>
                     )}
                   </div>
+                  
                   <div className="col-md-6 mb-3">
-                    <label htmlFor="company" className="form-label">Company</label>
+                    <label className="form-label">
+                      Email Address <span className="text-danger">*</span>
+                    </label>
                     <input
-                      id="company"
-                      {...form.register('company')}
-                      className="form-control"
+                      type="email"
+                      className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                      value={formData.email}
+                      onChange={(e) => handleInputChange('email', e.target.value)}
+                      placeholder="Enter email address"
+                    />
+                    {errors.email && (
+                      <div className="invalid-feedback d-flex align-items-center">
+                        <AlertCircle className="h-4 w-4 me-1" />
+                        {errors.email}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">
+                      Company <span className="text-danger">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      className={`form-control ${errors.company ? 'is-invalid' : ''}`}
+                      value={formData.company}
+                      onChange={(e) => handleInputChange('company', e.target.value)}
                       placeholder="Enter company name"
                     />
-                    {form.formState.errors.company && (
-                      <div className="text-danger small mt-1">{form.formState.errors.company.message}</div>
+                    {errors.company && (
+                      <div className="invalid-feedback d-flex align-items-center">
+                        <AlertCircle className="h-4 w-4 me-1" />
+                        {errors.company}
+                      </div>
                     )}
+                  </div>
+                  
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">Phone Number</label>
+                    <input
+                      type="tel"
+                      className="form-control"
+                      value={formData.phone}
+                      onChange={(e) => handleInputChange('phone', e.target.value)}
+                      placeholder="Enter phone number"
+                    />
                   </div>
                 </div>
               </div>
+            </div>
 
-              {/* Contact Information */}
-              <div className="mb-4">
-                <h6 className="mb-3 text-primary border-bottom pb-2">Contact Information</h6>
-                <div className="row">
-                  <div className="col-md-6 mb-3">
-                    <label htmlFor="email" className="form-label">Email Address</label>
-                    <input
-                      id="email"
-                      type="email"
-                      {...form.register('email')}
-                      className="form-control"
-                      placeholder="client@example.com"
-                    />
-                    {form.formState.errors.email && (
-                      <div className="text-danger small mt-1">{form.formState.errors.email.message}</div>
-                    )}
-                  </div>
-                  <div className="col-md-6 mb-3">
-                    <label htmlFor="phone" className="form-label">Phone Number</label>
-                    <input
-                      id="phone"
-                      {...form.register('phone')}
-                      className="form-control"
-                      placeholder="+1 (555) 123-4567"
-                    />
-                    {form.formState.errors.phone && (
-                      <div className="text-danger small mt-1">{form.formState.errors.phone.message}</div>
-                    )}
-                  </div>
-                </div>
+            {/* Address Information */}
+            <div className="card border-0 shadow-sm mb-4">
+              <div className="card-header bg-transparent border-0 pb-2">
+                <h6 className="card-title mb-0 d-flex align-items-center">
+                  <MapPin className="h-5 w-5 text-primary me-2" />
+                  Address Information
+                </h6>
               </div>
-
-              {/* Address Information */}
-              <div className="mb-4">
-                <h6 className="mb-3 text-primary border-bottom pb-2">Address Information</h6>
+              <div className="card-body">
                 <div className="row">
                   <div className="col-12 mb-3">
-                    <label htmlFor="street" className="form-label">Street Address</label>
+                    <label className="form-label">Street Address</label>
                     <input
-                      id="street"
-                      {...form.register('address.street')}
+                      type="text"
                       className="form-control"
-                      placeholder="123 Main Street"
+                      value={formData.address?.street || ''}
+                      onChange={(e) => handleInputChange('address.street', e.target.value)}
+                      placeholder="Enter street address"
                     />
                   </div>
+                  
                   <div className="col-md-4 mb-3">
-                    <label htmlFor="city" className="form-label">City</label>
+                    <label className="form-label">City</label>
                     <input
-                      id="city"
-                      {...form.register('address.city')}
+                      type="text"
                       className="form-control"
-                      placeholder="New York"
+                      value={formData.address?.city || ''}
+                      onChange={(e) => handleInputChange('address.city', e.target.value)}
+                      placeholder="Enter city"
                     />
                   </div>
+                  
                   <div className="col-md-4 mb-3">
-                    <label htmlFor="state" className="form-label">State</label>
+                    <label className="form-label">State/Province</label>
                     <input
-                      id="state"
-                      {...form.register('address.state')}
+                      type="text"
                       className="form-control"
-                      placeholder="NY"
+                      value={formData.address?.state || ''}
+                      onChange={(e) => handleInputChange('address.state', e.target.value)}
+                      placeholder="Enter state"
                     />
                   </div>
+                  
                   <div className="col-md-4 mb-3">
-                    <label htmlFor="zipCode" className="form-label">ZIP Code</label>
+                    <label className="form-label">ZIP/Postal Code</label>
                     <input
-                      id="zipCode"
-                      {...form.register('address.zipCode')}
+                      type="text"
                       className="form-control"
-                      placeholder="10001"
+                      value={formData.address?.zipCode || ''}
+                      onChange={(e) => handleInputChange('address.zipCode', e.target.value)}
+                      placeholder="Enter ZIP code"
                     />
                   </div>
+                  
                   <div className="col-md-6 mb-3">
-                    <label htmlFor="country" className="form-label">Country</label>
+                    <label className="form-label">Country</label>
                     <input
-                      id="country"
-                      {...form.register('address.country')}
+                      type="text"
                       className="form-control"
-                      placeholder="United States"
+                      value={formData.address?.country || ''}
+                      onChange={(e) => handleInputChange('address.country', e.target.value)}
+                      placeholder="Enter country"
                     />
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
 
-              {/* Submit Buttons */}
-              <div className="d-flex justify-content-end gap-2 pt-3 border-top">
-                <button
-                  type="button"
-                  onClick={() => navigate('/clients')}
-                  className="btn btn-outline-secondary"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={createClientMutation.isPending || updateClientMutation.isPending}
-                  className="btn btn-primary"
-                >
-                  <Save className="h-4 w-4 me-2" />
-                  {isEditing ? 'Update Client' : 'Create Client'}
-                </button>
+          {/* Client Settings */}
+          <div className="col-lg-4">
+            <div className="card border-0 shadow-sm mb-4">
+              <div className="card-header bg-transparent border-0 pb-2">
+                <h6 className="card-title mb-0 d-flex align-items-center">
+                  <Building2 className="h-5 w-5 text-primary me-2" />
+                  Client Settings
+                </h6>
               </div>
-            </form>
+              <div className="card-body">
+                <div className="mb-3">
+                  <label className="form-label">Status</label>
+                  <select
+                    className="form-select"
+                    value={formData.status}
+                    onChange={(e) => handleInputChange('status', e.target.value)}
+                  >
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="suspended">Suspended</option>
+                    <option value="pending">Pending</option>
+                  </select>
+                </div>
+                
+                <div className="mb-3">
+                  <label className="form-label">Tier</label>
+                  <select
+                    className="form-select"
+                    value={formData.tier}
+                    onChange={(e) => handleInputChange('tier', e.target.value)}
+                  >
+                    <option value="basic">Basic</option>
+                    <option value="professional">Professional</option>
+                    <option value="enterprise">Enterprise</option>
+                    <option value="custom">Custom</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="card border-0 shadow-sm">
+              <div className="card-body">
+                <div className="d-grid gap-2">
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="spinner-border spinner-border-sm me-2" role="status">
+                          <span className="visually-hidden">Saving...</span>
+                        </div>
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="h-4 w-4 me-1" />
+                        {isEditing ? 'Update Client' : 'Create Client'}
+                      </>
+                    )}
+                  </button>
+                  
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={() => navigate('/clients')}
+                  >
+                    <ArrowLeft className="h-4 w-4 me-1" />
+                    Back to Clients
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        </div>
-      </div>
+      </form>
     </div>
-  )
+  );
 }

@@ -2,13 +2,14 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { AppProviders } from './app/providers'
 import { ProtectedRoute } from '@/components/common/ProtectedRoute'
 import { SneatLayout } from '@/components/layout/SneatLayout'
-import { ClientList } from '@/pages/Clients/ClientList'
+import { ClientManagement } from '@/pages/Clients/ClientManagement'
 import { ClientForm } from '@/pages/Clients/ClientForm'
 import { ClientDetails } from '@/pages/Clients/ClientDetails'
+import { ContractManagement } from '@/pages/Clients/ContractManagement'
 import { Settings } from '@/pages/Settings/Settings'
 import { LoginPage } from '@/pages/Auth/LoginPage'
 import { RegisterPage } from '@/pages/Auth/RegisterPage'
-import { useClients } from '@/hooks/useClient'
+import { useClients } from '@/hooks/useClientManagement'
 import { PageHeader } from '@/components/navigation/PageHeader'
 import { 
   Users, 
@@ -209,7 +210,7 @@ function AppContent() {
           } />
           <Route path="/clients" element={
             <ProtectedRoute>
-              <ClientList />
+              <ClientManagement />
             </ProtectedRoute>
           } />
           <Route path="/clients/new" element={
@@ -225,6 +226,11 @@ function AppContent() {
           <Route path="/clients/:id/edit" element={
             <ProtectedRoute>
               <ClientForm />
+            </ProtectedRoute>
+          } />
+          <Route path="/clients/:id/contracts" element={
+            <ProtectedRoute>
+              <ContractManagement />
             </ProtectedRoute>
           } />
           <Route path="/suppliers" element={
