@@ -5,6 +5,7 @@ import { FlowLogo } from '@/components/icons/FlowLogo'
 import { FlowLogoAlt } from '@/components/icons/FlowLogoAlt'
 import { FlowLogoModern } from '@/components/icons/FlowLogoModern'
 import { FlowLogoMinimal } from '@/components/icons/FlowLogoMinimal'
+import { TopbarDateTime } from './TopbarDateTime'
 
 export function Topbar() {
   const { user, signOut } = useAuth()
@@ -49,8 +50,10 @@ export function Topbar() {
           </button>
         </div>
 
-        {/* User Menu - Right */}
+        {/* DateTime and User Menu - Right */}
         <div className="d-flex align-items-center justify-content-center h-100">
+          {/* DateTime Display */}
+          <TopbarDateTime />
           <div className="dropdown">
             <a className="nav-link dropdown-toggle hide-arrow d-flex align-items-center justify-content-center h-100" href="#" data-bs-toggle="dropdown">
               <div className="avatar d-flex align-items-center justify-content-center">

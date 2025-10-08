@@ -20,6 +20,7 @@ import { BusinessIntelligenceReports } from '@/pages/Finance/BusinessIntelligenc
 import { AutomatedReconciliation } from '@/pages/Finance/AutomatedReconciliation'
 import { Settings } from '@/pages/Settings/Settings'
 import { AIInsights } from '@/pages/AI/AIInsights'
+import { MultiTenancyBilling } from '@/pages/Billing/MultiTenancyBilling'
 import { TimeRegionTest } from '@/components/TimeRegionTest'
 import { LoginPage } from '@/pages/Auth/LoginPage'
 import { RegisterPage } from '@/pages/Auth/RegisterPage'
@@ -236,6 +237,37 @@ function Dashboard() {
                   <Link to="/ai-insights" className="btn btn-primary">
                     <Brain className="h-4 w-4 me-1" />
                     Explore AI
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Billing Card */}
+      <div className="row mt-2 dashboard-billing-row">
+        <div className="col-12">
+          <div className="card border-0 shadow-sm dashboard-card">
+            <div className="card-header bg-transparent border-0 pb-2">
+              <h6 className="card-title mb-0 d-flex align-items-center">
+                <CreditCard className="h-5 w-5 text-success me-2" />
+                Multi-Tenancy Billing
+              </h6>
+            </div>
+            <div className="card-body py-4">
+              <div className="text-center">
+                <CreditCard className="h-16 w-16 text-success mb-3" />
+                <h5 className="text-success mb-2">Billing Management</h5>
+                <p className="text-muted mb-4">Manage tenant subscriptions, billing, and usage across all clients.</p>
+                <div className="d-flex gap-2 justify-content-center">
+                  <Link to="/billing" className="btn btn-outline-success">
+                    <Eye className="h-4 w-4 me-1" />
+                    View Billing
+                  </Link>
+                  <Link to="/billing" className="btn btn-success">
+                    <CreditCard className="h-4 w-4 me-1" />
+                    Manage Plans
                   </Link>
                 </div>
               </div>
@@ -583,6 +615,11 @@ function AppContent() {
           <Route path="/ai-insights" element={
             <ProtectedRoute>
               <AIInsights />
+            </ProtectedRoute>
+          } />
+          <Route path="/billing" element={
+            <ProtectedRoute>
+              <MultiTenancyBilling />
             </ProtectedRoute>
           } />
           <Route path="/test-formatting" element={

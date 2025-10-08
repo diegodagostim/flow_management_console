@@ -1,28 +1,14 @@
-import { useTimeRegion } from '@/hooks/useTimeRegion'
 import { useUserLocation } from '@/hooks/useUserLocation'
-import { Clock, Calendar, MapPin, Globe, Wifi } from 'lucide-react'
+import { MapPin, Globe, Wifi } from 'lucide-react'
 
 export function DateTimeDisplay() {
-  const { currentDateTime } = useTimeRegion()
   const { ip, city, region, country, loading, error } = useUserLocation()
 
   return (
     <div className="menu-footer mt-auto p-3 border-top">
       <div className="text-center">
-        {/* Time Display */}
-        <div className="fw-medium text-primary mb-1 d-flex align-items-center justify-content-center small">
-          <Clock className="h-0.5 w-0.5 me-1" />
-          {currentDateTime.time}
-        </div>
-        
-        {/* Date Display */}
-        <div className="small text-muted d-flex align-items-center justify-content-center mb-2" style={{ fontSize: '0.7rem' }}>
-          <Calendar className="h-0.5 w-0.5 me-1" />
-          {currentDateTime.date}
-        </div>
-
         {/* IP Address and Location */}
-        <div className="border-top pt-2">
+        <div>
           {loading ? (
             <div className="small text-muted" style={{ fontSize: '0.65rem' }}>
               <div className="spinner-border spinner-border-sm me-1" role="status">
