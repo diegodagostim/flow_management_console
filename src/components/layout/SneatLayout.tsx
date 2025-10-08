@@ -20,7 +20,6 @@ const navigation = [
   { name: 'Suppliers', href: '/suppliers', icon: Building2 },
   { name: 'Finance', href: '/finance', icon: DollarSign },
   { name: 'Watchdog', href: '/watchdog', icon: Shield },
-  { name: 'Settings', href: '/settings', icon: SettingsIcon },
 ]
 
 interface SneatLayoutProps {
@@ -65,6 +64,20 @@ export function SneatLayout({ children }: SneatLayoutProps) {
               )
             })}
           </ul>
+
+          {/* Settings Link at Bottom */}
+          <div className="menu-bottom">
+            <ul className="menu-inner py-1">
+              <li className={`menu-item ${location.pathname === '/settings' ? 'active' : ''}`}>
+                <Link to="/settings" className="menu-link">
+                  <i className="menu-icon tf-icons">
+                    <SettingsIcon className="h-4 w-4" />
+                  </i>
+                  <div data-i18n="Settings">Settings</div>
+                </Link>
+              </li>
+            </ul>
+          </div>
 
           {/* Time and Date Display */}
           <DateTimeDisplay />
