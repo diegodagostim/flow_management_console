@@ -163,7 +163,7 @@ export function SupplierForm() {
   }
 
   return (
-    <div className="container-fluid supplier-form-page">
+    <div className="container-fluid supplier-form-page form-page">
       <PageHeader
         title={isEditing ? 'Edit Supplier' : 'Add Supplier'}
         subtitle={isEditing ? 'Update supplier information' : 'Create a new supplier'}

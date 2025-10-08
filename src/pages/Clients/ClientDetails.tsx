@@ -130,7 +130,7 @@ export function ClientDetails() {
   const pendingPayments = payments.filter(payment => payment.status === 'pending').length;
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid details-page">
       {/* Page Header */}
       <PageHeader 
         title={client.name}

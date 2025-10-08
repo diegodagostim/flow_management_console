@@ -112,7 +112,7 @@ export function FinanceDashboard() {
   ]
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid finance-dashboard">
       {/* Page Header */}
       <PageHeader 
         title="Finance Dashboard"

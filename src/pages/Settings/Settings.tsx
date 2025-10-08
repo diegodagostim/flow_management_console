@@ -93,7 +93,7 @@ export function Settings() {
 
       <div className="row">
         <div className="col-12">
-          <div className="card border-0 shadow-lg">
+          <div className="card border-0 shadow-lg settings-page">
             <div className="card-header border-0 px-0 pt-4 pb-0">
               <ul className="nav nav-tabs card-header-tabs" role="tablist">
                 <li className="nav-item" role="presentation">

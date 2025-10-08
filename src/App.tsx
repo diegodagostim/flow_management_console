@@ -57,7 +57,7 @@ function Dashboard() {
   }).length
 
   return (
-    <div className="container-fluid dashboard-container">
+    <div className="container-fluid dashboard-container dashboard-grid">
       {/* Page Header */}
       <PageHeader 
         title="Dashboard"

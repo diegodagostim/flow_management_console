@@ -132,7 +132,7 @@ export function SupplierDetails() {
     : 0;
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid details-page">
       <PageHeader
         title={supplier.name}
         subtitle={`${supplier.company} • ${getCategoryBadge(supplier.category)}`}

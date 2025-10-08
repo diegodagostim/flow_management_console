@@ -96,12 +96,10 @@ export function SneatLayout({ children }: SneatLayoutProps) {
 
             {/* Minimal Footer */}
             <footer className="content-footer">
-              <div className="container-xxl py-2">
-                <div className="text-center">
-                  <small className="text-muted">
-                    © {new Date().getFullYear()} Flow Management Console
-                  </small>
-                </div>
+              <div className="container-xxl">
+                <small className="text-muted">
+                  © {new Date().getFullYear()} Flow Management Console
+                </small>
               </div>
             </footer>
             {/* / Minimal Footer */}

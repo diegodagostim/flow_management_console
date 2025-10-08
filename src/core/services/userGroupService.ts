@@ -13,7 +13,8 @@ import {
   UserGroupSchema, 
   UserSchema, 
   CreateGroupInputSchema, 
-  CreateUserInputSchema 
+  CreateUserInputSchema,
+  SYSTEM_PERMISSIONS
 } from '@/core/models/UserGroup'
 
 /**
@@ -70,12 +71,21 @@ export class UserGroupService {
       // Validate input
       const validatedInput = CreateGroupInputSchema.parse(input);
       
+      // Convert permission IDs to actual permission objects
+      const permissions = validatedInput.permissions.map(permissionId => {
+        const permission = SYSTEM_PERMISSIONS.find(p => p.id === permissionId);
+        if (!permission) {
+          throw new Error(`Permission ${permissionId} not found`);
+        }
+        return permission;
+      });
+
       const group: UserGroup = {
         id: crypto.randomUUID(),
         name: validatedInput.name,
         description: validatedInput.description,
         color: validatedInput.color,
-        permissions: [], // Will be populated with actual permission objects
+        permissions: permissions,
         userCount: 0,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -107,9 +117,22 @@ export class UserGroupService {
         throw new Error('Group not found');
       }
 
+      // Convert permission IDs to actual permission objects if permissions are being updated
+      let permissions = existingGroup.permissions;
+      if (input.permissions) {
+        permissions = input.permissions.map(permissionId => {
+          const permission = SYSTEM_PERMISSIONS.find(p => p.id === permissionId);
+          if (!permission) {
+            throw new Error(`Permission ${permissionId} not found`);
+          }
+          return permission;
+        });
+      }
+
       const updatedGroup: UserGroup = {
         ...existingGroup,
         ...input,
+        permissions: permissions,
         updatedAt: new Date().toISOString(),
       };
 

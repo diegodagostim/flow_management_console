@@ -12,6 +12,27 @@ interface UserLocation {
   error: string | null;
 }
 
+// Helper function to fetch with timeout
+const fetchWithTimeout = async (url: string, timeoutMs: number = 5000): Promise<Response> => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  
+  try {
+    const response = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        'Accept': 'application/json',
+      },
+      mode: 'cors', // Explicitly set CORS mode
+    });
+    clearTimeout(timeoutId);
+    return response;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    throw error;
+  }
+};
+
 export function useUserLocation() {
   const [location, setLocation] = useState<UserLocation>({
     ip: '',
@@ -31,10 +52,12 @@ export function useUserLocation() {
         setLocation(prev => ({ ...prev, loading: true, error: null }));
         
         // Try multiple IP geolocation services as fallbacks
+        // Using services that are known to work well with CORS
         const services = [
           'https://ipapi.co/json/',
           'https://ipinfo.io/json',
-          'https://api.ipify.org?format=json'
+          'https://api.db-ip.com/v2/free/self',
+          'https://ipapi.co/json/'
         ];
         
         let data = null;
@@ -42,15 +65,14 @@ export function useUserLocation() {
         
         for (const service of services) {
           try {
-            const response = await fetch(service, {
-              timeout: 5000, // 5 second timeout
-            });
+            const response = await fetchWithTimeout(service, 8000); // Increased timeout
             
             if (!response.ok) {
               throw new Error(`HTTP ${response.status}`);
             }
             
             data = await response.json();
+            console.log(`Successfully fetched from ${service}:`, data);
             break; // Success, exit the loop
           } catch (error) {
             lastError = error;
@@ -60,14 +82,27 @@ export function useUserLocation() {
         }
         
         if (!data) {
-          throw lastError || new Error('All IP services failed');
+          // If all external services fail, provide a basic fallback
+          console.warn('All IP services failed, using fallback data');
+          setLocation({
+            ip: 'Local Network',
+            city: 'Unknown',
+            region: 'Unknown',
+            country: 'Unknown',
+            countryCode: 'Unknown',
+            timezone: 'Unknown',
+            isp: 'Local',
+            loading: false,
+            error: null,
+          });
+          return;
         }
         
         // Handle different response formats from different services
         let ip, city, region, country, countryCode, timezone, isp;
         
-        if (data.ipapi) {
-          // ipapi.co format
+        // Check for ipapi.co format
+        if (data.ip && data.city && data.country_name) {
           ip = data.ip;
           city = data.city;
           region = data.region;
@@ -75,8 +110,9 @@ export function useUserLocation() {
           countryCode = data.country_code;
           timezone = data.timezone;
           isp = data.org;
-        } else if (data.ipinfo) {
-          // ipinfo.io format
+        }
+        // Check for ipinfo.io format
+        else if (data.ip && data.city && data.country) {
           ip = data.ip;
           city = data.city;
           region = data.region;
@@ -84,15 +120,26 @@ export function useUserLocation() {
           countryCode = data.country;
           timezone = data.timezone;
           isp = data.org;
-        } else {
-          // Generic format or ipify
-          ip = data.ip || 'Unknown';
+        }
+        // Check for db-ip.com format
+        else if (data.ipAddress && data.city && data.countryName) {
+          ip = data.ipAddress;
+          city = data.city;
+          region = data.stateProv;
+          country = data.countryName;
+          countryCode = data.countryCode;
+          timezone = data.timeZone;
+          isp = data.organization;
+        }
+        // Generic fallback
+        else {
+          ip = data.ip || data.ipAddress || 'Unknown';
           city = data.city || 'Unknown';
-          region = data.region || 'Unknown';
-          country = data.country || 'Unknown';
-          countryCode = data.country_code || 'Unknown';
-          timezone = data.timezone || 'Unknown';
-          isp = data.org || 'Unknown';
+          region = data.region || data.stateProv || 'Unknown';
+          country = data.country || data.country_name || data.countryName || 'Unknown';
+          countryCode = data.country_code || data.countryCode || 'Unknown';
+          timezone = data.timezone || data.timeZone || 'Unknown';
+          isp = data.org || data.organization || 'Unknown';
         }
         
         setLocation({

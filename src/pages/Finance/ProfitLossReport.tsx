@@ -289,14 +289,7 @@ export function ProfitLossReport() {
               </h5>
             </div>
             <div className="card-body">
-              <div className="text-center py-5">
-                <BarChart3 className="h-16 w-16 text-primary mb-3" />
-                <h6 className="text-primary mb-2">Chart Visualization</h6>
-                <p className="text-muted mb-0">
-                  Interactive charts will be implemented with a charting library like Chart.js or Recharts.
-                  This would show the revenue, expenses, and profit trends over time.
-                </p>
-              </div>
+              <ProfitLossTrendChart data={profitLossData} />
             </div>
           </div>
         </div>
@@ -311,43 +304,11 @@ export function ProfitLossReport() {
               </h5>
             </div>
             <div className="card-body">
-              {transactionStats && (
-                <div className="space-y-3">
-                  {Object.entries(transactionStats.transactionsByCategory)
-                    .filter(([_, count]) => count > 0)
-                    .sort(([, a], [, b]) => b - a)
-                    .slice(0, 8)
-                    .map(([category, count]) => {
-                      const categoryExpenses = allTransactions
-                        .filter(t => t.type === 'expense' && t.category === category)
-                        .reduce((sum, t) => sum + t.amount, 0)
-                      
-                      const percentage = summaryMetrics.totalExpenses > 0 
-                        ? (categoryExpenses / summaryMetrics.totalExpenses) * 100 
-                        : 0
-                      
-                      return (
-                        <div key={category} className="d-flex justify-content-between align-items-center">
-                          <div className="flex-grow-1">
-                            <div className="fw-medium text-capitalize">
-                              {category.replace('_', ' ')}
-                            </div>
-                            <div className="progress mt-1" style={{ height: '4px' }}>
-                              <div 
-                                className="progress-bar bg-primary" 
-                                style={{ width: `${percentage}%` }}
-                              ></div>
-                            </div>
-                          </div>
-                          <div className="text-end ms-3">
-                            <div className="fw-medium">{formatCurrency(categoryExpenses)}</div>
-                            <small className="text-muted">{percentage.toFixed(1)}%</small>
-                          </div>
-                        </div>
-                      )
-                    })}
-                </div>
-              )}
+              <ExpenseBreakdownChart 
+                transactions={allTransactions} 
+                totalExpenses={summaryMetrics.totalExpenses}
+                formatCurrency={formatCurrency}
+              />
             </div>
           </div>
         </div>
@@ -411,6 +372,281 @@ export function ProfitLossReport() {
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+// Profit & Loss Trend Chart Component
+function ProfitLossTrendChart({ data }: { data: ProfitLossData[] }) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="text-center py-5">
+        <BarChart3 className="h-16 w-16 text-muted mb-3" />
+        <h6 className="text-muted mb-2">No Data Available</h6>
+        <p className="text-muted mb-0">No profit & loss data found for the selected period.</p>
+      </div>
+    )
+  }
+
+  const maxValue = Math.max(
+    ...data.map(d => Math.max(d.revenue, d.expenses, d.netProfit))
+  )
+
+  const chartHeight = 300
+  const chartWidth = 100
+  const padding = 20
+
+  return (
+    <div className="profit-loss-chart">
+      <div className="chart-container" style={{ height: `${chartHeight}px` }}>
+        <svg width="100%" height="100%" viewBox={`0 0 ${chartWidth} ${chartHeight}`}>
+          {/* Grid lines */}
+          {[0, 25, 50, 75, 100].map(y => (
+            <line
+              key={y}
+              x1="0"
+              y1={y}
+              x2="100"
+              y2={y}
+              stroke="#e9ecef"
+              strokeWidth="0.5"
+            />
+          ))}
+
+          {/* Revenue line */}
+          <polyline
+            fill="none"
+            stroke="#28a745"
+            strokeWidth="2"
+            points={data.map((d, i) => {
+              const x = (i / (data.length - 1)) * (chartWidth - 2 * padding) + padding
+              const y = chartHeight - padding - ((d.revenue / maxValue) * (chartHeight - 2 * padding))
+              return `${x},${y}`
+            }).join(' ')}
+          />
+
+          {/* Expenses line */}
+          <polyline
+            fill="none"
+            stroke="#dc3545"
+            strokeWidth="2"
+            points={data.map((d, i) => {
+              const x = (i / (data.length - 1)) * (chartWidth - 2 * padding) + padding
+              const y = chartHeight - padding - ((d.expenses / maxValue) * (chartHeight - 2 * padding))
+              return `${x},${y}`
+            }).join(' ')}
+          />
+
+          {/* Net Profit line */}
+          <polyline
+            fill="none"
+            stroke="#007bff"
+            strokeWidth="2"
+            points={data.map((d, i) => {
+              const x = (i / (data.length - 1)) * (chartWidth - 2 * padding) + padding
+              const y = chartHeight - padding - ((d.netProfit / maxValue) * (chartHeight - 2 * padding))
+              return `${x},${y}`
+            }).join(' ')}
+          />
+
+          {/* Data points */}
+          {data.map((d, i) => {
+            const x = (i / (data.length - 1)) * (chartWidth - 2 * padding) + padding
+            return (
+              <g key={i}>
+                {/* Revenue point */}
+                <circle
+                  cx={x}
+                  cy={chartHeight - padding - ((d.revenue / maxValue) * (chartHeight - 2 * padding))}
+                  r="3"
+                  fill="#28a745"
+                />
+                {/* Expenses point */}
+                <circle
+                  cx={x}
+                  cy={chartHeight - padding - ((d.expenses / maxValue) * (chartHeight - 2 * padding))}
+                  r="3"
+                  fill="#dc3545"
+                />
+                {/* Net Profit point */}
+                <circle
+                  cx={x}
+                  cy={chartHeight - padding - ((d.netProfit / maxValue) * (chartHeight - 2 * padding))}
+                  r="3"
+                  fill="#007bff"
+                />
+              </g>
+            )
+          })}
+
+          {/* X-axis labels */}
+          {data.map((d, i) => {
+            const x = (i / (data.length - 1)) * (chartWidth - 2 * padding) + padding
+            return (
+              <text
+                key={i}
+                x={x}
+                y={chartHeight - 5}
+                textAnchor="middle"
+                fontSize="8"
+                fill="#6c757d"
+              >
+                {d.period}
+              </text>
+            )
+          })}
+        </svg>
+      </div>
+
+      {/* Legend */}
+      <div className="chart-legend mt-3">
+        <div className="row">
+          <div className="col-4">
+            <div className="d-flex align-items-center">
+              <div className="legend-color me-2" style={{ width: '12px', height: '12px', backgroundColor: '#28a745', borderRadius: '2px' }}></div>
+              <small className="text-muted">Revenue</small>
+            </div>
+          </div>
+          <div className="col-4">
+            <div className="d-flex align-items-center">
+              <div className="legend-color me-2" style={{ width: '12px', height: '12px', backgroundColor: '#dc3545', borderRadius: '2px' }}></div>
+              <small className="text-muted">Expenses</small>
+            </div>
+          </div>
+          <div className="col-4">
+            <div className="d-flex align-items-center">
+              <div className="legend-color me-2" style={{ width: '12px', height: '12px', backgroundColor: '#007bff', borderRadius: '2px' }}></div>
+              <small className="text-muted">Net Profit</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Expense Breakdown Chart Component
+function ExpenseBreakdownChart({ 
+  transactions, 
+  totalExpenses, 
+  formatCurrency 
+}: { 
+  transactions: any[]
+  totalExpenses: number
+  formatCurrency: (amount: number) => string
+}) {
+  // Calculate expense breakdown by category
+  const expenseBreakdown = transactions
+    .filter(t => t.type === 'expense')
+    .reduce((acc, transaction) => {
+      const category = transaction.category || 'Other'
+      acc[category] = (acc[category] || 0) + transaction.amount
+      return acc
+    }, {} as Record<string, number>)
+
+  const sortedExpenses = Object.entries(expenseBreakdown)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 8)
+
+  if (sortedExpenses.length === 0) {
+    return (
+      <div className="text-center py-5">
+        <PieChart className="h-16 w-16 text-muted mb-3" />
+        <h6 className="text-muted mb-2">No Expense Data</h6>
+        <p className="text-muted mb-0">No expense transactions found for the selected period.</p>
+      </div>
+    )
+  }
+
+  const colors = [
+    '#007bff', '#28a745', '#ffc107', '#dc3545', 
+    '#6f42c1', '#fd7e14', '#20c997', '#6c757d'
+  ]
+
+  return (
+    <div className="expense-breakdown-chart">
+      {/* Pie Chart SVG */}
+      <div className="pie-chart-container mb-4">
+        <svg width="200" height="200" viewBox="0 0 200 200" className="mx-auto d-block">
+          <circle
+            cx="100"
+            cy="100"
+            r="80"
+            fill="none"
+            stroke="#e9ecef"
+            strokeWidth="2"
+          />
+          
+          {sortedExpenses.map(([category, amount], index) => {
+            const percentage = totalExpenses > 0 ? (amount / totalExpenses) * 100 : 0
+            const angle = (percentage / 100) * 360
+            const startAngle = sortedExpenses.slice(0, index).reduce((sum, [, amt]) => {
+              return sum + ((amt / totalExpenses) * 360)
+            }, 0)
+            
+            const endAngle = startAngle + angle
+            
+            // Convert angles to radians
+            const startRad = (startAngle - 90) * (Math.PI / 180)
+            const endRad = (endAngle - 90) * (Math.PI / 180)
+            
+            // Calculate path for pie slice
+            const x1 = 100 + 80 * Math.cos(startRad)
+            const y1 = 100 + 80 * Math.sin(startRad)
+            const x2 = 100 + 80 * Math.cos(endRad)
+            const y2 = 100 + 80 * Math.sin(endRad)
+            
+            const largeArcFlag = angle > 180 ? 1 : 0
+            
+            const pathData = [
+              `M 100 100`,
+              `L ${x1} ${y1}`,
+              `A 80 80 0 ${largeArcFlag} 1 ${x2} ${y2}`,
+              'Z'
+            ].join(' ')
+            
+            return (
+              <path
+                key={category}
+                d={pathData}
+                fill={colors[index % colors.length]}
+                stroke="#fff"
+                strokeWidth="1"
+              />
+            )
+          })}
+        </svg>
+      </div>
+
+      {/* Legend */}
+      <div className="expense-legend">
+        {sortedExpenses.map(([category, amount], index) => {
+          const percentage = totalExpenses > 0 ? (amount / totalExpenses) * 100 : 0
+          return (
+            <div key={category} className="d-flex justify-content-between align-items-center mb-2">
+              <div className="d-flex align-items-center">
+                <div 
+                  className="legend-color me-2" 
+                  style={{ 
+                    width: '12px', 
+                    height: '12px', 
+                    backgroundColor: colors[index % colors.length], 
+                    borderRadius: '2px' 
+                  }}
+                ></div>
+                <small className="text-capitalize">
+                  {category.replace('_', ' ')}
+                </small>
+              </div>
+              <div className="text-end">
+                <small className="fw-medium">{formatCurrency(amount)}</small>
+                <br />
+                <small className="text-muted">{percentage.toFixed(1)}%</small>
+              </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )

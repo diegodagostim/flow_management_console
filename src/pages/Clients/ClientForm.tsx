@@ -146,7 +146,7 @@ export function ClientForm() {
   }
 
   return (
-    <div className="container-fluid client-form-page">
+    <div className="container-fluid client-form-page form-page">
       {/* Page Header */}
       <PageHeader 
         title={isEditing ? 'Edit Client' : 'Add New Client'}

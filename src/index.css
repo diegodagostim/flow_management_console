@@ -1099,14 +1099,14 @@ body {
   }
 }
 
-/* Prevent scrolling while keeping footer visible */
+/* Enable scrolling for content areas while keeping layout structure */
 body {
-  overflow: hidden;
+  overflow-x: hidden;
   height: 100vh;
 }
 
 html {
-  overflow: hidden;
+  overflow-x: hidden;
   height: 100vh;
 }
 
@@ -1140,8 +1140,10 @@ html {
 
 .container-xxl.flex-grow-1.container-p-y {
   flex: 1;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   padding: 0.5rem;
+  max-height: calc(100vh - 68px); /* Account for header and 3px footer */
 }
 
 /* Minimal Footer Styling */
@@ -1150,16 +1152,181 @@ html {
   border-top: 1px solid rgba(37, 99, 235, 0.1);
   flex-shrink: 0;
   margin-top: auto;
+  height: 3px;
+  min-height: 3px;
+  max-height: 3px;
+}
+
+.content-footer .container-xxl {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .content-footer small {
-  font-size: 0.75rem;
+  font-size: 0.4rem;
   color: #697a8d;
+  line-height: 1;
+  margin: 0;
+  visibility: hidden; /* Hide text since footer is too small */
 }
 
 .dashboard-container::-webkit-scrollbar {
   width: 0px;
   background: transparent;
+}
+
+/* Scrolling styles for specific components */
+.user-group-management {
+  max-height: calc(100vh - 168px);
+  overflow-y: auto;
+}
+
+.user-group-management .card-body {
+  max-height: calc(100vh - 268px);
+  overflow-y: auto;
+}
+
+/* Settings page scrolling */
+.settings-page {
+  max-height: calc(100vh - 168px);
+  overflow-y: auto;
+}
+
+.settings-page .tab-content {
+  max-height: calc(100vh - 268px);
+  overflow-y: auto;
+}
+
+/* Form pages scrolling */
+.form-page {
+  max-height: calc(100vh - 168px);
+  overflow-y: auto;
+}
+
+/* Details pages scrolling */
+.details-page {
+  max-height: calc(100vh - 168px);
+  overflow-y: auto;
+}
+
+.details-page .tab-content {
+  max-height: calc(100vh - 318px);
+  overflow-y: auto;
+}
+
+/* Modal scrolling */
+.modal-body {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* Table scrolling */
+.table-responsive {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+/* List scrolling for long lists */
+.list-scrollable {
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+/* Card content scrolling */
+.card-scrollable {
+  max-height: 40vh;
+  overflow-y: auto;
+}
+
+/* Dashboard grid scrolling */
+.dashboard-grid {
+  max-height: calc(100vh - 118px);
+  overflow-y: auto;
+}
+
+/* Finance dashboard scrolling */
+.finance-dashboard {
+  max-height: calc(100vh - 168px);
+  overflow-y: auto;
+}
+
+/* Chart styling */
+.profit-loss-chart {
+  position: relative;
+}
+
+.profit-loss-chart .chart-container {
+  overflow: visible;
+}
+
+.profit-loss-chart svg {
+  overflow: visible;
+}
+
+.profit-loss-chart .chart-legend {
+  border-top: 1px solid #e9ecef;
+  padding-top: 1rem;
+}
+
+.expense-breakdown-chart {
+  text-align: center;
+}
+
+.expense-breakdown-chart .pie-chart-container {
+  position: relative;
+}
+
+.expense-breakdown-chart svg {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.expense-breakdown-chart .expense-legend {
+  text-align: left;
+}
+
+.expense-breakdown-chart .legend-color {
+  flex-shrink: 0;
+}
+
+/* Chart hover effects */
+.profit-loss-chart circle:hover {
+  r: 4;
+  transition: r 0.2s ease;
+}
+
+.expense-breakdown-chart path:hover {
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+/* Responsive chart adjustments */
+@media (max-width: 768px) {
+  .profit-loss-chart .chart-container {
+    height: 250px !important;
+  }
+  
+  .expense-breakdown-chart svg {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }
 
 /* Topbar Global Search Responsive */
