@@ -10,7 +10,8 @@ import {
   Shield,
   Settings as SettingsIcon,
   ChevronLeft,
-  Menu
+  Menu,
+  Brain
 } from 'lucide-react'
 import { TrafficLightIcon } from '@/components/icons/TrafficLightIcon'
 
@@ -19,6 +20,7 @@ const navigation = [
   { name: 'Clients', href: '/clients', icon: Users },
   { name: 'Suppliers', href: '/suppliers', icon: Building2 },
   { name: 'Finance', href: '/finance', icon: DollarSign },
+  { name: 'AI & Insights', href: '/ai-insights', icon: Brain },
   { name: 'Watchdog', href: '/watchdog', icon: Shield },
 ]
 

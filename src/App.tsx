@@ -19,6 +19,7 @@ import { CashflowDashboard } from '@/pages/Finance/CashflowDashboard'
 import { BusinessIntelligenceReports } from '@/pages/Finance/BusinessIntelligenceReports'
 import { AutomatedReconciliation } from '@/pages/Finance/AutomatedReconciliation'
 import { Settings } from '@/pages/Settings/Settings'
+import { AIInsights } from '@/pages/AI/AIInsights'
 import { TimeRegionTest } from '@/components/TimeRegionTest'
 import { LoginPage } from '@/pages/Auth/LoginPage'
 import { RegisterPage } from '@/pages/Auth/RegisterPage'
@@ -38,7 +39,8 @@ import {
   Database,
   BarChart3,
   FileText,
-  CreditCard
+  CreditCard,
+  Brain
 } from 'lucide-react'
 
 function Dashboard() {
@@ -203,6 +205,37 @@ function Dashboard() {
                   <Link to="/settings" className="btn btn-danger">
                     <SettingsIcon className="h-4 w-4 me-1" />
                     Configure
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* AI Insights Card */}
+      <div className="row mt-2 dashboard-ai-row">
+        <div className="col-12">
+          <div className="card border-0 shadow-sm dashboard-card">
+            <div className="card-header bg-transparent border-0 pb-2">
+              <h6 className="card-title mb-0 d-flex align-items-center">
+                <Brain className="h-5 w-5 text-primary me-2" />
+                AI & Insights
+              </h6>
+            </div>
+            <div className="card-body py-4">
+              <div className="text-center">
+                <Brain className="h-16 w-16 text-primary mb-3" />
+                <h5 className="text-primary mb-2">AI-Powered Analytics</h5>
+                <p className="text-muted mb-4">Discover insights, detect anomalies, and get predictive analytics for your business.</p>
+                <div className="d-flex gap-2 justify-content-center">
+                  <Link to="/ai-insights" className="btn btn-outline-primary">
+                    <Eye className="h-4 w-4 me-1" />
+                    View Insights
+                  </Link>
+                  <Link to="/ai-insights" className="btn btn-primary">
+                    <Brain className="h-4 w-4 me-1" />
+                    Explore AI
                   </Link>
                 </div>
               </div>
@@ -545,6 +578,11 @@ function AppContent() {
           <Route path="/settings" element={
             <ProtectedRoute>
               <Settings />
+            </ProtectedRoute>
+          } />
+          <Route path="/ai-insights" element={
+            <ProtectedRoute>
+              <AIInsights />
             </ProtectedRoute>
           } />
           <Route path="/test-formatting" element={
