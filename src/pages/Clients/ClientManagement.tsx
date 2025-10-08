@@ -36,8 +36,27 @@ export function ClientManagement() {
   const [selectedTier, setSelectedTier] = useState<Client['tier'] | ''>('');
   const [showFilters, setShowFilters] = useState(false);
 
-  const { data: clients = [], isLoading } = useClients(filters);
+  const { data: clients = [], isLoading, error } = useClients(filters);
   const deleteClientMutation = useDeleteClient();
+
+  if (error) {
+    return (
+      <div className="container-fluid">
+        <PageHeader
+          title="Client Management"
+          subtitle="Manage your clients and customer relationships"
+          breadcrumbs={[
+            { label: 'Home', path: '/' },
+            { label: 'Clients', active: true }
+          ]}
+        />
+        <div className="alert alert-danger">
+          <AlertCircle className="h-4 w-4 me-2" />
+          Failed to load clients. Please try again.
+        </div>
+      </div>
+    );
+  }
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
@@ -72,11 +91,11 @@ export function ClientManagement() {
       pending: { color: 'warning', icon: Clock },
     };
     
-    const config = statusConfig[status];
+    const config = statusConfig[status] || statusConfig.inactive;
     const Icon = config.icon;
     
     return (
-      <span className={`badge bg-label-${config.color} text-${config.color}`}>
+      <span className={`badge bg-label-${config.color}`}>
         <Icon className="h-3 w-3 me-1" />
         {status.charAt(0).toUpperCase() + status.slice(1)}
       </span>
@@ -91,10 +110,10 @@ export function ClientManagement() {
       custom: { color: 'secondary', label: 'Custom' },
     };
     
-    const config = tierConfig[tier];
+    const config = tierConfig[tier] || tierConfig.basic;
     
     return (
-      <span className={`badge bg-label-${config.color} text-${config.color}`}>
+      <span className={`badge bg-label-${config.color}`}>
         {config.label}
       </span>
     );
@@ -285,7 +304,7 @@ export function ClientManagement() {
       {/* Clients Table */}
       <div className="row">
         <div className="col-12">
-          <div className="card border-0 shadow-sm">
+          <div className="card border-0 shadow-sm client-management-table">
             <div className="card-header bg-transparent border-0 pb-2">
               <h6 className="card-title mb-0">Clients</h6>
             </div>
@@ -341,10 +360,10 @@ export function ClientManagement() {
                             <span className="fw-medium">{client.company}</span>
                           </td>
                           <td>
-                            {getStatusBadge(client.status)}
+                            {getStatusBadge(client.status || 'inactive')}
                           </td>
                           <td>
-                            {getTierBadge(client.tier)}
+                            {getTierBadge(client.tier || 'basic')}
                           </td>
                           <td>
                             <div className="d-flex flex-column">

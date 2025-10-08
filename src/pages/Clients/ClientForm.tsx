@@ -146,7 +146,7 @@ export function ClientForm() {
   }
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid client-form-page">
       {/* Page Header */}
       <PageHeader 
         title={isEditing ? 'Edit Client' : 'Add New Client'}
@@ -352,7 +352,7 @@ export function ClientForm() {
             </div>
 
             {/* Actions */}
-            <div className="card border-0 shadow-sm">
+            <div className="card border-0 shadow-sm form-actions">
               <div className="card-body">
                 <div className="d-grid gap-2">
                   <button

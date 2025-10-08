@@ -1,15 +1,21 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { AppProviders } from './app/providers'
 import { ProtectedRoute } from '@/components/common/ProtectedRoute'
+import { ErrorBoundary } from '@/components/common/ErrorBoundary'
 import { SneatLayout } from '@/components/layout/SneatLayout'
 import { ClientManagement } from '@/pages/Clients/ClientManagement'
 import { ClientForm } from '@/pages/Clients/ClientForm'
 import { ClientDetails } from '@/pages/Clients/ClientDetails'
 import { ContractManagement } from '@/pages/Clients/ContractManagement'
+import { SupplierManagement } from '@/pages/Suppliers/SupplierManagement'
+import { SupplierForm } from '@/pages/Suppliers/SupplierForm'
+import { SupplierDetails } from '@/pages/Suppliers/SupplierDetails'
+import { PurchaseOrderManagement } from '@/pages/Suppliers/PurchaseOrderManagement'
 import { Settings } from '@/pages/Settings/Settings'
 import { LoginPage } from '@/pages/Auth/LoginPage'
 import { RegisterPage } from '@/pages/Auth/RegisterPage'
 import { useClients } from '@/hooks/useClientManagement'
+import { useSuppliers } from '@/hooks/useSupplierManagement'
 import { PageHeader } from '@/components/navigation/PageHeader'
 import { 
   Users, 
@@ -27,9 +33,11 @@ import {
 
 function Dashboard() {
   const { data: clients = [] } = useClients({})
+  const { data: suppliers = [] } = useSuppliers({})
 
   // Calculate stats
   const totalClients = clients.length
+  const totalSuppliers = suppliers.length
   const recentClients = clients.filter(client => {
     if (!client.createdAt) return false
     const clientDate = new Date(client.createdAt)
@@ -65,19 +73,19 @@ function Dashboard() {
           </div>
         </div>
         
-        <div className="col-lg-2 col-md-4 col-6 mb-2">
-          <div className="card border-0 shadow-sm h-100 dashboard-card dashboard-stats-card">
-            <div className="card-body text-center py-3">
-              <div className="avatar avatar-md mx-auto mb-2">
-                <span className="avatar-initial rounded bg-label-info">
-                  <Building2 className="h-4 w-4" />
-                </span>
-              </div>
-              <h4 className="mb-1 text-info">0</h4>
-              <p className="text-muted mb-0 small">Suppliers</p>
-            </div>
-          </div>
-        </div>
+                 <div className="col-lg-2 col-md-4 col-6 mb-2">
+                   <div className="card border-0 shadow-sm h-100 dashboard-card dashboard-stats-card">
+                     <div className="card-body text-center py-3">
+                       <div className="avatar avatar-md mx-auto mb-2">
+                         <span className="avatar-initial rounded bg-label-info">
+                           <Building2 className="h-4 w-4" />
+                         </span>
+                       </div>
+                       <h4 className="mb-1 text-info">{totalSuppliers}</h4>
+                       <p className="text-muted mb-0 small">Suppliers</p>
+                     </div>
+                   </div>
+                 </div>
         
         <div className="col-lg-2 col-md-4 col-6 mb-2">
           <div className="card border-0 shadow-sm h-100 dashboard-card dashboard-stats-card">
@@ -210,7 +218,9 @@ function AppContent() {
           } />
           <Route path="/clients" element={
             <ProtectedRoute>
-              <ClientManagement />
+              <ErrorBoundary>
+                <ClientManagement />
+              </ErrorBoundary>
             </ProtectedRoute>
           } />
           <Route path="/clients/new" element={
@@ -235,30 +245,32 @@ function AppContent() {
           } />
           <Route path="/suppliers" element={
             <ProtectedRoute>
-              <div className="row">
-                <div className="col-12">
-                  <div className="card">
-                    <div className="card-body text-center py-5">
-                      <Building2 className="h-20 w-20 text-primary mb-4" />
-                      <h4 className="mb-3">Suppliers Module</h4>
-                      <p className="text-muted mb-4">Coming Soon!</p>
-                      <p className="text-muted">
-                        We are actively working on this feature. Supplier management will be available shortly.
-                      </p>
-                      <div className="mt-4">
-                        <Link to="/" className="btn btn-outline-primary me-2">
-                          <ArrowUpRight className="h-4 w-4 me-1" />
-                          Back to Dashboard
-                        </Link>
-                        <Link to="/settings" className="btn btn-primary">
-                          <SettingsIcon className="h-4 w-4 me-1" />
-                          Settings
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <SupplierManagement />
+            </ProtectedRoute>
+          } />
+          <Route path="/suppliers/new" element={
+            <ProtectedRoute>
+              <SupplierForm />
+            </ProtectedRoute>
+          } />
+          <Route path="/suppliers/:id" element={
+            <ProtectedRoute>
+              <SupplierDetails />
+            </ProtectedRoute>
+          } />
+          <Route path="/suppliers/:id/edit" element={
+            <ProtectedRoute>
+              <SupplierForm />
+            </ProtectedRoute>
+          } />
+          <Route path="/suppliers/:id/orders" element={
+            <ProtectedRoute>
+              <PurchaseOrderManagement />
+            </ProtectedRoute>
+          } />
+          <Route path="/suppliers/:id/orders/new" element={
+            <ProtectedRoute>
+              <PurchaseOrderManagement />
             </ProtectedRoute>
           } />
           <Route path="/finance" element={

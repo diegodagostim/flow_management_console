@@ -19,22 +19,48 @@
     <link rel="stylesheet" href="/assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
     <link rel="stylesheet" href="/assets/css/demo.css" />
     
-    <!-- Helpers -->
-    <script src="/assets/vendor/js/helpers.js"></script>
-    
-    <!-- Config -->
-    <script src="/assets/js/config.js"></script>
+    <!-- Legacy Scripts - Load in isolated context -->
+    <script>
+      // Create isolated context for legacy scripts
+      (function() {
+        // Store original require if it exists
+        const originalRequire = typeof require !== 'undefined' ? require : undefined;
+        
+        // Define require for legacy scripts
+        window.require = function() {
+          console.warn('Legacy require() called - this should not happen in modern ES modules');
+          return {};
+        };
+        
+        // Load legacy scripts
+        const scripts = [
+          '/assets/vendor/js/helpers.js',
+          '/assets/js/config.js',
+          '/assets/vendor/libs/jquery.js',
+          '/assets/vendor/libs/popper.js',
+          '/assets/js/popper-config.js',
+          '/assets/vendor/js/bootstrap.js',
+          '/assets/js/main.js'
+        ];
+        
+        scripts.forEach(src => {
+          const script = document.createElement('script');
+          script.src = src;
+          script.async = false;
+          document.head.appendChild(script);
+        });
+        
+        // Restore original require if it existed
+        if (originalRequire) {
+          window.require = originalRequire;
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    
+    <!-- Load React app after all legacy scripts -->
     <script type="module" src="/src/main.tsx"></script>
-    
-    <!-- Core JS -->
-    <script src="/assets/vendor/libs/jquery.js"></script>
-    <script src="/assets/vendor/libs/popper.js"></script>
-    <script src="/assets/vendor/js/bootstrap.js"></script>
-    
-    <!-- Main JS -->
-    <script src="/assets/js/main.js"></script>
   </body>
 </html>

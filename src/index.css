@@ -1456,3 +1456,316 @@ html {
       padding: 0.625rem 0.875rem;
     }
   }
+
+/* Popper.js fixes to prevent margin warnings */
+.dropdown-menu {
+  margin: 0 !important; /* Remove any margin that causes Popper warnings */
+}
+
+.dropdown-menu.show {
+  margin: 0 !important;
+}
+
+/* Ensure proper spacing using padding instead of margin */
+.dropdown-menu {
+  padding: 0.5rem 0;
+}
+
+.dropdown-item {
+  padding: 0.5rem 1rem;
+}
+
+/* Fix for Bootstrap dropdown positioning */
+.dropdown-menu[data-popper-placement] {
+  margin: 0 !important;
+}
+
+/* Client Form Page Scrolling */
+.client-form-page {
+  height: calc(100vh - 120px); /* Account for header and topbar */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding-bottom: 2rem; /* Add bottom padding for better UX */
+}
+
+.client-form-page .card {
+  margin-bottom: 1.5rem;
+}
+
+.client-form-page .card-body {
+  padding: 1.5rem;
+}
+
+/* Ensure form buttons are always visible */
+.client-form-page .form-actions {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  padding: 1rem 0;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 2rem;
+  z-index: 10;
+}
+
+/* Responsive adjustments for client form */
+@media (max-width: 768px) {
+  .client-form-page {
+    height: calc(100vh - 100px);
+    padding-bottom: 1rem;
+  }
+  
+  .client-form-page .form-actions {
+    padding: 0.75rem 0;
+  }
+}
+
+/* Settings Page Card Overlap Fixes */
+.settings-page {
+  padding-bottom: 2rem; /* Add bottom padding */
+  min-height: calc(100vh - 200px); /* Ensure minimum height */
+  overflow: visible; /* Allow content to be visible */
+  height: calc(100vh - 120px); /* Set fixed height for scrolling */
+  overflow-y: auto; /* Enable vertical scrolling */
+  scroll-behavior: smooth; /* Smooth scrolling */
+}
+
+.settings-page .card {
+  margin-bottom: 1.5rem; /* Ensure proper spacing between cards */
+  overflow: visible; /* Allow content to extend beyond card if needed */
+}
+
+/* Fix for main settings card container */
+.settings-page .card.border-0.shadow-lg {
+  margin-bottom: 2rem; /* Extra spacing for main container */
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important; /* Subtle shadow */
+  max-height: calc(100vh - 200px); /* Set max height for scrolling */
+  overflow-y: auto; /* Enable scrolling for main card */
+  scroll-behavior: smooth; /* Smooth scrolling */
+}
+
+.settings-page .card-body {
+  padding: 1.5rem; /* Consistent padding */
+  overflow: visible; /* Prevent content clipping */
+}
+
+.settings-page .row {
+  margin-bottom: 1rem; /* Add spacing between rows */
+}
+
+.settings-page .col-lg-8,
+.settings-page .col-lg-4 {
+  margin-bottom: 1rem; /* Add spacing between columns */
+}
+
+/* Fix for tab content spacing */
+.settings-page .tab-content {
+  padding-top: 1rem; /* Add top padding to tab content */
+  min-height: 400px; /* Ensure minimum height for content */
+  max-height: calc(100vh - 300px); /* Set max height for scrolling */
+  overflow-y: auto; /* Enable scrolling for tab content */
+  scroll-behavior: smooth; /* Smooth scrolling */
+}
+
+/* Time & Region tab specific styling */
+.settings-page #time-region .tab-pane {
+  min-height: 600px; /* Larger minimum height for Time & Region */
+}
+
+.settings-page #time-region .card {
+  min-height: 500px; /* Larger card for Time & Region */
+}
+
+.settings-page .tab-pane {
+  padding-bottom: 1rem; /* Add bottom padding to each tab */
+  overflow: visible; /* Allow content to be visible */
+}
+
+/* Fix for tab navigation */
+.settings-page .nav-tabs {
+  margin-bottom: 0; /* Remove default margin */
+  border-bottom: 1px solid #dee2e6; /* Ensure border */
+}
+
+.settings-page .nav-tabs .nav-link {
+  margin-bottom: -1px; /* Proper tab alignment */
+  border: 1px solid transparent; /* Consistent borders */
+}
+
+/* Ensure proper spacing for nested cards */
+.settings-page .card .card {
+  margin-bottom: 1rem;
+}
+
+.settings-page .card .card-body {
+  padding: 1rem;
+}
+
+/* Fix for form elements spacing */
+.settings-page .form-label {
+  margin-bottom: 0.5rem;
+}
+
+.settings-page .mb-3 {
+  margin-bottom: 1rem !important;
+}
+
+.settings-page .mb-4 {
+  margin-bottom: 1.5rem !important;
+}
+
+/* Responsive adjustments for settings page */
+@media (max-width: 768px) {
+  .settings-page {
+    padding-bottom: 1rem;
+    height: calc(100vh - 100px); /* Adjust height for mobile */
+  }
+  
+  .settings-page .card {
+    margin-bottom: 1rem;
+  }
+  
+  .settings-page .card-body {
+    padding: 1rem;
+  }
+  
+  .settings-page .col-lg-8,
+  .settings-page .col-lg-4 {
+    margin-bottom: 0.75rem;
+  }
+  
+  .settings-page .tab-content {
+    max-height: calc(100vh - 250px); /* Adjust for mobile */
+  }
+  
+  .settings-page .card.border-0.shadow-lg {
+    max-height: calc(100vh - 150px); /* Adjust for mobile */
+  }
+}
+
+/* Ensure footer doesn't overlap with settings content */
+.content-footer {
+  margin-top: 2rem; /* Add top margin to footer */
+  position: relative; /* Ensure proper positioning */
+  z-index: 1; /* Lower z-index than content */
+}
+
+/* Supplier Form Page Scrolling */
+.supplier-form-page {
+  height: calc(100vh - 120px); /* Account for header and topbar */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding-bottom: 2rem; /* Add bottom padding for better UX */
+}
+
+.supplier-form-page .card {
+  margin-bottom: 1.5rem;
+}
+
+.supplier-form-page .card-body {
+  padding: 1.5rem;
+}
+
+/* Ensure form buttons are always visible */
+.supplier-form-page .form-actions {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  padding: 1rem 0;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 2rem;
+  z-index: 10;
+}
+
+/* Responsive adjustments for supplier form */
+@media (max-width: 768px) {
+  .supplier-form-page {
+    height: calc(100vh - 100px);
+    padding-bottom: 1rem;
+  }
+  
+  .supplier-form-page .form-actions {
+    padding: 0.75rem 0;
+  }
+}
+
+/* Dropdown overflow fixes for Client Management and other tables */
+.table-responsive {
+  overflow: visible !important; /* Allow dropdowns to extend beyond table */
+}
+
+.card {
+  overflow: visible !important; /* Allow dropdowns to extend beyond card */
+}
+
+.card-body {
+  overflow: visible !important; /* Allow dropdowns to extend beyond card body */
+}
+
+/* Ensure dropdown menus have proper z-index */
+.dropdown-menu {
+  z-index: 1050 !important; /* Higher than Bootstrap's default */
+  position: absolute !important;
+}
+
+.dropdown-menu.show {
+  z-index: 1050 !important;
+}
+
+/* Fix for table dropdowns specifically */
+.table .dropdown {
+  position: static !important; /* Allow dropdown to position relative to viewport */
+}
+
+.table .dropdown-menu {
+  position: absolute !important;
+  z-index: 1050 !important;
+  transform: none !important; /* Remove any transform that might clip */
+}
+
+/* Ensure proper positioning for dropdowns in table cells */
+.table td .dropdown-menu {
+  position: absolute !important;
+  z-index: 1050 !important;
+  min-width: 160px;
+}
+
+/* Fix for Bootstrap's dropdown positioning in cards */
+.card .dropdown-menu {
+  z-index: 1050 !important;
+  position: absolute !important;
+}
+
+/* Specific fixes for Client Management and Supplier Management tables */
+.client-management-table .table-responsive,
+.supplier-management-table .table-responsive {
+  overflow: visible !important;
+}
+
+.client-management-table .card,
+.supplier-management-table .card {
+  overflow: visible !important;
+}
+
+.client-management-table .card-body,
+.supplier-management-table .card-body {
+  overflow: visible !important;
+}
+
+/* Ensure dropdown buttons in tables have proper positioning context */
+.table td .dropdown-toggle {
+  position: relative;
+}
+
+.table td .dropdown-menu {
+  position: absolute !important;
+  z-index: 1050 !important;
+  top: 100% !important;
+  left: 0 !important;
+  right: auto !important;
+  min-width: 160px;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Fix for dropdowns in the last column of tables */
+.table td:last-child .dropdown-menu {
+  right: 0 !important;
+  left: auto !important;
+  }
