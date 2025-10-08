@@ -34,11 +34,11 @@ export function DateTimeDisplay() {
     <div className="menu-footer mt-auto p-3 border-top">
       <div className="text-center">
         <div className="fw-semibold text-primary mb-1 d-flex align-items-center justify-content-center">
-          <Clock className="h-2 w-2 me-1" />
+          <Clock className="h-1 w-1 me-1" />
           {formatTime(currentTime)}
         </div>
         <div className="small text-muted d-flex align-items-center justify-content-center">
-          <Calendar className="h-1 w-1 me-1" />
+          <Calendar className="h-0.5 w-0.5 me-1" />
           {formatDate(currentTime)}
         </div>
       </div>

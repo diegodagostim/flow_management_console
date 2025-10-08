@@ -89,7 +89,7 @@ body {
 @layer components {
   /* Enhanced Typography */
   .text-primary {
-    color: #696cff !important;
+    color: #2563eb !important;
   }
   
   .text-secondary {
@@ -170,15 +170,15 @@ body {
   }
   
   .btn-primary {
-    background: linear-gradient(135deg, #696cff 0%, #5a5dff 100%);
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
     color: white;
-    box-shadow: 0 0.125rem 0.25rem rgba(105, 108, 255, 0.3);
+    box-shadow: 0 0.125rem 0.25rem rgba(37, 99, 235, 0.3);
   }
   
   .btn-primary:hover {
-    background: linear-gradient(135deg, #5a5dff 0%, #4a4dff 100%);
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
     transform: translateY(-1px);
-    box-shadow: 0 0.25rem 0.5rem rgba(105, 108, 255, 0.4);
+    box-shadow: 0 0.25rem 0.5rem rgba(37, 99, 235, 0.4);
   }
   
   .btn-success {
@@ -194,13 +194,13 @@ body {
   }
   
   .btn-outline-primary {
-    border: 1px solid #696cff;
-    color: #696cff;
+    border: 1px solid #2563eb;
+    color: #2563eb;
     background: transparent;
   }
   
   .btn-outline-primary:hover {
-    background: #696cff;
+    background: #2563eb;
     color: white;
     transform: translateY(-1px);
   }
@@ -240,8 +240,8 @@ body {
   }
   
   .form-control:focus {
-    border-color: #696cff;
-    box-shadow: 0 0 0 0.2rem rgba(105, 108, 255, 0.25);
+    border-color: #2563eb;
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
     background-color: #fff;
   }
   
@@ -254,9 +254,9 @@ body {
   
   /* Enhanced Input Groups */
   .input-group-text {
-    background-color: rgba(105, 108, 255, 0.1);
+    background-color: rgba(37, 99, 235, 0.1);
     border: 1px solid #d9dee3;
-    color: #696cff;
+    color: #2563eb;
     border-radius: 0.375rem 0 0 0.375rem;
     font-size: 0.9375rem;
   }
@@ -307,8 +307,8 @@ body {
   }
   
   .avatar-initial {
-    background-color: rgba(105, 108, 255, 0.1);
-    color: #696cff;
+    background-color: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
     font-weight: 600;
   }
   
@@ -321,8 +321,8 @@ body {
   }
   
   .bg-label-primary {
-    background-color: rgba(105, 108, 255, 0.1) !important;
-    color: #696cff !important;
+    background-color: rgba(37, 99, 235, 0.1) !important;
+    color: #2563eb !important;
   }
   
   .bg-label-success {
@@ -518,7 +518,7 @@ body {
   }
 
   .topbar .dropdown-toggle:hover {
-    background-color: rgba(105, 108, 255, 0.1);
+    background-color: rgba(37, 99, 235, 0.1);
   }
 
   /* Adjust layout to account for topbar */
@@ -603,8 +603,8 @@ body {
 
   /* Menu footer styling */
   .menu-footer {
-    background-color: rgba(105, 108, 255, 0.05);
-    border-top: 1px solid rgba(105, 108, 255, 0.1) !important;
+    background-color: rgba(37, 99, 235, 0.05);
+    border-top: 1px solid rgba(37, 99, 235, 0.1) !important;
   }
 
   /* Ensure menu items are properly spaced */
@@ -617,83 +617,83 @@ body {
     margin-bottom: 0.25rem;
   }
   
-  /* Teal Blue Color Scheme */
+  /* Professional Blue Color Scheme */
   :root {
-    --bs-primary: #20b2aa;
-    --bs-primary-rgb: 32, 178, 170;
-    --bs-primary-dark: #1a9b94;
-    --bs-primary-light: #4dc4bd;
+    --bs-primary: #2563eb;
+    --bs-primary-rgb: 37, 99, 235;
+    --bs-primary-dark: #1d4ed8;
+    --bs-primary-light: #3b82f6;
   }
 
   /* Primary color overrides */
   .text-primary {
-    color: #20b2aa !important;
+    color: #2563eb !important;
   }
 
   .bg-primary {
-    background-color: #20b2aa !important;
+    background-color: #2563eb !important;
   }
 
   .btn-primary {
-    background-color: #20b2aa;
-    border-color: #20b2aa;
+    background-color: #2563eb;
+    border-color: #2563eb;
   }
 
   .btn-primary:hover {
-    background-color: #1a9b94;
-    border-color: #1a9b94;
+    background-color: #1d4ed8;
+    border-color: #1d4ed8;
   }
 
   .btn-primary:focus {
-    background-color: #1a9b94;
-    border-color: #1a9b94;
-    box-shadow: 0 0 0 0.2rem rgba(32, 178, 170, 0.25);
+    background-color: #1d4ed8;
+    border-color: #1d4ed8;
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
   }
 
   .btn-outline-primary {
-    color: #20b2aa;
-    border-color: #20b2aa;
+    color: #2563eb;
+    border-color: #2563eb;
   }
 
   .btn-outline-primary:hover {
-    background-color: #20b2aa;
-    border-color: #20b2aa;
+    background-color: #2563eb;
+    border-color: #2563eb;
   }
 
   /* Avatar and badge colors */
   .bg-label-primary {
-    background-color: rgba(32, 178, 170, 0.1) !important;
-    color: #20b2aa !important;
+    background-color: rgba(37, 99, 235, 0.1) !important;
+    color: #2563eb !important;
   }
 
   .badge.bg-primary {
-    background-color: #20b2aa !important;
+    background-color: #2563eb !important;
   }
 
   /* Form controls */
   .form-control:focus {
-    border-color: #20b2aa;
-    box-shadow: 0 0 0 0.2rem rgba(32, 178, 170, 0.25);
+    border-color: #2563eb;
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
   }
 
   .form-check-input:checked {
-    background-color: #20b2aa;
-    border-color: #20b2aa;
+    background-color: #2563eb;
+    border-color: #2563eb;
   }
 
   /* Navigation and menu */
   .menu-item.active .menu-link {
-    color: #20b2aa !important;
+    color: #2563eb !important;
   }
 
   .nav-link.active {
-    color: #20b2aa !important;
-    border-bottom-color: #20b2aa !important;
+    color: #2563eb !important;
+    border-bottom-color: #2563eb !important;
   }
 
   /* Topbar styling */
   .topbar .dropdown-toggle:hover {
-    background-color: rgba(32, 178, 170, 0.1);
+    background-color: rgba(37, 99, 235, 0.1);
   }
 
   /* Settings page enhancements */
@@ -708,13 +708,13 @@ body {
   .settings-page .nav-tabs .nav-link:hover {
     border-color: transparent;
     border-bottom-color: #e7eaf3;
-    color: #20b2aa;
+    color: #2563eb;
   }
 
   .settings-page .nav-tabs .nav-link.active {
     border-color: transparent;
-    border-bottom-color: #20b2aa;
-    color: #20b2aa;
+    border-bottom-color: #2563eb;
+    color: #2563eb;
     background-color: transparent;
   }
 
@@ -729,39 +729,39 @@ body {
   }
 
   .settings-page .form-control:focus {
-    border-color: #20b2aa;
-    box-shadow: 0 0 0 0.2rem rgba(32, 178, 170, 0.25);
+    border-color: #2563eb;
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
   }
 
   .settings-page .btn-primary {
-    background-color: #20b2aa;
-    border-color: #20b2aa;
+    background-color: #2563eb;
+    border-color: #2563eb;
   }
 
   .settings-page .btn-primary:hover {
-    background-color: #1a9b94;
-    border-color: #1a9b94;
+    background-color: #1d4ed8;
+    border-color: #1d4ed8;
   }
 
-  /* Additional teal blue overrides */
+  /* Additional professional blue overrides */
   .alert-info {
-    background-color: rgba(32, 178, 170, 0.1);
-    border-color: rgba(32, 178, 170, 0.2);
-    color: #1a9b94;
+    background-color: rgba(37, 99, 235, 0.1);
+    border-color: rgba(37, 99, 235, 0.2);
+    color: #1d4ed8;
   }
 
   .border-primary {
-    border-color: #20b2aa !important;
+    border-color: #2563eb !important;
   }
 
   .shadow-primary {
-    box-shadow: 0 0.125rem 0.25rem rgba(32, 178, 170, 0.075) !important;
+    box-shadow: 0 0.125rem 0.25rem rgba(37, 99, 235, 0.075) !important;
   }
 
   /* Menu hover effects */
   .menu-link:hover {
-    background-color: rgba(32, 178, 170, 0.1);
-    color: #20b2aa;
+    background-color: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
   }
     transition: all 0.2s ease;
     border-radius: 0.375rem;
@@ -770,13 +770,13 @@ body {
   }
   
   .menu-link:hover {
-    background-color: rgba(105, 108, 255, 0.1);
-    color: #696cff;
+    background-color: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
   }
   
   .menu-item.active .menu-link {
-    background-color: rgba(105, 108, 255, 0.15);
-    color: #696cff;
+    background-color: rgba(37, 99, 235, 0.15);
+    color: #2563eb;
     font-weight: 600;
   }
   
@@ -796,8 +796,8 @@ body {
   }
   
   .dropdown-item:hover {
-    background-color: rgba(105, 108, 255, 0.1);
-    color: #696cff;
+    background-color: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
   }
   
   /* Enhanced Footer */
@@ -826,8 +826,8 @@ body {
   
   .navbar-nav .form-control:focus {
     background-color: white !important;
-    border-color: #696cff !important;
-    box-shadow: 0 0 0 0.2rem rgba(105, 108, 255, 0.15) !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15) !important;
   }
   
   .navbar-nav .form-control::placeholder {
@@ -838,12 +838,12 @@ body {
   /* Search box hover effect */
   .navbar-nav .input-group:hover .form-control {
     background-color: white !important;
-    border-color: rgba(105, 108, 255, 0.3) !important;
+    border-color: rgba(37, 99, 235, 0.3) !important;
   }
   
   .navbar-nav .input-group:hover .input-group-text {
     background-color: white !important;
-    border-color: rgba(105, 108, 255, 0.3) !important;
+    border-color: rgba(37, 99, 235, 0.3) !important;
   }
   
   /* Responsive Enhancements */
