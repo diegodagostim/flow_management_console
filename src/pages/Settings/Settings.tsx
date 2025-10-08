@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setAdapter } from '@/app/store'
 import type { RootState } from '@/app/store'
 import { UserGroupManagement } from '@/components/UserGroupManagement'
+import { IntegrationSettings } from '@/components/IntegrationSettings'
 import { PageHeader } from '@/components/navigation/PageHeader'
 import { useTimeRegion } from '@/hooks/useTimeRegion'
 import { 
@@ -20,7 +21,12 @@ import {
   Clock,
   Map,
   Calendar,
-  DollarSign
+  DollarSign,
+  Plug,
+  Shield,
+  CheckCircle,
+  XCircle,
+  AlertCircle
 } from 'lucide-react'
 
 export function Settings() {
@@ -154,6 +160,21 @@ export function Settings() {
                   >
                     <Database className="h-4 w-4 me-2" />
                     Database Switch
+                  </button>
+                </li>
+                <li className="nav-item" role="presentation">
+                  <button 
+                    className="nav-link" 
+                    id="integration-tab" 
+                    data-bs-toggle="tab" 
+                    data-bs-target="#integration" 
+                    type="button" 
+                    role="tab"
+                    aria-controls="integration"
+                    aria-selected="false"
+                  >
+                    <Plug className="h-4 w-4 me-2" />
+                    Integration
                   </button>
                 </li>
               </ul>
@@ -1025,6 +1046,10 @@ export function Settings() {
                       </div>
                     </div>
                   </div>
+                </div>
+
+                <div className="tab-pane fade" id="integration" role="tabpanel">
+                  <IntegrationSettings />
                 </div>
               </div>
             </div>
