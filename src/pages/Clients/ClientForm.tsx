@@ -6,6 +6,7 @@ import { useClient, useCreateClient, useUpdateClient } from '@/hooks/useClient'
 import type { CreateClientInput, UpdateClientInput } from '@/core/models/Client'
 import { ClientSchema } from '@/core/models/Client'
 import { ArrowLeft, Save } from 'lucide-react'
+import { PageHeader } from '@/components/navigation/PageHeader'
 
 export function ClientForm() {
   const navigate = useNavigate()
@@ -70,25 +71,20 @@ export function ClientForm() {
   }
 
   return (
-    <div className="row">
-      <div className="col-12">
-        {/* Header */}
-        <div className="d-flex align-items-center mb-4">
-          <button
-            onClick={() => navigate('/clients')}
-            className="btn btn-outline-secondary me-3"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </button>
-          <div>
-            <h4 className="mb-1">
-              {isEditing ? 'Edit Client' : 'Add New Client'}
-            </h4>
-            <p className="text-muted">
-              {isEditing ? 'Update client information' : 'Enter client details to get started'}
-            </p>
-          </div>
-        </div>
+    <div className="container-fluid">
+      {/* Page Header */}
+      <PageHeader 
+        title={isEditing ? 'Edit Client' : 'Add New Client'}
+        subtitle={isEditing ? 'Update client information' : 'Enter client details to get started'}
+        breadcrumbs={[
+          { label: 'Home', path: '/' },
+          { label: 'Clients', path: '/clients' },
+          { label: isEditing ? 'Edit Client' : 'Add Client', active: true }
+        ]}
+      />
+
+      <div className="row">
+        <div className="col-12">
 
         {/* Form */}
         <div className="card">
@@ -231,6 +227,7 @@ export function ClientForm() {
               </div>
             </form>
           </div>
+        </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useClient, useDeleteClient } from '@/hooks/useClient';
 import { ArrowLeft, Edit, Trash2, Mail, Phone, Building2, MapPin, Calendar } from 'lucide-react';
+import { PageHeader } from '@/components/navigation/PageHeader';
 
 export function ClientDetails() {
   const { id } = useParams<{ id: string }>();
@@ -59,37 +60,35 @@ export function ClientDetails() {
   }
 
   return (
-    <div className="row">
-      <div className="col-12">
-        {/* Header */}
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <div className="d-flex align-items-center">
-            <Link to="/clients" className="btn btn-outline-secondary me-3">
-              <ArrowLeft className="h-4 w-4 me-2" />
-              Back to Clients
-            </Link>
-            <div>
-              <h4 className="mb-1">{client.name}</h4>
-              {client.company && (
-                <p className="text-muted mb-0">{client.company}</p>
-              )}
-            </div>
-          </div>
-          <div className="d-flex gap-2">
-            <Link to={`/clients/${client.id}/edit`} className="btn btn-outline-primary">
-              <Edit className="h-4 w-4 me-2" />
-              Edit
-            </Link>
-            <button
-              className="btn btn-outline-danger"
-              onClick={handleDelete}
-              disabled={deleteClientMutation.isPending}
-            >
-              <Trash2 className="h-4 w-4 me-2" />
-              Delete
-            </button>
-          </div>
+    <div className="container-fluid">
+      {/* Page Header */}
+      <PageHeader 
+        title={client.name}
+        subtitle={client.company || 'Client Details'}
+        breadcrumbs={[
+          { label: 'Home', path: '/' },
+          { label: 'Clients', path: '/clients' },
+          { label: client.name, active: true }
+        ]}
+      >
+        <div className="d-flex gap-2">
+          <Link to={`/clients/${client.id}/edit`} className="btn btn-outline-primary">
+            <Edit className="h-4 w-4 me-2" />
+            Edit
+          </Link>
+          <button
+            className="btn btn-outline-danger"
+            onClick={handleDelete}
+            disabled={deleteClientMutation.isPending}
+          >
+            <Trash2 className="h-4 w-4 me-2" />
+            Delete
+          </button>
         </div>
+      </PageHeader>
+
+      <div className="row">
+        <div className="col-12">
 
         <div className="row">
           {/* Main Content */}
@@ -293,6 +292,7 @@ export function ClientDetails() {
               </div>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </div>

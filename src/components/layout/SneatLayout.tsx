@@ -7,16 +7,19 @@ import {
   Users, 
   Building2, 
   DollarSign, 
+  Shield,
   Settings as SettingsIcon,
   ChevronLeft,
   Menu
 } from 'lucide-react'
+import { TrafficLightIcon } from '@/components/icons/TrafficLightIcon'
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: Home },
   { name: 'Clients', href: '/clients', icon: Users },
   { name: 'Suppliers', href: '/suppliers', icon: Building2 },
   { name: 'Finance', href: '/finance', icon: DollarSign },
+  { name: 'Watchdog', href: '/watchdog', icon: Shield },
   { name: 'Settings', href: '/settings', icon: SettingsIcon },
 ]
 
@@ -70,23 +73,6 @@ export function SneatLayout({ children }: SneatLayoutProps) {
 
         {/* Layout container */}
         <div className="layout-page">
-          {/* Navbar */}
-          <nav className="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
-            <div className="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
-              <button 
-                className="nav-item nav-link px-0 me-xl-4"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                <Menu className="h-4 w-4" />
-              </button>
-            </div>
-
-            <div className="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-              {/* Empty navbar - all functionality moved to topbar */}
-            </div>
-          </nav>
-          {/* / Navbar */}
-
           {/* Content wrapper */}
           <div className="content-wrapper">
             {/* Content */}
@@ -95,25 +81,17 @@ export function SneatLayout({ children }: SneatLayoutProps) {
             </div>
             {/* / Content */}
 
-            {/* Footer */}
-            <footer className="content-footer footer bg-footer-theme">
-              <div className="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
-                <div className="mb-2 mb-md-0">
+            {/* Minimal Footer */}
+            <footer className="content-footer">
+              <div className="container-xxl py-2">
+                <div className="text-center">
                   <small className="text-muted">
-                    © {new Date().getFullYear()}, made by{' '}
-                    <a href="#" target="_blank" className="footer-link">Flow Management Team</a>
-                  </small>
-                </div>
-                <div>
-                  <small className="text-muted">
-                    <a href="#" className="footer-link me-4" target="_blank">License</a>
-                    <a href="#" target="_blank" className="footer-link me-4">Documentation</a>
-                    <a href="#" target="_blank" className="footer-link me-4">Support</a>
+                    © {new Date().getFullYear()} Flow Management Console
                   </small>
                 </div>
               </div>
             </footer>
-            {/* / Footer */}
+            {/* / Minimal Footer */}
 
             <div className="content-backdrop fade"></div>
           </div>

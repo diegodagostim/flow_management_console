@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useClients } from '@/hooks/useClient';
 import { useDeleteClient } from '@/hooks/useClient';
 import { Plus, Search, Edit, Trash2, Eye, Users } from 'lucide-react';
+import { PageHeader } from '@/components/navigation/PageHeader';
 
 export function ClientList() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -55,21 +56,26 @@ export function ClientList() {
   }
 
   return (
-    <div className="row">
-      <div className="col-12">
-        {/* Header */}
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <div>
-            <h4 className="mb-1">Clients</h4>
-            <p className="text-muted">Manage your client relationships</p>
-          </div>
-          <Link to="/clients/new">
-            <button className="btn btn-primary">
-              <Plus className="h-4 w-4 me-2" />
-              Add Client
-            </button>
-          </Link>
-        </div>
+    <div className="container-fluid">
+      {/* Page Header */}
+      <PageHeader 
+        title="Clients"
+        subtitle="Manage your client relationships"
+        breadcrumbs={[
+          { label: 'Home', path: '/' },
+          { label: 'Clients', active: true }
+        ]}
+      >
+        <Link to="/clients/new">
+          <button className="btn btn-primary">
+            <Plus className="h-4 w-4 me-2" />
+            Add Client
+          </button>
+        </Link>
+      </PageHeader>
+
+      <div className="row">
+        <div className="col-12">
 
         {/* Search */}
         <div className="card mb-4">
@@ -185,6 +191,7 @@ export function ClientList() {
             ))}
           </div>
         )}
+        </div>
       </div>
     </div>
   )

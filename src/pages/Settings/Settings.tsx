@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setAdapter } from '@/app/store'
 import type { RootState } from '@/app/store'
 import { GDPRCompliance } from '@/components/common/GDPRCompliance'
+import { UserGroupManagement } from '@/components/UserGroupManagement'
+import { PageHeader } from '@/components/navigation/PageHeader'
 import { 
   Database, 
   Settings as SettingsIcon, 
@@ -53,27 +55,20 @@ export function Settings() {
   return (
     <div className="container-fluid settings-page">
       {/* Page Header */}
-      <div className="row mb-4">
-        <div className="col-12">
-          <div className="d-flex align-items-center">
-            <div className="avatar avatar-lg me-3">
-              <span className="avatar-initial rounded bg-label-primary">
-                <SettingsIcon className="h-5 w-5" />
-              </span>
-            </div>
-            <div>
-              <h3 className="mb-1 fw-semibold">Settings</h3>
-              <p className="text-muted mb-0">Manage your application configuration and preferences</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PageHeader 
+        title="Settings"
+        subtitle="Manage your application configuration and preferences"
+        breadcrumbs={[
+          { label: 'Home', path: '/' },
+          { label: 'Settings', active: true }
+        ]}
+      />
 
       {/* Settings Tabs */}
       <div className="row">
         <div className="col-12">
-          <div className="card">
-            <div className="card-header border-bottom">
+          <div className="card border-0 shadow-lg">
+            <div className="card-header border-0 p-0">
               <ul className="nav nav-tabs card-header-tabs" role="tablist">
                 <li className="nav-item" role="presentation">
                   <button 
@@ -83,6 +78,8 @@ export function Settings() {
                     data-bs-target="#general" 
                     type="button" 
                     role="tab"
+                    aria-controls="general"
+                    aria-selected="true"
                   >
                     <SettingsIcon className="h-4 w-4 me-2" />
                     General
@@ -96,6 +93,8 @@ export function Settings() {
                     data-bs-target="#company" 
                     type="button" 
                     role="tab"
+                    aria-controls="company"
+                    aria-selected="false"
                   >
                     <Building2 className="h-4 w-4 me-2" />
                     Company
@@ -109,9 +108,11 @@ export function Settings() {
                     data-bs-target="#users" 
                     type="button" 
                     role="tab"
+                    aria-controls="users"
+                    aria-selected="false"
                   >
                     <Users className="h-4 w-4 me-2" />
-                    Users
+                    User/Groups
                   </button>
                 </li>
                 <li className="nav-item" role="presentation">
@@ -122,6 +123,8 @@ export function Settings() {
                     data-bs-target="#security" 
                     type="button" 
                     role="tab"
+                    aria-controls="security"
+                    aria-selected="false"
                   >
                     <Shield className="h-4 w-4 me-2" />
                     Security
@@ -388,40 +391,7 @@ export function Settings() {
 
                 {/* Users Settings Tab */}
                 <div className="tab-pane fade" id="users" role="tabpanel">
-                  <div className="row">
-                    <div className="col-lg-8">
-                      <div className="card border-0 bg-light">
-                        <div className="card-header bg-transparent border-0 pb-0">
-                          <h5 className="card-title mb-2 d-flex align-items-center">
-                            <Users className="h-5 w-5 me-2 text-primary" />
-                            User Management
-                          </h5>
-                          <p className="text-muted small mb-0">Manage user accounts and permissions</p>
-                        </div>
-                        <div className="card-body text-center py-5">
-                          <div className="avatar avatar-xl mx-auto mb-4">
-                            <span className="avatar-initial rounded bg-label-secondary">
-                              <User className="h-8 w-8" />
-                            </span>
-                          </div>
-                          <h5 className="mb-3">User Management Coming Soon</h5>
-                          <p className="text-muted mb-4">
-                            Advanced user management features will be available when authentication is fully implemented.
-                          </p>
-                          <div className="d-grid gap-2 d-md-flex justify-content-md-center">
-                            <button className="btn btn-outline-primary" disabled>
-                              <User className="h-4 w-4 me-2" />
-                              Add User
-                            </button>
-                            <button className="btn btn-outline-secondary" disabled>
-                              <Shield className="h-4 w-4 me-2" />
-                              Manage Permissions
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <UserGroupManagement />
                 </div>
 
                 {/* Security Settings Tab */}
