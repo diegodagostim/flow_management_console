@@ -11,6 +11,13 @@ import { SupplierManagement } from '@/pages/Suppliers/SupplierManagement'
 import { SupplierForm } from '@/pages/Suppliers/SupplierForm'
 import { SupplierDetails } from '@/pages/Suppliers/SupplierDetails'
 import { PurchaseOrderManagement } from '@/pages/Suppliers/PurchaseOrderManagement'
+import { FinanceDashboard } from '@/pages/Finance/FinanceDashboard'
+import { BillsManagement } from '@/pages/Finance/BillsManagement'
+import { SalesInvoices } from '@/pages/Finance/SalesInvoices'
+import { ProfitLossReport } from '@/pages/Finance/ProfitLossReport'
+import { CashflowDashboard } from '@/pages/Finance/CashflowDashboard'
+import { BusinessIntelligenceReports } from '@/pages/Finance/BusinessIntelligenceReports'
+import { AutomatedReconciliation } from '@/pages/Finance/AutomatedReconciliation'
 import { Settings } from '@/pages/Settings/Settings'
 import { TimeRegionTest } from '@/components/TimeRegionTest'
 import { LoginPage } from '@/pages/Auth/LoginPage'
@@ -29,7 +36,9 @@ import {
   Eye,
   ArrowUpRight,
   Database,
-  BarChart3
+  BarChart3,
+  FileText,
+  CreditCard
 } from 'lucide-react'
 
 function Dashboard() {
@@ -276,31 +285,223 @@ function AppContent() {
           } />
           <Route path="/finance" element={
             <ProtectedRoute>
-              <div className="row">
-                <div className="col-12">
-                  <div className="card">
-                    <div className="card-body text-center py-5">
-                      <DollarSign className="h-20 w-20 text-success mb-4" />
-                      <h4 className="mb-3">Finance Module</h4>
-                      <p className="text-muted mb-4">Coming Soon!</p>
-                      <p className="text-muted">
-                        Financial reports and management will be available shortly. 
-                        We're building comprehensive financial tools for your business.
-                      </p>
-                      <div className="mt-4">
-                        <Link to="/" className="btn btn-outline-primary me-2">
+              <FinanceDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/finance/bills" element={
+            <ProtectedRoute>
+              <BillsManagement />
+            </ProtectedRoute>
+          } />
+          <Route path="/finance/bills/new" element={
+            <ProtectedRoute>
+              <div className="container-fluid">
+                <PageHeader 
+                  title="Add New Bill"
+                  subtitle="Create a new vendor bill or expense"
+                  breadcrumbs={[
+                    { label: 'Home', path: '/' },
+                    { label: 'Finance', path: '/finance' },
+                    { label: 'Bills', path: '/finance/bills' },
+                    { label: 'New Bill', active: true }
+                  ]}
+                />
+                <div className="row">
+                  <div className="col-12">
+                    <div className="card">
+                      <div className="card-body text-center py-5">
+                        <FileText className="h-20 w-20 text-primary mb-4" />
+                        <h4 className="mb-3">Bill Form</h4>
+                        <p className="text-muted mb-4">Bill creation form will be implemented here.</p>
+                        <Link to="/finance/bills" className="btn btn-primary">
                           <ArrowUpRight className="h-4 w-4 me-1" />
-                          Back to Dashboard
-                        </Link>
-                        <Link to="/settings" className="btn btn-primary">
-                          <SettingsIcon className="h-4 w-4 me-1" />
-                          Settings
+                          Back to Bills
                         </Link>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+            </ProtectedRoute>
+          } />
+          <Route path="/finance/bills/:id" element={
+            <ProtectedRoute>
+              <div className="container-fluid">
+                <PageHeader 
+                  title="Bill Details"
+                  subtitle="View bill information and payment status"
+                  breadcrumbs={[
+                    { label: 'Home', path: '/' },
+                    { label: 'Finance', path: '/finance' },
+                    { label: 'Bills', path: '/finance/bills' },
+                    { label: 'Bill Details', active: true }
+                  ]}
+                />
+                <div className="row">
+                  <div className="col-12">
+                    <div className="card">
+                      <div className="card-body text-center py-5">
+                        <FileText className="h-20 w-20 text-primary mb-4" />
+                        <h4 className="mb-3">Bill Details</h4>
+                        <p className="text-muted mb-4">Bill details view will be implemented here.</p>
+                        <Link to="/finance/bills" className="btn btn-primary">
+                          <ArrowUpRight className="h-4 w-4 me-1" />
+                          Back to Bills
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ProtectedRoute>
+          } />
+          <Route path="/finance/bills/:id/edit" element={
+            <ProtectedRoute>
+              <div className="container-fluid">
+                <PageHeader 
+                  title="Edit Bill"
+                  subtitle="Update bill information"
+                  breadcrumbs={[
+                    { label: 'Home', path: '/' },
+                    { label: 'Finance', path: '/finance' },
+                    { label: 'Bills', path: '/finance/bills' },
+                    { label: 'Edit Bill', active: true }
+                  ]}
+                />
+                <div className="row">
+                  <div className="col-12">
+                    <div className="card">
+                      <div className="card-body text-center py-5">
+                        <FileText className="h-20 w-20 text-primary mb-4" />
+                        <h4 className="mb-3">Edit Bill</h4>
+                        <p className="text-muted mb-4">Bill edit form will be implemented here.</p>
+                        <Link to="/finance/bills" className="btn btn-primary">
+                          <ArrowUpRight className="h-4 w-4 me-1" />
+                          Back to Bills
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ProtectedRoute>
+          } />
+          <Route path="/finance/invoices" element={
+            <ProtectedRoute>
+              <SalesInvoices />
+            </ProtectedRoute>
+          } />
+          <Route path="/finance/invoices/new" element={
+            <ProtectedRoute>
+              <div className="container-fluid">
+                <PageHeader 
+                  title="Create Invoice"
+                  subtitle="Create a new sales invoice"
+                  breadcrumbs={[
+                    { label: 'Home', path: '/' },
+                    { label: 'Finance', path: '/finance' },
+                    { label: 'Invoices', path: '/finance/invoices' },
+                    { label: 'New Invoice', active: true }
+                  ]}
+                />
+                <div className="row">
+                  <div className="col-12">
+                    <div className="card">
+                      <div className="card-body text-center py-5">
+                        <CreditCard className="h-20 w-20 text-success mb-4" />
+                        <h4 className="mb-3">Invoice Form</h4>
+                        <p className="text-muted mb-4">Invoice creation form will be implemented here.</p>
+                        <Link to="/finance/invoices" className="btn btn-primary">
+                          <ArrowUpRight className="h-4 w-4 me-1" />
+                          Back to Invoices
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ProtectedRoute>
+          } />
+          <Route path="/finance/invoices/:id" element={
+            <ProtectedRoute>
+              <div className="container-fluid">
+                <PageHeader 
+                  title="Invoice Details"
+                  subtitle="View invoice information and payment status"
+                  breadcrumbs={[
+                    { label: 'Home', path: '/' },
+                    { label: 'Finance', path: '/finance' },
+                    { label: 'Invoices', path: '/finance/invoices' },
+                    { label: 'Invoice Details', active: true }
+                  ]}
+                />
+                <div className="row">
+                  <div className="col-12">
+                    <div className="card">
+                      <div className="card-body text-center py-5">
+                        <CreditCard className="h-20 w-20 text-success mb-4" />
+                        <h4 className="mb-3">Invoice Details</h4>
+                        <p className="text-muted mb-4">Invoice details view will be implemented here.</p>
+                        <Link to="/finance/invoices" className="btn btn-primary">
+                          <ArrowUpRight className="h-4 w-4 me-1" />
+                          Back to Invoices
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ProtectedRoute>
+          } />
+          <Route path="/finance/invoices/:id/edit" element={
+            <ProtectedRoute>
+              <div className="container-fluid">
+                <PageHeader 
+                  title="Edit Invoice"
+                  subtitle="Update invoice information"
+                  breadcrumbs={[
+                    { label: 'Home', path: '/' },
+                    { label: 'Finance', path: '/finance' },
+                    { label: 'Invoices', path: '/finance/invoices' },
+                    { label: 'Edit Invoice', active: true }
+                  ]}
+                />
+                <div className="row">
+                  <div className="col-12">
+                    <div className="card">
+                      <div className="card-body text-center py-5">
+                        <CreditCard className="h-20 w-20 text-success mb-4" />
+                        <h4 className="mb-3">Edit Invoice</h4>
+                        <p className="text-muted mb-4">Invoice edit form will be implemented here.</p>
+                        <Link to="/finance/invoices" className="btn btn-primary">
+                          <ArrowUpRight className="h-4 w-4 me-1" />
+                          Back to Invoices
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ProtectedRoute>
+          } />
+          <Route path="/finance/profit-loss" element={
+            <ProtectedRoute>
+              <ProfitLossReport />
+            </ProtectedRoute>
+          } />
+          <Route path="/finance/cashflow" element={
+            <ProtectedRoute>
+              <CashflowDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/finance/business-intelligence" element={
+            <ProtectedRoute>
+              <BusinessIntelligenceReports />
+            </ProtectedRoute>
+          } />
+          <Route path="/finance/reconciliation" element={
+            <ProtectedRoute>
+              <AutomatedReconciliation />
             </ProtectedRoute>
           } />
           <Route path="/watchdog" element={
