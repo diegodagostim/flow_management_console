@@ -708,12 +708,19 @@ body {
     border-bottom: 2px solid #e7eaf3;
     background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
     border-radius: 0.75rem 0.75rem 0 0;
-    padding: 0.5rem 1rem 0;
+    padding: 0;
     margin-bottom: 0;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 
   .settings-page .nav-tabs .nav-item {
     margin-right: 0.5rem;
+    margin-left: 0;
+  }
+  
+  .settings-page .nav-tabs .nav-item:first-child {
+    margin-left: 0;
   }
 
   .settings-page .nav-tabs .nav-link {
@@ -770,6 +777,11 @@ body {
 
   .settings-page .nav-tabs .nav-link.active .lucide {
     transform: scale(1.05);
+  }
+
+  /* Card body alignment */
+  .settings-page .card-body {
+    padding: 0;
   }
 
   /* Tab content styling */

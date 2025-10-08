@@ -26,7 +26,7 @@ import {
 export function Settings() {
   const dispatch = useDispatch();
   const currentAdapter = useSelector((state: RootState) => state.storage.adapter);
-  const { settings: timeRegionSettings, updateSettings: updateTimeRegionSettings } = useTimeRegion();
+  const { settings: timeRegionSettings, updateSettings: updateTimeRegionSettings, currentDateTime } = useTimeRegion();
   const [supabaseUrl, setSupabaseUrl] = useState(import.meta.env.VITE_SUPABASE_URL || '');
   const [supabaseKey, setSupabaseKey] = useState(import.meta.env.VITE_SUPABASE_ANON_KEY || '');
   const [companyData, setCompanyData] = useState({
@@ -35,6 +35,7 @@ export function Settings() {
     phone: '',
     address: ''
   });
+  const [originalTimezone, setOriginalTimezone] = useState(timeRegionSettings.timezone);
 
   const handleAdapterChange = (adapter: 'local' | 'supabase') => {
     dispatch(setAdapter(adapter))
@@ -58,6 +59,25 @@ export function Settings() {
 
   const handleSaveTimeRegion = () => {
     console.log('Time & Region settings saved:', timeRegionSettings);
+    
+    // Check if timezone was changed
+    const timezoneChanged = originalTimezone !== timeRegionSettings.timezone;
+    
+    if (timezoneChanged) {
+      // Show a brief message before refreshing
+      console.log('Timezone changed, refreshing application...');
+      
+      // Show user notification
+      alert('Timezone changed! The application will refresh to apply the new timezone settings.');
+      
+      // Update the original timezone to the new value
+      setOriginalTimezone(timeRegionSettings.timezone);
+      
+      // Small delay to ensure settings are saved
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+    }
   }
 
   return (
@@ -74,7 +94,7 @@ export function Settings() {
       <div className="row">
         <div className="col-12">
           <div className="card border-0 shadow-lg">
-            <div className="card-header border-0 p-0">
+            <div className="card-header border-0 px-0 pt-4 pb-0">
               <ul className="nav nav-tabs card-header-tabs" role="tablist">
                 <li className="nav-item" role="presentation">
                   <button 
