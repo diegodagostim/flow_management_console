@@ -16,46 +16,27 @@ export interface TimeRegionSettings {
   weekStart: string;
 }
 
-export function formatDate(date: Date, settings: TimeRegionSettings): string {
-  const { timezone, dateFormat } = settings;
+export function formatDate(date: Date | string, settings: TimeRegionSettings): string {
+  const { timezone, dateFormat, language } = settings;
+  
+  // Convert string to Date if needed
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  
+  // Handle invalid dates
+  if (isNaN(dateObj.getTime())) {
+    return 'Invalid Date';
+  }
   
   const options: Intl.DateTimeFormatOptions = {
     timeZone: timezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
   };
 
-  switch (dateFormat) {
-    case 'MM/DD/YYYY':
-      options.year = 'numeric';
-      options.month = '2-digit';
-      options.day = '2-digit';
-      break;
-    case 'DD/MM/YYYY':
-      options.year = 'numeric';
-      options.month = '2-digit';
-      options.day = '2-digit';
-      break;
-    case 'YYYY-MM-DD':
-      options.year = 'numeric';
-      options.month = '2-digit';
-      options.day = '2-digit';
-      break;
-    case 'DD-MM-YYYY':
-      options.year = 'numeric';
-      options.month = '2-digit';
-      options.day = '2-digit';
-      break;
-    case 'MM-DD-YYYY':
-      options.year = 'numeric';
-      options.month = '2-digit';
-      options.day = '2-digit';
-      break;
-    default:
-      options.year = 'numeric';
-      options.month = '2-digit';
-      options.day = '2-digit';
-  }
-
-  let formatted = new Intl.DateTimeFormat('en-US', options).format(date);
+  // Use the language setting for formatting
+  const locale = language === 'en' ? 'en-US' : `${language}-${settings.country}`;
+  let formatted = new Intl.DateTimeFormat(locale, options).format(dateObj);
   
   // Apply custom formatting based on dateFormat
   if (dateFormat === 'DD/MM/YYYY' || dateFormat === 'DD-MM-YYYY') {
@@ -69,18 +50,33 @@ export function formatDate(date: Date, settings: TimeRegionSettings): string {
     }
   } else if (dateFormat === 'YYYY-MM-DD') {
     // Ensure YYYY-MM-DD format
-    const parts = formatted.split('/');
+    const parts = formatted.split(/[\/\-]/);
     if (parts.length === 3) {
       const [month, day, year] = parts;
       formatted = `${year}-${month}-${day}`;
+    }
+  } else if (dateFormat === 'MM-DD-YYYY') {
+    // Ensure MM-DD-YYYY format
+    const parts = formatted.split(/[\/\-]/);
+    if (parts.length === 3) {
+      const [month, day, year] = parts;
+      formatted = `${month}-${day}-${year}`;
     }
   }
 
   return formatted;
 }
 
-export function formatTime(date: Date, settings: TimeRegionSettings): string {
-  const { timezone, timeFormat } = settings;
+export function formatTime(date: Date | string, settings: TimeRegionSettings): string {
+  const { timezone, timeFormat, language } = settings;
+  
+  // Convert string to Date if needed
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  
+  // Handle invalid dates
+  if (isNaN(dateObj.getTime())) {
+    return 'Invalid Time';
+  }
   
   const options: Intl.DateTimeFormatOptions = {
     timeZone: timezone,
@@ -89,16 +85,36 @@ export function formatTime(date: Date, settings: TimeRegionSettings): string {
     minute: '2-digit',
   };
 
-  return new Intl.DateTimeFormat('en-US', options).format(date);
+  // Use the language setting for formatting
+  const locale = language === 'en' ? 'en-US' : `${language}-${settings.country}`;
+  return new Intl.DateTimeFormat(locale, options).format(dateObj);
 }
 
 export function formatCurrency(amount: number, settings: TimeRegionSettings): string {
-  const { currency, language } = settings;
+  const { currency, language, country } = settings;
   
-  return new Intl.NumberFormat(language, {
+  // Use the language and country for proper locale formatting
+  const locale = language === 'en' ? 'en-US' : `${language}-${country}`;
+  
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: currency,
   }).format(amount);
+}
+
+export function formatNumber(number: number, settings: TimeRegionSettings): string {
+  const { language, country } = settings;
+  
+  // Use the language and country for proper locale formatting
+  const locale = language === 'en' ? 'en-US' : `${language}-${country}`;
+  
+  return new Intl.NumberFormat(locale).format(number);
+}
+
+export function formatDateTime(date: Date | string, settings: TimeRegionSettings): string {
+  const dateStr = formatDate(date, settings);
+  const timeStr = formatTime(date, settings);
+  return `${dateStr} ${timeStr}`;
 }
 
 export function getCurrentDateTime(settings: TimeRegionSettings): {

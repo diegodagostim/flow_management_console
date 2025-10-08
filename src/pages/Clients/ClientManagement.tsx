@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { PageHeader } from '@/components/navigation/PageHeader';
 import { useClients, useDeleteClient } from '@/hooks/useClientManagement';
+import { useTimeRegion } from '@/hooks/useTimeRegion';
 import type { Client, ClientFilters } from '@/core/models/ClientManagement';
 
 export function ClientManagement() {
@@ -38,6 +39,7 @@ export function ClientManagement() {
 
   const { data: clients = [], isLoading, error } = useClients(filters);
   const deleteClientMutation = useDeleteClient();
+  const { formatDate, formatCurrency, formatNumber } = useTimeRegion();
 
   if (error) {
     return (
@@ -384,7 +386,7 @@ export function ClientManagement() {
                           <td>
                             <small className="text-muted d-flex align-items-center">
                               <Calendar className="h-3 w-3 me-1" />
-                              {client.createdAt ? new Date(client.createdAt).toLocaleDateString() : 'N/A'}
+                              {client.createdAt ? formatDate(client.createdAt) : 'N/A'}
                             </small>
                           </td>
                           <td>

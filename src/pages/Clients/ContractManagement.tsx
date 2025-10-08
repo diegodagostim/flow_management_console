@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { PageHeader } from '@/components/navigation/PageHeader';
 import { useClient, useContractsByClient, useCreateContract, useUpdateContract, useDeleteContract } from '@/hooks/useClientManagement';
+import { useTimeRegion } from '@/hooks/useTimeRegion';
 import type { Contract, CreateContractInput, UpdateContractInput } from '@/core/models/ClientManagement';
 
 export function ContractManagement() {
@@ -46,6 +47,7 @@ export function ContractManagement() {
   const createContractMutation = useCreateContract();
   const updateContractMutation = useUpdateContract();
   const deleteContractMutation = useDeleteContract();
+  const { formatDate, formatCurrency } = useTimeRegion();
 
   const handleInputChange = (field: keyof CreateContractInput, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -238,7 +240,7 @@ export function ContractManagement() {
                   </span>
                 </div>
                 <div>
-                  <h4 className="mb-1 text-info">${totalValue.toLocaleString()}</h4>
+                  <h4 className="mb-1 text-info">{formatCurrency(totalValue)}</h4>
                   <p className="text-muted mb-0">Total Value</p>
                 </div>
               </div>
@@ -537,7 +539,7 @@ export function ContractManagement() {
                           <td>{getStatusBadge(contract.status)}</td>
                           <td>
                             <span className="fw-medium">
-                              ${contract.amount.toLocaleString()} {contract.currency}
+                              {formatCurrency(contract.amount)} {contract.currency}
                             </span>
                           </td>
                           <td>
@@ -547,12 +549,12 @@ export function ContractManagement() {
                           </td>
                           <td>
                             <small className="text-muted">
-                              {new Date(contract.startDate).toLocaleDateString()}
+                              {formatDate(contract.startDate)}
                             </small>
                           </td>
                           <td>
                             <small className="text-muted">
-                              {contract.endDate ? new Date(contract.endDate).toLocaleDateString() : 'N/A'}
+                              {contract.endDate ? formatDate(contract.endDate) : 'N/A'}
                             </small>
                           </td>
                           <td>

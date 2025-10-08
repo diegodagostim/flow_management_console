@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { PageHeader } from '@/components/navigation/PageHeader';
 import { useSupplier, usePurchaseOrdersBySupplier, useInvoicesBySupplier, useSupplierPaymentsBySupplier, useSupplierMetricsBySupplier } from '@/hooks/useSupplierManagement';
+import { useTimeRegion } from '@/hooks/useTimeRegion';
 import {
   Edit,
   Building2,
@@ -37,6 +38,7 @@ export function SupplierDetails() {
   const { data: invoices = [] } = useInvoicesBySupplier(id || '');
   const { data: payments = [] } = useSupplierPaymentsBySupplier(id || '');
   const { data: metrics = [] } = useSupplierMetricsBySupplier(id || '');
+  const { formatDate, formatCurrency, formatNumber } = useTimeRegion();
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
@@ -219,7 +221,7 @@ export function SupplierDetails() {
                   <DollarSign className="h-4 w-4" />
                 </span>
               </div>
-              <h4 className="mb-1 text-info">${totalSpent.toLocaleString()}</h4>
+              <h4 className="mb-1 text-info">{formatCurrency(totalSpent)}</h4>
               <p className="text-muted mb-0 small">Total Spent</p>
             </div>
           </div>
@@ -419,10 +421,10 @@ export function SupplierDetails() {
                             <div className="fw-medium">{order.poNumber}</div>
                             <small className="text-muted">{order.priority}</small>
                           </td>
-                          <td>{new Date(order.orderDate).toLocaleDateString()}</td>
+                          <td>{formatDate(order.orderDate)}</td>
                           <td>
                             {order.expectedDeliveryDate
-                              ? new Date(order.expectedDeliveryDate).toLocaleDateString()
+                              ? formatDate(order.expectedDeliveryDate)
                               : 'Not set'}
                           </td>
                           <td>
@@ -430,7 +432,7 @@ export function SupplierDetails() {
                               {order.status.replace('_', ' ').toUpperCase()}
                             </span>
                           </td>
-                          <td>${order.totalAmount.toLocaleString()}</td>
+                          <td>{formatCurrency(order.totalAmount)}</td>
                           <td>
                             <Link
                               to={`/suppliers/${supplier.id}/orders/${order.id}`}
@@ -481,14 +483,14 @@ export function SupplierDetails() {
                       {invoices.map((invoice) => (
                         <tr key={invoice.id}>
                           <td className="fw-medium">{invoice.invoiceNumber}</td>
-                          <td>{new Date(invoice.invoiceDate).toLocaleDateString()}</td>
-                          <td>{new Date(invoice.dueDate).toLocaleDateString()}</td>
+                          <td>{formatDate(invoice.invoiceDate)}</td>
+                          <td>{formatDate(invoice.dueDate)}</td>
                           <td>
                             <span className={`badge bg-label-${invoice.status === 'paid' ? 'success' : invoice.status === 'overdue' ? 'danger' : 'warning'}`}>
                               {invoice.status.toUpperCase()}
                             </span>
                           </td>
-                          <td>${invoice.totalAmount.toLocaleString()}</td>
+                          <td>{formatCurrency(invoice.totalAmount)}</td>
                           <td>
                             <Link
                               to={`/suppliers/${supplier.id}/invoices/${invoice.id}`}
@@ -538,8 +540,8 @@ export function SupplierDetails() {
                     <tbody>
                       {payments.map((payment) => (
                         <tr key={payment.id}>
-                          <td>{new Date(payment.paymentDate).toLocaleDateString()}</td>
-                          <td>${payment.amount.toLocaleString()}</td>
+                          <td>{formatDate(payment.paymentDate)}</td>
+                          <td>{formatCurrency(payment.amount)}</td>
                           <td>
                             <span className="badge bg-label-info">
                               {payment.method.replace('_', ' ').toUpperCase()}
@@ -584,7 +586,7 @@ export function SupplierDetails() {
                     <div key={metric.id} className="col-md-6 mb-3">
                       <div className="card border">
                         <div className="card-body">
-                          <h6 className="card-title">{new Date(metric.period).toLocaleDateString()}</h6>
+                          <h6 className="card-title">{formatDate(metric.period)}</h6>
                           <div className="row text-center">
                             <div className="col-4">
                               <div className="fw-bold text-primary">{metric.totalOrders}</div>
@@ -595,7 +597,7 @@ export function SupplierDetails() {
                               <small className="text-muted">On-Time</small>
                             </div>
                             <div className="col-4">
-                              <div className="fw-bold text-info">${metric.totalSpent.toLocaleString()}</div>
+                              <div className="fw-bold text-info">{formatCurrency(metric.totalSpent)}</div>
                               <small className="text-muted">Spent</small>
                             </div>
                           </div>

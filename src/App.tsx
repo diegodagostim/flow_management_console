@@ -12,6 +12,7 @@ import { SupplierForm } from '@/pages/Suppliers/SupplierForm'
 import { SupplierDetails } from '@/pages/Suppliers/SupplierDetails'
 import { PurchaseOrderManagement } from '@/pages/Suppliers/PurchaseOrderManagement'
 import { Settings } from '@/pages/Settings/Settings'
+import { TimeRegionTest } from '@/components/TimeRegionTest'
 import { LoginPage } from '@/pages/Auth/LoginPage'
 import { RegisterPage } from '@/pages/Auth/RegisterPage'
 import { useClients } from '@/hooks/useClientManagement'
@@ -343,6 +344,11 @@ function AppContent() {
           <Route path="/settings" element={
             <ProtectedRoute>
               <Settings />
+            </ProtectedRoute>
+          } />
+          <Route path="/test-formatting" element={
+            <ProtectedRoute>
+              <TimeRegionTest />
             </ProtectedRoute>
           } />
         </Routes>

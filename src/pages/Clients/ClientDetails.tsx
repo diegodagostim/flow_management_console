@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { PageHeader } from '@/components/navigation/PageHeader';
 import { useClient, useContractsByClient, usePaymentsByClient, useUsageMetricsByClient, useNotificationsByClient } from '@/hooks/useClientManagement';
+import { useTimeRegion } from '@/hooks/useTimeRegion';
 import type { Contract, Payment, UsageMetrics, Notification } from '@/core/models/ClientManagement';
 
 export function ClientDetails() {
@@ -35,6 +36,7 @@ export function ClientDetails() {
   const { data: payments = [] } = usePaymentsByClient(id || '');
   const { data: metrics = [] } = useUsageMetricsByClient(id || '');
   const { data: notifications = [] } = useNotificationsByClient(id || '');
+  const { formatDate, formatCurrency, formatNumber } = useTimeRegion();
 
   if (clientLoading) {
     return (
@@ -217,7 +219,7 @@ export function ClientDetails() {
                   </span>
                 </div>
                 <div>
-                  <h4 className="mb-1 text-primary">${totalRevenue.toLocaleString()}</h4>
+                  <h4 className="mb-1 text-primary">{formatCurrency(totalRevenue)}</h4>
                   <p className="text-muted mb-0">Total Revenue</p>
                 </div>
               </div>
@@ -366,7 +368,7 @@ export function ClientDetails() {
                         <span className="fw-medium">Created:</span>
                       </div>
                       <p className="text-muted ms-4">
-                        {client.createdAt ? new Date(client.createdAt).toLocaleDateString() : 'N/A'}
+                        {client.createdAt ? formatDate(client.createdAt) : 'N/A'}
                       </p>
                     </div>
                     <div className="mb-3">
@@ -426,7 +428,7 @@ export function ClientDetails() {
                                 <div>
                                   <h6 className="mb-0">{contract.name}</h6>
                                   <small className="text-muted">
-                                    {contract.startDate ? new Date(contract.startDate).toLocaleDateString() : 'N/A'}
+                                    {contract.startDate ? formatDate(contract.startDate) : 'N/A'}
                                   </small>
                                 </div>
                               </td>
@@ -436,7 +438,7 @@ export function ClientDetails() {
                                 </span>
                               </td>
                               <td>{getStatusBadge(contract.status)}</td>
-                              <td>${contract.amount.toLocaleString()}</td>
+                              <td>{formatCurrency(contract.amount)}</td>
                               <td>{contract.billingCycle}</td>
                               <td>
                                 <button className="btn btn-sm btn-outline-primary">
@@ -495,7 +497,7 @@ export function ClientDetails() {
                                   )}
                                 </div>
                               </td>
-                              <td>${payment.amount.toLocaleString()}</td>
+                              <td>{formatCurrency(payment.amount)}</td>
                               <td>{getPaymentStatusBadge(payment.status)}</td>
                               <td>
                                 <span className="badge bg-label-secondary">
@@ -503,7 +505,7 @@ export function ClientDetails() {
                                 </span>
                               </td>
                               <td>
-                                {payment.paymentDate ? new Date(payment.paymentDate).toLocaleDateString() : 'N/A'}
+                                {payment.paymentDate ? formatDate(payment.paymentDate) : 'N/A'}
                               </td>
                               <td>
                                 <button className="btn btn-sm btn-outline-primary">
@@ -555,8 +557,8 @@ export function ClientDetails() {
                           {metrics.map((metric) => (
                             <tr key={metric.id}>
                               <td>{metric.period}</td>
-                              <td>{metric.apiCalls.toLocaleString()}</td>
-                              <td>{metric.activeUsers.toLocaleString()}</td>
+                              <td>{formatNumber(metric.apiCalls)}</td>
+                              <td>{formatNumber(metric.activeUsers)}</td>
                               <td>{(metric.storageUsed / 1024).toFixed(2)} GB</td>
                               <td>{(metric.bandwidthUsed / 1024).toFixed(2)} GB</td>
                               <td>
@@ -630,7 +632,7 @@ export function ClientDetails() {
                                 </span>
                               </td>
                               <td>
-                                {notification.sentAt ? new Date(notification.sentAt).toLocaleDateString() : 'Not sent'}
+                                {notification.sentAt ? formatDate(notification.sentAt) : 'Not sent'}
                               </td>
                               <td>
                                 <button className="btn btn-sm btn-outline-primary">

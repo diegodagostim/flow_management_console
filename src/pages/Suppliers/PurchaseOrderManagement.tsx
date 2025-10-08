@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { PageHeader } from '@/components/navigation/PageHeader';
 import { usePurchaseOrdersBySupplier, useCreatePurchaseOrder, useUpdatePurchaseOrder, useDeletePurchaseOrder } from '@/hooks/useSupplierManagement';
+import { useTimeRegion } from '@/hooks/useTimeRegion';
 import type { CreatePurchaseOrderInput, UpdatePurchaseOrderInput } from '@/core/models/SupplierManagement';
 import {
   Plus,
@@ -47,6 +48,7 @@ export function PurchaseOrderManagement() {
   const createOrderMutation = useCreatePurchaseOrder();
   const updateOrderMutation = useUpdatePurchaseOrder();
   const deleteOrderMutation = useDeletePurchaseOrder();
+  const { formatDate, formatCurrency } = useTimeRegion();
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
@@ -243,15 +245,15 @@ export function PurchaseOrderManagement() {
                         <div className="fw-medium">{order.poNumber}</div>
                         <small className="text-muted">{order.items?.length || 0} items</small>
                       </td>
-                      <td>{new Date(order.orderDate).toLocaleDateString()}</td>
+                      <td>{formatDate(order.orderDate)}</td>
                       <td>
                         {order.expectedDeliveryDate
-                          ? new Date(order.expectedDeliveryDate).toLocaleDateString()
+                          ? formatDate(order.expectedDeliveryDate)
                           : 'Not set'}
                       </td>
                       <td>{getStatusBadge(order.status)}</td>
                       <td>{getPriorityBadge(order.priority)}</td>
-                      <td>${order.totalAmount.toLocaleString()}</td>
+                      <td>{formatCurrency(order.totalAmount)}</td>
                       <td>
                         <div className="dropdown">
                           <button

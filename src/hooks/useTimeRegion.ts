@@ -6,6 +6,8 @@ import {
   formatDate,
   formatTime,
   formatCurrency,
+  formatNumber,
+  formatDateTime,
   getCurrentDateTime
 } from '@/lib/utils';
 
@@ -40,6 +42,14 @@ export function useTimeRegion() {
     return formatCurrency(amount, settings);
   }, [settings]);
 
+  const formatNumberWithSettings = useCallback((number: number) => {
+    return formatNumber(number, settings);
+  }, [settings]);
+
+  const formatDateTimeWithSettings = useCallback((date: Date | string) => {
+    return formatDateTime(date, settings);
+  }, [settings]);
+
   return {
     settings,
     currentDateTime,
@@ -47,5 +57,7 @@ export function useTimeRegion() {
     formatDate: formatDateWithSettings,
     formatTime: formatTimeWithSettings,
     formatCurrency: formatCurrencyWithSettings,
+    formatNumber: formatNumberWithSettings,
+    formatDateTime: formatDateTimeWithSettings,
   };
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PageHeader } from '@/components/navigation/PageHeader';
 import { useSuppliers, useDeleteSupplier } from '@/hooks/useSupplierManagement';
+import { useTimeRegion } from '@/hooks/useTimeRegion';
 import type { SupplierFilters } from '@/core/models/SupplierManagement';
 import {
   Plus,
@@ -32,6 +33,7 @@ export function SupplierManagement() {
 
   const { data: suppliers = [], isLoading, error } = useSuppliers(filters);
   const deleteSupplierMutation = useDeleteSupplier();
+  const { formatDate, formatCurrency, formatNumber } = useTimeRegion();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
