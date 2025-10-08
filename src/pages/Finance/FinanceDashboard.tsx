@@ -4,6 +4,7 @@ import { PageHeader } from '@/components/navigation/PageHeader'
 import { useInvoicesStats } from '@/hooks/useInvoice'
 import { useBillsStats } from '@/hooks/useBill'
 import { useTransactionsStats } from '@/hooks/useTransaction'
+import { useTimeRegion } from '@/hooks/useTimeRegion'
 import { 
   DollarSign, 
   FileText, 
@@ -26,13 +27,7 @@ export function FinanceDashboard() {
   const { data: invoiceStats } = useInvoicesStats()
   const { data: billStats } = useBillsStats()
   const { data: transactionStats } = useTransactionsStats()
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(amount)
-  }
+  const { formatCurrency } = useTimeRegion()
 
   const formatPercentage = (value: number) => {
     return `${value.toFixed(1)}%`

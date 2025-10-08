@@ -27,6 +27,7 @@ export function ContractManagement() {
   const { id } = useParams<{ id: string }>();
   const [showForm, setShowForm] = useState(false);
   const [editingContract, setEditingContract] = useState<Contract | null>(null);
+  const { settings } = useTimeRegion();
   const [formData, setFormData] = useState<CreateContractInput>({
     clientId: id || '',
     name: '',
@@ -36,7 +37,7 @@ export function ContractManagement() {
     endDate: '',
     billingCycle: 'monthly',
     amount: 0,
-    currency: 'USD',
+    currency: settings.currency,
     autoRenew: true,
     terms: '',
     notes: '',
@@ -75,7 +76,7 @@ export function ContractManagement() {
         endDate: '',
         billingCycle: 'monthly',
         amount: 0,
-        currency: 'USD',
+        currency: settings.currency,
         autoRenew: true,
         terms: '',
         notes: '',

@@ -3,6 +3,7 @@ import { PageHeader } from '@/components/navigation/PageHeader'
 import { useInvoicesStats } from '@/hooks/useInvoice'
 import { useBillsStats, useBills } from '@/hooks/useBill'
 import { useTransactionsStats, useTransactions } from '@/hooks/useTransaction'
+import { useTimeRegion } from '@/hooks/useTimeRegion'
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -33,6 +34,7 @@ export function ProfitLossReport() {
   const { data: invoiceStats } = useInvoicesStats()
   const { data: billStats } = useBillsStats()
   const { data: transactionStats } = useTransactionsStats()
+  const { formatCurrency } = useTimeRegion()
   
   const { data: allBills = [] } = useBills()
   const { data: allTransactions = [] } = useTransactions()
@@ -116,12 +118,6 @@ export function ProfitLossReport() {
     }
   }, [profitLossData])
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(amount)
-  }
 
   const formatPercentage = (value: number) => {
     return `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`

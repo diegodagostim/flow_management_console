@@ -4,6 +4,7 @@ import { useInvoicesStats, useInvoices } from '@/hooks/useInvoice'
 import { useBillsStats, useBills } from '@/hooks/useBill'
 import { useTransactionsStats, useTransactions } from '@/hooks/useTransaction'
 import { useClients } from '@/hooks/useClientManagement'
+import { useTimeRegion } from '@/hooks/useTimeRegion'
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -57,6 +58,7 @@ export function BusinessIntelligenceReports() {
   const { data: allBills = [] } = useBills()
   const { data: allTransactions = [] } = useTransactions()
   const { data: clients = [] } = useClients()
+  const { formatCurrency } = useTimeRegion()
 
   // Calculate KPI metrics
   const kpiMetrics = useMemo((): KPIMetric[] => {
@@ -180,12 +182,6 @@ export function BusinessIntelligenceReports() {
       .sort((a, b) => b.amount - a.amount)
   }, [transactionStats, allTransactions, billStats])
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(amount)
-  }
 
   const formatPercentage = (value: number) => {
     return `${value.toFixed(1)}%`

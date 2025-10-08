@@ -99,28 +99,13 @@ export function Settings() {
                 <li className="nav-item" role="presentation">
                   <button 
                     className="nav-link active" 
-                    id="general-tab" 
-                    data-bs-toggle="tab" 
-                    data-bs-target="#general" 
-                    type="button" 
-                    role="tab"
-                    aria-controls="general"
-                    aria-selected="true"
-                  >
-                    <SettingsIcon className="h-4 w-4 me-2" />
-                    General
-                  </button>
-                </li>
-                <li className="nav-item" role="presentation">
-                  <button 
-                    className="nav-link" 
                     id="company-tab" 
                     data-bs-toggle="tab" 
                     data-bs-target="#company" 
                     type="button" 
                     role="tab"
                     aria-controls="company"
-                    aria-selected="false"
+                    aria-selected="true"
                   >
                     <Building2 className="h-4 w-4 me-2" />
                     Company
@@ -156,120 +141,26 @@ export function Settings() {
                     Time & Region
                   </button>
                 </li>
+                <li className="nav-item" role="presentation">
+                  <button 
+                    className="nav-link" 
+                    id="general-tab" 
+                    data-bs-toggle="tab" 
+                    data-bs-target="#general" 
+                    type="button" 
+                    role="tab"
+                    aria-controls="general"
+                    aria-selected="false"
+                  >
+                    <Database className="h-4 w-4 me-2" />
+                    Database Switch
+                  </button>
+                </li>
               </ul>
             </div>
             <div className="card-body">
               <div className="tab-content" id="settingsTabContent">
-                <div className="tab-pane fade show active" id="general" role="tabpanel">
-                  <div className="row">
-                    <div className="col-lg-8 mb-4">
-                      <div className="mb-4">
-                        <h5 className="mb-2 d-flex align-items-center">
-                            <Database className="h-5 w-5 me-2 text-primary" />
-                            Data Storage Configuration
-                          </h5>
-                        <p className="text-muted small mb-3">Choose how your data is stored and managed</p>
-                          <div className="row">
-                            <div className="col-md-6 mb-4">
-                              <div className="card h-100 border-0 shadow-sm">
-                                <div className="card-body text-center">
-                                  <div className="avatar avatar-xl mx-auto mb-3">
-                                  <span className="avatar-initial rounded bg-label-primary">
-                                      <Server className="h-6 w-6" />
-                                    </span>
-                                  </div>
-                                  <h6 className="mb-2">Local Storage</h6>
-                                <p className="text-muted small mb-3">Store data in your browser's local storage</p>
-                                  <div className="form-check d-flex justify-content-center">
-                                    <input
-                                      className="form-check-input"
-                                      type="radio"
-                                      name="storage"
-                                      id="local"
-                                      value="local"
-                                      checked={currentAdapter === 'local'}
-                                      onChange={() => handleAdapterChange('local')}
-                                    />
-                                    <label className="form-check-label ms-2" htmlFor="local">
-                                      Use Local Storage
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-md-6 mb-4">
-                              <div className="card h-100 border-0 shadow-sm">
-                                <div className="card-body text-center">
-                                  <div className="avatar avatar-xl mx-auto mb-3">
-                                    <span className="avatar-initial rounded bg-label-success">
-                                      <Globe className="h-6 w-6" />
-                                    </span>
-                                  </div>
-                                  <h6 className="mb-2">Supabase Cloud</h6>
-                                  <p className="text-muted small mb-3">Store data in the cloud</p>
-                                  <div className="form-check d-flex justify-content-center">
-                                    <input
-                                      className="form-check-input"
-                                      type="radio"
-                                      name="storage"
-                                      id="supabase"
-                                      value="supabase"
-                                      checked={currentAdapter === 'supabase'}
-                                      onChange={() => handleAdapterChange('supabase')}
-                                    />
-                                    <label className="form-check-label ms-2" htmlFor="supabase">
-                                      Use Supabase
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          {currentAdapter === 'supabase' && (
-                            <div className="mt-4">
-                              <h6 className="mb-3 d-flex align-items-center">
-                                <Key className="h-4 w-4 me-2" />
-                                Supabase Configuration
-                              </h6>
-                              <div className="row">
-                                <div className="col-md-6 mb-3">
-                                  <label htmlFor="supabase-url" className="form-label">Project URL</label>
-                                  <input
-                                    type="url"
-                                    className="form-control"
-                                    id="supabase-url"
-                                    value={supabaseUrl}
-                                    onChange={(e) => setSupabaseUrl(e.target.value)}
-                                  placeholder="e.g., https://your-project-id.supabase.co"
-                                  />
-                                </div>
-                                <div className="col-md-6 mb-3">
-                                  <label htmlFor="supabase-key" className="form-label">Anon Key</label>
-                                  <input
-                                  type="text"
-                                    className="form-control"
-                                    id="supabase-key"
-                                    value={supabaseKey}
-                                    onChange={(e) => setSupabaseKey(e.target.value)}
-                                    placeholder="Your Supabase anon key"
-                                  />
-                                </div>
-                              </div>
-                            <div className="d-flex justify-content-end">
-                              <button className="btn btn-primary" onClick={handleSaveSupabase}>
-                                <Save className="h-4 w-4 me-2" />
-                                Save Supabase Config
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="tab-pane fade" id="company" role="tabpanel">
+                <div className="tab-pane fade show active" id="company" role="tabpanel">
                   <div className="row">
                     <div className="col-lg-8">
                       <div className="mb-4">
@@ -1022,6 +913,115 @@ export function Settings() {
                             <small className="text-muted">{timeRegionSettings.language.toUpperCase()}</small>
                           </div>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="tab-pane fade" id="general" role="tabpanel">
+                  <div className="row">
+                    <div className="col-lg-8 mb-4">
+                      <div className="mb-4">
+                        <h5 className="mb-2 d-flex align-items-center">
+                            <Database className="h-5 w-5 me-2 text-primary" />
+                            Data Storage Configuration
+                          </h5>
+                        <p className="text-muted small mb-3">Choose how your data is stored and managed</p>
+                          <div className="row">
+                            <div className="col-md-6 mb-4">
+                              <div className="card h-100 border-0 shadow-sm">
+                                <div className="card-body text-center">
+                                  <div className="avatar avatar-xl mx-auto mb-3">
+                                  <span className="avatar-initial rounded bg-label-primary">
+                                      <Server className="h-6 w-6" />
+                                    </span>
+                                  </div>
+                                  <h6 className="mb-2">Local Storage</h6>
+                                <p className="text-muted small mb-3">Store data in your browser's local storage</p>
+                                  <div className="form-check d-flex justify-content-center">
+                                    <input
+                                      className="form-check-input"
+                                      type="radio"
+                                      name="storage"
+                                      id="local"
+                                      value="local"
+                                      checked={currentAdapter === 'local'}
+                                      onChange={() => handleAdapterChange('local')}
+                                    />
+                                    <label className="form-check-label ms-2" htmlFor="local">
+                                      Use Local Storage
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="col-md-6 mb-4">
+                              <div className="card h-100 border-0 shadow-sm">
+                                <div className="card-body text-center">
+                                  <div className="avatar avatar-xl mx-auto mb-3">
+                                    <span className="avatar-initial rounded bg-label-success">
+                                      <Globe className="h-6 w-6" />
+                                    </span>
+                                  </div>
+                                  <h6 className="mb-2">Supabase Cloud</h6>
+                                  <p className="text-muted small mb-3">Store data in the cloud</p>
+                                  <div className="form-check d-flex justify-content-center">
+                                    <input
+                                      className="form-check-input"
+                                      type="radio"
+                                      name="storage"
+                                      id="supabase"
+                                      value="supabase"
+                                      checked={currentAdapter === 'supabase'}
+                                      onChange={() => handleAdapterChange('supabase')}
+                                    />
+                                    <label className="form-check-label ms-2" htmlFor="supabase">
+                                      Use Supabase
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {currentAdapter === 'supabase' && (
+                            <div className="mt-4">
+                              <h6 className="mb-3 d-flex align-items-center">
+                                <Key className="h-4 w-4 me-2" />
+                                Supabase Configuration
+                              </h6>
+                              <div className="row">
+                                <div className="col-md-6 mb-3">
+                                  <label htmlFor="supabase-url" className="form-label">Project URL</label>
+                                  <input
+                                    type="url"
+                                    className="form-control"
+                                    id="supabase-url"
+                                    value={supabaseUrl}
+                                    onChange={(e) => setSupabaseUrl(e.target.value)}
+                                  placeholder="e.g., https://your-project-id.supabase.co"
+                                  />
+                                </div>
+                                <div className="col-md-6 mb-3">
+                                  <label htmlFor="supabase-key" className="form-label">Anon Key</label>
+                                  <input
+                                  type="text"
+                                    className="form-control"
+                                    id="supabase-key"
+                                    value={supabaseKey}
+                                    onChange={(e) => setSupabaseKey(e.target.value)}
+                                    placeholder="Your Supabase anon key"
+                                  />
+                                </div>
+                              </div>
+                            <div className="d-flex justify-content-end">
+                              <button className="btn btn-primary" onClick={handleSaveSupabase}>
+                                <Save className="h-4 w-4 me-2" />
+                                Save Supabase Config
+                              </button>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

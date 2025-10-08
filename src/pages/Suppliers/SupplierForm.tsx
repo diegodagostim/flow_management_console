@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PageHeader } from '@/components/navigation/PageHeader';
 import { useSupplier, useCreateSupplier, useUpdateSupplier } from '@/hooks/useSupplierManagement';
+import { useTimeRegion } from '@/hooks/useTimeRegion';
 import type { CreateSupplierInput, UpdateSupplierInput } from '@/core/models/SupplierManagement';
 import {
   Save,
@@ -26,6 +27,7 @@ export function SupplierForm() {
   const { data: supplier, isLoading } = useSupplier(id || '');
   const createSupplierMutation = useCreateSupplier();
   const updateSupplierMutation = useUpdateSupplier();
+  const { settings } = useTimeRegion();
 
   const [formData, setFormData] = useState<CreateSupplierInput>({
     name: '',
@@ -43,7 +45,7 @@ export function SupplierForm() {
     status: 'active',
     category: 'other',
     paymentTerms: 'net_30',
-    currency: 'USD',
+    currency: settings.currency,
     rating: undefined,
     notes: '',
   });

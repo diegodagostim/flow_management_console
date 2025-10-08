@@ -28,6 +28,7 @@ export function PurchaseOrderManagement() {
   const { id: supplierId } = useParams<{ id: string }>();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingOrder, setEditingOrder] = useState<string | null>(null);
+  const { settings } = useTimeRegion();
   const [formData, setFormData] = useState<CreatePurchaseOrderInput>({
     supplierId: supplierId || '',
     poNumber: '',
@@ -36,7 +37,7 @@ export function PurchaseOrderManagement() {
     status: 'draft',
     priority: 'medium',
     totalAmount: 0,
-    currency: 'USD',
+    currency: settings.currency,
     shippingAddress: '',
     billingAddress: '',
     terms: '',
@@ -102,7 +103,7 @@ export function PurchaseOrderManagement() {
         status: 'draft',
         priority: 'medium',
         totalAmount: 0,
-        currency: 'USD',
+        currency: settings.currency,
         shippingAddress: '',
         billingAddress: '',
         terms: '',

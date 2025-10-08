@@ -3,6 +3,7 @@ import { PageHeader } from '@/components/navigation/PageHeader'
 import { useTransactionsStats, useTransactions } from '@/hooks/useTransaction'
 import { useInvoicesStats, useOverdueInvoices } from '@/hooks/useInvoice'
 import { useBillsStats, useOverdueBills } from '@/hooks/useBill'
+import { useTimeRegion } from '@/hooks/useTimeRegion'
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -39,6 +40,7 @@ export function CashflowDashboard() {
   const { data: billStats } = useBillsStats()
   const { data: overdueInvoices = [] } = useOverdueInvoices()
   const { data: overdueBills = [] } = useOverdueBills()
+  const { formatCurrency } = useTimeRegion()
 
   // Calculate cashflow data
   const cashflowData = useMemo(() => {
@@ -136,12 +138,6 @@ export function CashflowDashboard() {
     }
   }, [overdueInvoices, overdueBills])
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(amount)
-  }
 
   const formatPercentage = (value: number) => {
     return `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`

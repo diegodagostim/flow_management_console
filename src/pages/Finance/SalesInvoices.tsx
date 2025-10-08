@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageHeader } from '@/components/navigation/PageHeader'
 import { useInvoices, useInvoicesStats, useOverdueInvoices } from '@/hooks/useInvoice'
+import { useTimeRegion } from '@/hooks/useTimeRegion'
 import { 
   Plus, 
   Search, 
@@ -32,6 +33,7 @@ export function SalesInvoices() {
   
   const { data: stats } = useInvoicesStats()
   const { data: overdueInvoices = [] } = useOverdueInvoices()
+  const { formatCurrency } = useTimeRegion()
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -57,12 +59,6 @@ export function SalesInvoices() {
     }
   }
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(amount)
-  }
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {

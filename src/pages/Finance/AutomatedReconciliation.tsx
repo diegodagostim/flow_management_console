@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react'
 import { PageHeader } from '@/components/navigation/PageHeader'
 import { useTransactions, useUnreconciledTransactions } from '@/hooks/useTransaction'
 import { useMarkTransactionAsReconciled } from '@/hooks/useTransaction'
+import { useTimeRegion } from '@/hooks/useTimeRegion'
 import { 
   RefreshCw, 
   CheckCircle, 
@@ -54,6 +55,7 @@ export function AutomatedReconciliation() {
   const { data: allTransactions = [] } = useTransactions()
   const { data: unreconciledTransactions = [] } = useUnreconciledTransactions()
   const markAsReconciled = useMarkTransactionAsReconciled()
+  const { formatCurrency } = useTimeRegion()
 
   // Mock reconciliation rules
   const reconciliationRules: ReconciliationRule[] = [
@@ -161,12 +163,6 @@ export function AutomatedReconciliation() {
     }
   }, [externalTransactions])
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(amount)
-  }
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {

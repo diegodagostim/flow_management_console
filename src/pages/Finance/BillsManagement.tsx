@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageHeader } from '@/components/navigation/PageHeader'
 import { useBills, useBillsStats, useOverdueBills } from '@/hooks/useBill'
+import { useTimeRegion } from '@/hooks/useTimeRegion'
 import { 
   Plus, 
   Search, 
@@ -31,6 +32,7 @@ export function BillsManagement() {
   
   const { data: stats } = useBillsStats()
   const { data: overdueBills = [] } = useOverdueBills()
+  const { formatCurrency } = useTimeRegion()
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -54,12 +56,6 @@ export function BillsManagement() {
     }
   }
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(amount)
-  }
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
