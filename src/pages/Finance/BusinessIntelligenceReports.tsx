@@ -220,7 +220,7 @@ export function BusinessIntelligenceReports() {
         title="Business Intelligence Reports"
         subtitle="Advanced analytics and insights for your business"
         breadcrumbs={[
-          { label: 'Home', path: '/' },
+          { label: 'Home', path: '/dashboard' },
           { label: 'Finance', path: '/finance' },
           { label: 'BI Reports', active: true }
         ]}

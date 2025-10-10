@@ -62,7 +62,7 @@ export function ClientList() {
         title="Clients"
         subtitle="Manage your client relationships"
         breadcrumbs={[
-          { label: 'Home', path: '/' },
+          { label: 'Home', path: '/dashboard' },
           { label: 'Clients', active: true }
         ]}
       >

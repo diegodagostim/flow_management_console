@@ -99,7 +99,7 @@ export function SupplierManagement() {
           title="Supplier Management"
           subtitle="Manage your suppliers and vendor relationships"
           breadcrumbs={[
-            { label: 'Home', path: '/' },
+            { label: 'Home', path: '/dashboard' },
             { label: 'Suppliers', active: true }
           ]}
         />
@@ -129,7 +129,7 @@ export function SupplierManagement() {
         title="Supplier Management"
         subtitle="Manage your suppliers and vendor relationships"
         breadcrumbs={[
-          { label: 'Home', path: '/' },
+          { label: 'Home', path: '/dashboard' },
           { label: 'Suppliers', active: true }
         ]}
       />

@@ -152,7 +152,7 @@ export function ClientForm() {
         title={isEditing ? 'Edit Client' : 'Add New Client'}
         subtitle={isEditing ? 'Update client information' : 'Create a new client profile'}
         breadcrumbs={[
-          { label: 'Home', path: '/' },
+          { label: 'Home', path: '/dashboard' },
           { label: 'Clients', path: '/clients' },
           { label: isEditing ? 'Edit Client' : 'Add Client', active: true }
         ]}

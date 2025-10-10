@@ -147,7 +147,7 @@ export function SupplierForm() {
           title={isEditing ? 'Edit Supplier' : 'Add Supplier'}
           subtitle={isEditing ? 'Update supplier information' : 'Create a new supplier'}
           breadcrumbs={[
-            { label: 'Home', path: '/' },
+            { label: 'Home', path: '/dashboard' },
             { label: 'Suppliers', path: '/suppliers' },
             { label: isEditing ? 'Edit' : 'Add', active: true }
           ]}
@@ -168,7 +168,7 @@ export function SupplierForm() {
         title={isEditing ? 'Edit Supplier' : 'Add Supplier'}
         subtitle={isEditing ? 'Update supplier information' : 'Create a new supplier'}
         breadcrumbs={[
-          { label: 'Home', path: '/' },
+          { label: 'Home', path: '/dashboard' },
           { label: 'Suppliers', path: '/suppliers' },
           { label: isEditing ? 'Edit' : 'Add', active: true }
         ]}

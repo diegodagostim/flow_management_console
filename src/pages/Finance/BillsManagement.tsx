@@ -72,7 +72,7 @@ export function BillsManagement() {
         title="Bills & Expenses"
         subtitle="Manage your business expenses and vendor bills"
         breadcrumbs={[
-          { label: 'Home', path: '/' },
+          { label: 'Home', path: '/dashboard' },
           { label: 'Finance', path: '/finance' },
           { label: 'Bills', active: true }
         ]}

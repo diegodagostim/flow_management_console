@@ -136,7 +136,7 @@ export function ClientDetails() {
         title={client.name}
         subtitle={`${client.company} • ${client.email}`}
         breadcrumbs={[
-          { label: 'Home', path: '/' },
+          { label: 'Home', path: '/dashboard' },
           { label: 'Clients', path: '/clients' },
           { label: client.name, active: true }
         ]}

@@ -168,7 +168,7 @@ export function ContractManagement() {
         title={`Contracts - ${client?.name || 'Client'}`}
         subtitle="Manage client contracts and subscriptions"
         breadcrumbs={[
-          { label: 'Home', path: '/' },
+          { label: 'Home', path: '/dashboard' },
           { label: 'Clients', path: '/clients' },
           { label: client?.name || 'Client', path: `/clients/${id}` },
           { label: 'Contracts', active: true }

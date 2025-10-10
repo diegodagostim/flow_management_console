@@ -48,7 +48,7 @@ export function ClientManagement() {
           title="Client Management"
           subtitle="Manage your clients and customer relationships"
           breadcrumbs={[
-            { label: 'Home', path: '/' },
+            { label: 'Home', path: '/dashboard' },
             { label: 'Clients', active: true }
           ]}
         />
@@ -128,7 +128,7 @@ export function ClientManagement() {
         title="Client Management"
         subtitle="Manage your clients, contracts, billing, and analytics"
         breadcrumbs={[
-          { label: 'Home', path: '/' },
+          { label: 'Home', path: '/dashboard' },
           { label: 'Clients', active: true }
         ]}
       />

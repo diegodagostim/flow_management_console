@@ -221,7 +221,7 @@ export function AutomatedReconciliation() {
         title="Automated Reconciliation"
         subtitle="Automatically match transactions with payment processor data"
         breadcrumbs={[
-          { label: 'Home', path: '/' },
+          { label: 'Home', path: '/dashboard' },
           { label: 'Finance', path: '/finance' },
           { label: 'Reconciliation', active: true }
         ]}

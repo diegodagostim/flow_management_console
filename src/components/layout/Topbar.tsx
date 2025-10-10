@@ -23,7 +23,7 @@ export function Topbar() {
       <div className="container-xxl d-flex align-items-center justify-content-between py-2">
         {/* Logo and Title - Left */}
         <div className="d-flex align-items-center">
-          <Link to="/" className="text-decoration-none">
+          <Link to="/dashboard" className="text-decoration-none">
             <FlowLogoAlt size={32} showText={true} />
           </Link>
         </div>

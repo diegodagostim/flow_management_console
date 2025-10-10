@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useAuth } from '@/hooks/useAuth'
 import { Mail, Lock, Eye, EyeOff, UserPlus } from 'lucide-react'
+import { FlowLogo } from '@/components/icons/FlowLogo'
 
 const registerSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -38,7 +39,7 @@ export function RegisterPage() {
     setError(null)
     try {
       await signUp(data.email, data.password)
-      navigate('/')
+      navigate('/dashboard')
     } catch (err) {
       setError('Failed to register. Please try again.')
       console.error('Registration error:', err)
@@ -56,10 +57,8 @@ export function RegisterPage() {
               <div className="card-body p-5">
                 {/* Header */}
                 <div className="text-center mb-4">
-                  <div className="avatar avatar-xl mx-auto mb-3">
-                    <span className="avatar-initial rounded bg-success">
-                      <UserPlus className="h-8 w-8 text-white" />
-                    </span>
+                  <div className="mb-3">
+                    <FlowLogo className="h-12 w-auto mx-auto text-success" />
                   </div>
                   <h4 className="card-title mb-2">Create Your Account</h4>
                   <p className="text-muted">Get started with Flow Management Console</p>

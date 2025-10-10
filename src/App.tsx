@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { AppProviders } from './app/providers'
 import { ProtectedRoute } from '@/components/common/ProtectedRoute'
+import { ProtectedLayout } from '@/components/common/ProtectedLayout'
+import { AuthRedirect } from '@/components/common/AuthRedirect'
 import { ErrorBoundary } from '@/components/common/ErrorBoundary'
 import { SneatLayout } from '@/components/layout/SneatLayout'
 import { ClientManagement } from '@/pages/Clients/ClientManagement'
@@ -24,6 +26,7 @@ import { MultiTenancyBilling } from '@/pages/Billing/MultiTenancyBilling'
 import { TimeRegionTest } from '@/components/TimeRegionTest'
 import { LoginPage } from '@/pages/Auth/LoginPage'
 import { RegisterPage } from '@/pages/Auth/RegisterPage'
+import { ForgotPasswordPage } from '@/pages/Auth/ForgotPasswordPage'
 import { useClients } from '@/hooks/useClientManagement'
 import { useSuppliers } from '@/hooks/useSupplierManagement'
 import { PageHeader } from '@/components/navigation/PageHeader'
@@ -66,7 +69,7 @@ function Dashboard() {
         title="Dashboard"
         subtitle="Overview of your business metrics"
         breadcrumbs={[
-          { label: 'Home', path: '/', active: true }
+          { label: 'Home', path: '/dashboard', active: true }
         ]}
       />
 
@@ -282,90 +285,96 @@ function Dashboard() {
 function AppContent() {
   return (
     <Router>
-      <SneatLayout>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } />
-          <Route path="/clients" element={
-            <ProtectedRoute>
-              <ErrorBoundary>
-                <ClientManagement />
-              </ErrorBoundary>
-            </ProtectedRoute>
-          } />
-          <Route path="/clients/new" element={
-            <ProtectedRoute>
-              <ClientForm />
-            </ProtectedRoute>
-          } />
-          <Route path="/clients/:id" element={
-            <ProtectedRoute>
-              <ClientDetails />
-            </ProtectedRoute>
-          } />
-          <Route path="/clients/:id/edit" element={
-            <ProtectedRoute>
-              <ClientForm />
-            </ProtectedRoute>
-          } />
-          <Route path="/clients/:id/contracts" element={
-            <ProtectedRoute>
-              <ContractManagement />
-            </ProtectedRoute>
-          } />
-          <Route path="/suppliers" element={
-            <ProtectedRoute>
-              <SupplierManagement />
-            </ProtectedRoute>
-          } />
-          <Route path="/suppliers/new" element={
-            <ProtectedRoute>
-              <SupplierForm />
-            </ProtectedRoute>
-          } />
-          <Route path="/suppliers/:id" element={
-            <ProtectedRoute>
-              <SupplierDetails />
-            </ProtectedRoute>
-          } />
-          <Route path="/suppliers/:id/edit" element={
-            <ProtectedRoute>
-              <SupplierForm />
-            </ProtectedRoute>
-          } />
-          <Route path="/suppliers/:id/orders" element={
-            <ProtectedRoute>
-              <PurchaseOrderManagement />
-            </ProtectedRoute>
-          } />
-          <Route path="/suppliers/:id/orders/new" element={
-            <ProtectedRoute>
-              <PurchaseOrderManagement />
-            </ProtectedRoute>
-          } />
-          <Route path="/finance" element={
-            <ProtectedRoute>
-              <FinanceDashboard />
-            </ProtectedRoute>
-          } />
-          <Route path="/finance/bills" element={
-            <ProtectedRoute>
-              <BillsManagement />
-            </ProtectedRoute>
-          } />
-          <Route path="/finance/bills/new" element={
-            <ProtectedRoute>
-              <div className="container-fluid">
+      <Routes>
+        {/* Root route - handles initial authentication state */}
+        <Route path="/" element={<AuthRedirect />} />
+        
+        {/* Public Routes - No Layout */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        
+        {/* Protected Routes - With Layout */}
+        <Route path="/dashboard" element={
+          <ProtectedLayout>
+            <Dashboard />
+          </ProtectedLayout>
+        } />
+        <Route path="/clients" element={
+          <ProtectedLayout>
+            <ErrorBoundary>
+              <ClientManagement />
+            </ErrorBoundary>
+          </ProtectedLayout>
+        } />
+        <Route path="/clients/new" element={
+          <ProtectedLayout>
+            <ClientForm />
+          </ProtectedLayout>
+        } />
+        <Route path="/clients/:id" element={
+          <ProtectedLayout>
+            <ClientDetails />
+          </ProtectedLayout>
+        } />
+        <Route path="/clients/:id/edit" element={
+          <ProtectedLayout>
+            <ClientForm />
+          </ProtectedLayout>
+        } />
+        <Route path="/clients/:id/contracts" element={
+          <ProtectedLayout>
+            <ContractManagement />
+          </ProtectedLayout>
+        } />
+        <Route path="/suppliers" element={
+          <ProtectedLayout>
+            <SupplierManagement />
+          </ProtectedLayout>
+        } />
+        <Route path="/suppliers/new" element={
+          <ProtectedLayout>
+            <SupplierForm />
+          </ProtectedLayout>
+        } />
+        <Route path="/suppliers/:id" element={
+          <ProtectedLayout>
+            <SupplierDetails />
+          </ProtectedLayout>
+        } />
+        <Route path="/suppliers/:id/edit" element={
+          <ProtectedLayout>
+            <SupplierForm />
+          </ProtectedLayout>
+        } />
+        <Route path="/suppliers/:id/orders" element={
+          <ProtectedLayout>
+            <PurchaseOrderManagement />
+          </ProtectedLayout>
+        } />
+        <Route path="/suppliers/:id/orders/new" element={
+          <ProtectedLayout>
+            <PurchaseOrderManagement />
+          </ProtectedLayout>
+        } />
+        <Route path="/finance" element={
+          <ProtectedLayout>
+            <FinanceDashboard />
+          </ProtectedLayout>
+        } />
+        <Route path="/finance/bills" element={
+          <ProtectedLayout>
+            <BillsManagement />
+          </ProtectedLayout>
+        } />
+        <Route path="/finance/bills/new" element={
+          <ProtectedLayout>
+            <div className="container-fluid">
                 <PageHeader 
                   title="Add New Bill"
                   subtitle="Create a new vendor bill or expense"
                   breadcrumbs={[
-                    { label: 'Home', path: '/' },
+                    { label: 'Home', path: '/dashboard' },
                     { label: 'Finance', path: '/finance' },
                     { label: 'Bills', path: '/finance/bills' },
                     { label: 'New Bill', active: true }
@@ -387,16 +396,16 @@ function AppContent() {
                   </div>
                 </div>
               </div>
-            </ProtectedRoute>
-          } />
+          </ProtectedLayout>
+        } />
           <Route path="/finance/bills/:id" element={
-            <ProtectedRoute>
+          <ProtectedLayout>
               <div className="container-fluid">
                 <PageHeader 
                   title="Bill Details"
                   subtitle="View bill information and payment status"
                   breadcrumbs={[
-                    { label: 'Home', path: '/' },
+                    { label: 'Home', path: '/dashboard' },
                     { label: 'Finance', path: '/finance' },
                     { label: 'Bills', path: '/finance/bills' },
                     { label: 'Bill Details', active: true }
@@ -418,16 +427,16 @@ function AppContent() {
                   </div>
                 </div>
               </div>
-            </ProtectedRoute>
-          } />
+          </ProtectedLayout>
+        } />
           <Route path="/finance/bills/:id/edit" element={
-            <ProtectedRoute>
+          <ProtectedLayout>
               <div className="container-fluid">
                 <PageHeader 
                   title="Edit Bill"
                   subtitle="Update bill information"
                   breadcrumbs={[
-                    { label: 'Home', path: '/' },
+                    { label: 'Home', path: '/dashboard' },
                     { label: 'Finance', path: '/finance' },
                     { label: 'Bills', path: '/finance/bills' },
                     { label: 'Edit Bill', active: true }
@@ -449,21 +458,21 @@ function AppContent() {
                   </div>
                 </div>
               </div>
-            </ProtectedRoute>
-          } />
+          </ProtectedLayout>
+        } />
           <Route path="/finance/invoices" element={
-            <ProtectedRoute>
+          <ProtectedLayout>
               <SalesInvoices />
-            </ProtectedRoute>
-          } />
+          </ProtectedLayout>
+        } />
           <Route path="/finance/invoices/new" element={
-            <ProtectedRoute>
+          <ProtectedLayout>
               <div className="container-fluid">
                 <PageHeader 
                   title="Create Invoice"
                   subtitle="Create a new sales invoice"
                   breadcrumbs={[
-                    { label: 'Home', path: '/' },
+                    { label: 'Home', path: '/dashboard' },
                     { label: 'Finance', path: '/finance' },
                     { label: 'Invoices', path: '/finance/invoices' },
                     { label: 'New Invoice', active: true }
@@ -485,16 +494,16 @@ function AppContent() {
                   </div>
                 </div>
               </div>
-            </ProtectedRoute>
-          } />
+          </ProtectedLayout>
+        } />
           <Route path="/finance/invoices/:id" element={
-            <ProtectedRoute>
+          <ProtectedLayout>
               <div className="container-fluid">
                 <PageHeader 
                   title="Invoice Details"
                   subtitle="View invoice information and payment status"
                   breadcrumbs={[
-                    { label: 'Home', path: '/' },
+                    { label: 'Home', path: '/dashboard' },
                     { label: 'Finance', path: '/finance' },
                     { label: 'Invoices', path: '/finance/invoices' },
                     { label: 'Invoice Details', active: true }
@@ -516,16 +525,16 @@ function AppContent() {
                   </div>
                 </div>
               </div>
-            </ProtectedRoute>
-          } />
+          </ProtectedLayout>
+        } />
           <Route path="/finance/invoices/:id/edit" element={
-            <ProtectedRoute>
+          <ProtectedLayout>
               <div className="container-fluid">
                 <PageHeader 
                   title="Edit Invoice"
                   subtitle="Update invoice information"
                   breadcrumbs={[
-                    { label: 'Home', path: '/' },
+                    { label: 'Home', path: '/dashboard' },
                     { label: 'Finance', path: '/finance' },
                     { label: 'Invoices', path: '/finance/invoices' },
                     { label: 'Edit Invoice', active: true }
@@ -547,36 +556,36 @@ function AppContent() {
                   </div>
                 </div>
               </div>
-            </ProtectedRoute>
-          } />
+          </ProtectedLayout>
+        } />
           <Route path="/finance/profit-loss" element={
-            <ProtectedRoute>
+          <ProtectedLayout>
               <ProfitLossReport />
-            </ProtectedRoute>
-          } />
+          </ProtectedLayout>
+        } />
           <Route path="/finance/cashflow" element={
-            <ProtectedRoute>
+          <ProtectedLayout>
               <CashflowDashboard />
-            </ProtectedRoute>
-          } />
+          </ProtectedLayout>
+        } />
           <Route path="/finance/business-intelligence" element={
-            <ProtectedRoute>
+          <ProtectedLayout>
               <BusinessIntelligenceReports />
-            </ProtectedRoute>
-          } />
+          </ProtectedLayout>
+        } />
           <Route path="/finance/reconciliation" element={
-            <ProtectedRoute>
+          <ProtectedLayout>
               <AutomatedReconciliation />
-            </ProtectedRoute>
-          } />
+          </ProtectedLayout>
+        } />
           <Route path="/watchdog" element={
-            <ProtectedRoute>
+          <ProtectedLayout>
               <div className="container-fluid">
                 <PageHeader 
                   title="Watchdog Module"
                   subtitle="Security monitoring and alerting system"
                   breadcrumbs={[
-                    { label: 'Home', path: '/' },
+                    { label: 'Home', path: '/dashboard' },
                     { label: 'Watchdog', active: true }
                   ]}
                 />
@@ -591,7 +600,7 @@ function AppContent() {
                           We're building comprehensive security tools for your business.
                         </p>
                         <div className="mt-4">
-                          <Link to="/" className="btn btn-outline-primary me-2">
+                          <Link to="/dashboard" className="btn btn-outline-primary me-2">
                             <ArrowUpRight className="h-4 w-4 me-1" />
                             Back to Dashboard
                           </Link>
@@ -605,30 +614,29 @@ function AppContent() {
                   </div>
                 </div>
               </div>
-            </ProtectedRoute>
-          } />
+          </ProtectedLayout>
+        } />
           <Route path="/settings" element={
-            <ProtectedRoute>
+          <ProtectedLayout>
               <Settings />
-            </ProtectedRoute>
-          } />
+          </ProtectedLayout>
+        } />
           <Route path="/ai-insights" element={
-            <ProtectedRoute>
+          <ProtectedLayout>
               <AIInsights />
-            </ProtectedRoute>
-          } />
+          </ProtectedLayout>
+        } />
           <Route path="/billing" element={
-            <ProtectedRoute>
+          <ProtectedLayout>
               <MultiTenancyBilling />
-            </ProtectedRoute>
-          } />
+          </ProtectedLayout>
+        } />
           <Route path="/test-formatting" element={
-            <ProtectedRoute>
+          <ProtectedLayout>
               <TimeRegionTest />
-            </ProtectedRoute>
-          } />
+          </ProtectedLayout>
+        } />
         </Routes>
-      </SneatLayout>
     </Router>
   )
 }

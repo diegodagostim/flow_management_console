@@ -166,7 +166,7 @@ export function PurchaseOrderManagement() {
           title="Purchase Orders"
           subtitle="Manage purchase orders for this supplier"
           breadcrumbs={[
-            { label: 'Home', path: '/' },
+            { label: 'Home', path: '/dashboard' },
             { label: 'Suppliers', path: '/suppliers' },
             { label: 'Purchase Orders', active: true }
           ]}
@@ -187,7 +187,7 @@ export function PurchaseOrderManagement() {
         title="Purchase Orders"
         subtitle="Manage purchase orders for this supplier"
         breadcrumbs={[
-          { label: 'Home', path: '/' },
+          { label: 'Home', path: '/dashboard' },
           { label: 'Suppliers', path: '/suppliers' },
           { label: 'Purchase Orders', active: true }
         ]}

@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useAuth } from '@/hooks/useAuth'
 import { Database, Mail, Lock, Eye, EyeOff, LogIn } from 'lucide-react'
+import { FlowLogo } from '@/components/icons/FlowLogo'
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -33,7 +34,7 @@ export function LoginPage() {
     setError(null)
     try {
       await signIn(data.email, data.password)
-      navigate('/')
+      navigate('/dashboard')
     } catch (err) {
       setError('Failed to sign in. Please check your credentials.')
       console.error('Login error:', err)
@@ -51,10 +52,8 @@ export function LoginPage() {
               <div className="card-body p-5">
                 {/* Header */}
                 <div className="text-center mb-4">
-                  <div className="avatar avatar-xl mx-auto mb-3">
-                    <span className="avatar-initial rounded bg-primary">
-                      <Database className="h-8 w-8 text-white" />
-                    </span>
+                  <div className="mb-3">
+                    <FlowLogo className="h-12 w-auto mx-auto text-primary" />
                   </div>
                   <h4 className="card-title mb-2">Welcome Back</h4>
                   <p className="text-muted">Sign in to your Flow Management Console</p>
@@ -89,8 +88,13 @@ export function LoginPage() {
                     )}
                   </div>
                   
-                  <div className="mb-4">
-                    <label htmlFor="password" className="form-label">Password</label>
+                  <div className="mb-3">
+                    <div className="d-flex justify-content-between">
+                      <label htmlFor="password" className="form-label">Password</label>
+                      <Link to="/forgot-password" className="text-decoration-none">
+                        <small className="text-primary">Forgot Password?</small>
+                      </Link>
+                    </div>
                     <div className="input-group">
                       <span className="input-group-text">
                         <Lock className="h-4 w-4" />
@@ -113,6 +117,19 @@ export function LoginPage() {
                     {errors.password && (
                       <div className="invalid-feedback d-block">{errors.password.message}</div>
                     )}
+                  </div>
+
+                  <div className="mb-4">
+                    <div className="form-check">
+                      <input 
+                        className="form-check-input" 
+                        type="checkbox" 
+                        id="remember-me" 
+                      />
+                      <label className="form-check-label" htmlFor="remember-me">
+                        Remember Me
+                      </label>
+                    </div>
                   </div>
                   
                   {error && (

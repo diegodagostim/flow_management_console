@@ -27,7 +27,7 @@ export function Breadcrumb({
     if (showHome) {
       breadcrumbs.push({
         label: 'Home',
-        path: '/',
+        path: '/dashboard',
         active: location.pathname === '/'
       })
     }

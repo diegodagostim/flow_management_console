@@ -158,7 +158,7 @@ export function CashflowDashboard() {
         title="Cashflow Dashboard"
         subtitle="Monitor your cash flow and financial liquidity"
         breadcrumbs={[
-          { label: 'Home', path: '/' },
+          { label: 'Home', path: '/dashboard' },
           { label: 'Finance', path: '/finance' },
           { label: 'Cashflow', active: true }
         ]}

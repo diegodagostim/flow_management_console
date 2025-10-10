@@ -92,7 +92,7 @@ export function Settings() {
         title="Settings"
         subtitle="Manage your application configuration and preferences"
         breadcrumbs={[
-          { label: 'Home', path: '/' },
+          { label: 'Home', path: '/dashboard' },
           { label: 'Settings', active: true }
         ]}
       />

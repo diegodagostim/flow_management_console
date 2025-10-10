@@ -84,7 +84,7 @@ export function SupplierDetails() {
           title="Supplier Details"
           subtitle="View supplier information and performance"
           breadcrumbs={[
-            { label: 'Home', path: '/' },
+            { label: 'Home', path: '/dashboard' },
             { label: 'Suppliers', path: '/suppliers' },
             { label: 'Details', active: true }
           ]}
@@ -106,7 +106,7 @@ export function SupplierDetails() {
           title="Supplier Details"
           subtitle="View supplier information and performance"
           breadcrumbs={[
-            { label: 'Home', path: '/' },
+            { label: 'Home', path: '/dashboard' },
             { label: 'Suppliers', path: '/suppliers' },
             { label: 'Details', active: true }
           ]}
@@ -137,7 +137,7 @@ export function SupplierDetails() {
         title={supplier.name}
         subtitle={`${supplier.company} • ${getCategoryBadge(supplier.category)}`}
         breadcrumbs={[
-          { label: 'Home', path: '/' },
+          { label: 'Home', path: '/dashboard' },
           { label: 'Suppliers', path: '/suppliers' },
           { label: supplier.name, active: true }
         ]}

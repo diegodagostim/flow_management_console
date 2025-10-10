@@ -118,7 +118,7 @@ export function FinanceDashboard() {
         title="Finance Dashboard"
         subtitle="Comprehensive financial management and analytics"
         breadcrumbs={[
-          { label: 'Home', path: '/' },
+          { label: 'Home', path: '/dashboard' },
           { label: 'Finance', active: true }
         ]}
       />

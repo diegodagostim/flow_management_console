@@ -75,7 +75,7 @@ export function SalesInvoices() {
         title="Sales Invoices"
         subtitle="Manage your sales invoices and track payments"
         breadcrumbs={[
-          { label: 'Home', path: '/' },
+          { label: 'Home', path: '/dashboard' },
           { label: 'Finance', path: '/finance' },
           { label: 'Invoices', active: true }
         ]}

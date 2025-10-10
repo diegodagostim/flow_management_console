@@ -138,7 +138,7 @@ export function ProfitLossReport() {
         title="Profit & Loss Report"
         subtitle="Analyze your business profitability and financial performance"
         breadcrumbs={[
-          { label: 'Home', path: '/' },
+          { label: 'Home', path: '/dashboard' },
           { label: 'Finance', path: '/finance' },
           { label: 'P&L Report', active: true }
         ]}
