@@ -301,8 +301,10 @@ export function AIInsights() {
               </ul>
             </div>
             <div className="card-body">
-              {/* Anomaly Detection Tab */}
-              {activeTab === 'anomalies' && (
+              <div className="tab-content">
+                {/* Anomaly Detection Tab */}
+                <div className={`tab-pane ${activeTab === 'anomalies' ? 'active' : ''}`}>
+                  {activeTab === 'anomalies' && (
                 <div className="anomaly-detection">
                   <div className="d-flex justify-content-between align-items-center mb-4">
                     <div>
@@ -325,69 +327,85 @@ export function AIInsights() {
                     </div>
                   </div>
 
-                  <div className="row">
-                    {anomalies.map((anomaly) => (
-                      <div key={anomaly.id} className="col-lg-6 mb-4">
-                        <div className="card h-100">
-                          <div className="card-header d-flex justify-content-between align-items-center">
-                            <div className="d-flex align-items-center">
-                              {getSeverityIcon(anomaly.severity)}
-                              <span className={`badge bg-${getSeverityColor(anomaly.severity)} ms-2`}>
-                                {anomaly.severity.toUpperCase()}
-                              </span>
-                            </div>
-                            <div className="d-flex align-items-center">
-                              {getStatusIcon(anomaly.status)}
-                              <span className="ms-2 small text-muted">{anomaly.status.replace('_', ' ')}</span>
-                            </div>
-                          </div>
-                          <div className="card-body">
-                            <h6 className="card-title">{anomaly.title}</h6>
-                            <p className="card-text small text-muted mb-3">{anomaly.description}</p>
-                            
-                            <div className="mb-3">
-                              <div className="d-flex justify-content-between align-items-center mb-1">
-                                <small className="text-muted">Confidence</small>
-                                <small className="fw-medium">{(anomaly.confidence * 100).toFixed(1)}%</small>
+                  <div className="table-responsive">
+                    <table className="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>Anomaly</th>
+                          <th>Severity</th>
+                          <th>Status</th>
+                          <th>Confidence</th>
+                          <th>Impact</th>
+                          <th>Detected</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {anomalies.map((anomaly) => (
+                          <tr key={anomaly.id}>
+                            <td>
+                              <div>
+                                <div className="fw-medium">{anomaly.title}</div>
+                                <small className="text-muted">{anomaly.description}</small>
+                                <div className="mt-1">
+                                  <small className="text-muted">
+                                    <strong>Recommendation:</strong> {anomaly.recommendation}
+                                  </small>
+                                </div>
                               </div>
-                              <div className="progress" style={{ height: '4px' }}>
-                                <div 
-                                  className="progress-bar bg-primary" 
-                                  style={{ width: `${anomaly.confidence * 100}%` }}
-                                ></div>
+                            </td>
+                            <td>
+                              <div className="d-flex align-items-center">
+                                {getSeverityIcon(anomaly.severity)}
+                                <span className={`badge bg-${getSeverityColor(anomaly.severity)} ms-2`}>
+                                  {anomaly.severity.toUpperCase()}
+                                </span>
                               </div>
-                            </div>
-
-                            <div className="mb-3">
-                              <small className="text-muted d-block mb-1">Impact:</small>
+                            </td>
+                            <td>
+                              <div className="d-flex align-items-center">
+                                {getStatusIcon(anomaly.status)}
+                                <span className="ms-2 small text-muted">{anomaly.status.replace('_', ' ')}</span>
+                              </div>
+                            </td>
+                            <td>
+                              <div className="small">
+                                <div className="fw-medium">{(anomaly.confidence * 100).toFixed(1)}%</div>
+                                <div className="progress" style={{ height: '3px' }}>
+                                  <div 
+                                    className="progress-bar bg-primary" 
+                                    style={{ width: `${anomaly.confidence * 100}%` }}
+                                  ></div>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
                               <small className="text-dark">{anomaly.impact}</small>
-                            </div>
-
-                            <div className="mb-3">
-                              <small className="text-muted d-block mb-1">Recommendation:</small>
-                              <small className="text-dark">{anomaly.recommendation}</small>
-                            </div>
-
-                            <div className="d-flex justify-content-between align-items-center">
+                            </td>
+                            <td>
                               <small className="text-muted">
                                 <Calendar className="h-3 w-3 me-1" />
                                 {new Date(anomaly.detectedAt).toLocaleDateString()}
                               </small>
+                            </td>
+                            <td>
                               <div className="btn-group btn-group-sm">
                                 <button className="btn btn-outline-primary">Investigate</button>
                                 <button className="btn btn-outline-secondary">Dismiss</button>
                               </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-              )}
+                  )}
+                </div>
 
-              {/* Smart BI Summaries Tab */}
-              {activeTab === 'summaries' && (
+                {/* Smart BI Summaries Tab */}
+                <div className={`tab-pane ${activeTab === 'summaries' ? 'active' : ''}`}>
+                  {activeTab === 'summaries' && (
                 <div className="smart-summaries">
                   <div className="d-flex justify-content-between align-items-center mb-4">
                     <div>
@@ -410,74 +428,108 @@ export function AIInsights() {
                     </div>
                   </div>
 
-                  <div className="row">
-                    {summaries.map((summary) => (
-                      <div key={summary.id} className="col-lg-6 mb-4">
-                        <div className="card h-100">
-                          <div className="card-header d-flex justify-content-between align-items-center">
-                            <div className="d-flex align-items-center">
-                              <Brain className="h-4 w-4 me-2 text-primary" />
-                              <span className="badge bg-primary">{summary.category.toUpperCase()}</span>
-                            </div>
-                            <div className="d-flex align-items-center">
-                              <span className="small text-muted">Confidence: {(summary.confidence * 100).toFixed(1)}%</span>
-                            </div>
-                          </div>
-                          <div className="card-body">
-                            <h6 className="card-title">{summary.title}</h6>
-                            <p className="card-text mb-3">{summary.summary}</p>
-                            
-                            <div className="mb-3">
-                              <h6 className="small fw-medium mb-2">Key Insights:</h6>
-                              <ul className="list-unstyled small">
-                                {summary.keyInsights.map((insight, index) => (
-                                  <li key={index} className="mb-1">
-                                    <CheckCircle className="h-3 w-3 me-2 text-success" />
-                                    {insight}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-
-                            <div className="mb-3">
-                              <h6 className="small fw-medium mb-2">Trends:</h6>
-                              {summary.trends.map((trend, index) => (
-                                <div key={index} className="d-flex justify-content-between align-items-center mb-1">
-                                  <div className="d-flex align-items-center">
-                                    {getTrendIcon(trend.direction)}
-                                    <span className="ms-2 small">{trend.metric}</span>
-                                  </div>
-                                  <div className="text-end">
-                                    <span className={`small fw-medium ${trend.direction === 'up' ? 'text-success' : trend.direction === 'down' ? 'text-danger' : 'text-muted'}`}>
-                                      {trend.direction === 'up' ? '+' : trend.direction === 'down' ? '-' : ''}{trend.percentage}%
-                                    </span>
-                                    <br />
-                                    <small className="text-muted">{trend.period}</small>
-                                  </div>
+                  <div className="table-responsive">
+                    <table className="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>Summary</th>
+                          <th>Category</th>
+                          <th>Confidence</th>
+                          <th>Key Insights</th>
+                          <th>Trends</th>
+                          <th>Generated</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {summaries.map((summary) => (
+                          <tr key={summary.id}>
+                            <td>
+                              <div>
+                                <div className="fw-medium">{summary.title}</div>
+                                <small className="text-muted">{summary.summary}</small>
+                              </div>
+                            </td>
+                            <td>
+                              <div className="d-flex align-items-center">
+                                <Brain className="h-4 w-4 me-2 text-primary" />
+                                <span className="badge bg-primary">{summary.category.toUpperCase()}</span>
+                              </div>
+                            </td>
+                            <td>
+                              <div className="small">
+                                <div className="fw-medium">{(summary.confidence * 100).toFixed(1)}%</div>
+                                <div className="progress" style={{ height: '3px' }}>
+                                  <div 
+                                    className="progress-bar bg-primary" 
+                                    style={{ width: `${summary.confidence * 100}%` }}
+                                  ></div>
                                 </div>
-                              ))}
-                            </div>
-
-                            <div className="d-flex justify-content-between align-items-center">
+                              </div>
+                            </td>
+                            <td>
+                              <div className="small">
+                                <ul className="list-unstyled mb-0">
+                                  {summary.keyInsights.slice(0, 2).map((insight, index) => (
+                                    <li key={index} className="mb-1">
+                                      <CheckCircle className="h-3 w-3 me-2 text-success" />
+                                      {insight}
+                                    </li>
+                                  ))}
+                                  {summary.keyInsights.length > 2 && (
+                                    <li className="text-muted">
+                                      +{summary.keyInsights.length - 2} more insights
+                                    </li>
+                                  )}
+                                </ul>
+                              </div>
+                            </td>
+                            <td>
+                              <div className="small">
+                                {summary.trends.slice(0, 2).map((trend, index) => (
+                                  <div key={index} className="d-flex justify-content-between align-items-center mb-1">
+                                    <div className="d-flex align-items-center">
+                                      {getTrendIcon(trend.direction)}
+                                      <span className="ms-2">{trend.metric}</span>
+                                    </div>
+                                    <div className="text-end">
+                                      <span className={`small fw-medium ${trend.direction === 'up' ? 'text-success' : trend.direction === 'down' ? 'text-danger' : 'text-muted'}`}>
+                                        {trend.direction === 'up' ? '+' : trend.direction === 'down' ? '-' : ''}{trend.percentage}%
+                                      </span>
+                                    </div>
+                                  </div>
+                                ))}
+                                {summary.trends.length > 2 && (
+                                  <div className="text-muted">
+                                    +{summary.trends.length - 2} more trends
+                                  </div>
+                                )}
+                              </div>
+                            </td>
+                            <td>
                               <small className="text-muted">
                                 <Calendar className="h-3 w-3 me-1" />
                                 {new Date(summary.generatedAt).toLocaleDateString()}
                               </small>
+                            </td>
+                            <td>
                               <button className="btn btn-outline-primary btn-sm">
                                 <Eye className="h-4 w-4 me-1" />
                                 View Details
                               </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-              )}
+                  )}
+                </div>
 
-              {/* Predictive Analytics Tab */}
-              {activeTab === 'predictions' && (
+                {/* Predictive Analytics Tab */}
+                <div className={`tab-pane ${activeTab === 'predictions' ? 'active' : ''}`}>
+                  {activeTab === 'predictions' && (
                 <div className="predictive-analytics">
                   <div className="d-flex justify-content-between align-items-center mb-4">
                     <div>
@@ -500,94 +552,107 @@ export function AIInsights() {
                     </div>
                   </div>
 
-                  <div className="row">
-                    {predictions.map((prediction) => (
-                      <div key={prediction.id} className="col-lg-4 mb-4">
-                        <div className="card h-100">
-                          <div className="card-header d-flex justify-content-between align-items-center">
-                            <div className="d-flex align-items-center">
-                              <Target className="h-4 w-4 me-2 text-primary" />
+                  <div className="table-responsive">
+                    <table className="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>Metric</th>
+                          <th>Timeframe</th>
+                          <th>Current Value</th>
+                          <th>Predicted Value</th>
+                          <th>Confidence</th>
+                          <th>Risk Level</th>
+                          <th>Factors</th>
+                          <th>Updated</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {predictions.map((prediction) => (
+                          <tr key={prediction.id}>
+                            <td>
+                              <div className="d-flex align-items-center">
+                                <Target className="h-4 w-4 me-2 text-primary" />
+                                <div className="fw-medium">{prediction.metric}</div>
+                              </div>
+                            </td>
+                            <td>
                               <span className="badge bg-info">{prediction.timeframe}</span>
-                            </div>
-                            <span className={`badge bg-${getRiskColor(prediction.riskLevel)}`}>
-                              {prediction.riskLevel.toUpperCase()} RISK
-                            </span>
-                          </div>
-                          <div className="card-body">
-                            <h6 className="card-title">{prediction.metric}</h6>
-                            
-                            <div className="mb-3">
-                              <div className="d-flex justify-content-between align-items-center mb-1">
-                                <small className="text-muted">Current</small>
-                                <small className="fw-medium">
-                                  {prediction.metric.includes('Rate') || prediction.metric.includes('Rate') 
-                                    ? `${(prediction.currentValue * 100).toFixed(1)}%`
-                                    : prediction.metric.includes('Revenue') || prediction.metric.includes('Cash Flow')
-                                    ? formatCurrency(prediction.currentValue)
-                                    : formatNumber(prediction.currentValue)
-                                  }
-                                </small>
+                            </td>
+                            <td>
+                              <div className="fw-medium">
+                                {prediction.metric.includes('Rate') || prediction.metric.includes('Rate') 
+                                  ? `${(prediction.currentValue * 100).toFixed(1)}%`
+                                  : prediction.metric.includes('Revenue') || prediction.metric.includes('Cash Flow')
+                                  ? formatCurrency(prediction.currentValue)
+                                  : formatNumber(prediction.currentValue)
+                                }
                               </div>
-                              <div className="d-flex justify-content-between align-items-center mb-1">
-                                <small className="text-muted">Predicted</small>
-                                <small className="fw-medium text-primary">
-                                  {prediction.metric.includes('Rate') || prediction.metric.includes('Rate') 
-                                    ? `${(prediction.predictedValue * 100).toFixed(1)}%`
-                                    : prediction.metric.includes('Revenue') || prediction.metric.includes('Cash Flow')
-                                    ? formatCurrency(prediction.predictedValue)
-                                    : formatNumber(prediction.predictedValue)
-                                  }
-                                </small>
+                            </td>
+                            <td>
+                              <div className="fw-medium text-primary">
+                                {prediction.metric.includes('Rate') || prediction.metric.includes('Rate') 
+                                  ? `${(prediction.predictedValue * 100).toFixed(1)}%`
+                                  : prediction.metric.includes('Revenue') || prediction.metric.includes('Cash Flow')
+                                  ? formatCurrency(prediction.predictedValue)
+                                  : formatNumber(prediction.predictedValue)
+                                }
                               </div>
-                            </div>
-
-                            <div className="mb-3">
-                              <div className="d-flex justify-content-between align-items-center mb-1">
-                                <small className="text-muted">Confidence</small>
-                                <small className="fw-medium">{(prediction.confidence * 100).toFixed(1)}%</small>
+                            </td>
+                            <td>
+                              <div className="small">
+                                <div className="fw-medium">{(prediction.confidence * 100).toFixed(1)}%</div>
+                                <div className="progress" style={{ height: '3px' }}>
+                                  <div 
+                                    className="progress-bar bg-primary" 
+                                    style={{ width: `${prediction.confidence * 100}%` }}
+                                  ></div>
+                                </div>
                               </div>
-                              <div className="progress" style={{ height: '4px' }}>
-                                <div 
-                                  className="progress-bar bg-primary" 
-                                  style={{ width: `${prediction.confidence * 100}%` }}
-                                ></div>
+                            </td>
+                            <td>
+                              <span className={`badge bg-${getRiskColor(prediction.riskLevel)}`}>
+                                {prediction.riskLevel.toUpperCase()} RISK
+                              </span>
+                            </td>
+                            <td>
+                              <div className="small">
+                                <ul className="list-unstyled mb-0">
+                                  {prediction.factors.slice(0, 2).map((factor, index) => (
+                                    <li key={index} className="mb-1">
+                                      <Zap className="h-3 w-3 me-2 text-warning" />
+                                      {factor}
+                                    </li>
+                                  ))}
+                                  {prediction.factors.length > 2 && (
+                                    <li className="text-muted">
+                                      +{prediction.factors.length - 2} more factors
+                                    </li>
+                                  )}
+                                </ul>
                               </div>
-                            </div>
-
-                            <div className="mb-3">
-                              <h6 className="small fw-medium mb-2">Key Factors:</h6>
-                              <ul className="list-unstyled small">
-                                {prediction.factors.map((factor, index) => (
-                                  <li key={index} className="mb-1">
-                                    <Zap className="h-3 w-3 me-2 text-warning" />
-                                    {factor}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-
-                            <div className="mb-3">
-                              <h6 className="small fw-medium mb-2">Recommendation:</h6>
-                              <p className="small text-muted mb-0">{prediction.recommendation}</p>
-                            </div>
-
-                            <div className="d-flex justify-content-between align-items-center">
+                            </td>
+                            <td>
                               <small className="text-muted">
                                 <Calendar className="h-3 w-3 me-1" />
                                 {new Date(prediction.lastUpdated).toLocaleDateString()}
                               </small>
+                            </td>
+                            <td>
                               <button className="btn btn-outline-primary btn-sm">
                                 <Eye className="h-4 w-4 me-1" />
                                 View Details
                               </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-              )}
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>

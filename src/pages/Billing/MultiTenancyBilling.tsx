@@ -542,99 +542,90 @@ export function MultiTenancyBilling() {
                     </div>
                   </div>
 
-                  <div className="row">
-                    {tenants.map((tenant) => {
-                      const PlanIcon = getPlanIcon(tenant.plan)
-                      const planColor = getPlanColor(tenant.plan)
-                      const currentPlan = plans.find(p => p.id === tenant.plan)
-                      
-                      return (
-                        <div key={tenant.id} className="col-lg-6 mb-4">
-                          <div className="card h-100">
-                            <div className="card-header d-flex justify-content-between align-items-center">
-                              <div className="d-flex align-items-center">
-                                <PlanIcon className={`h-4 w-4 me-2 text-${planColor}`} />
-                                <span className={`badge bg-${planColor}`}>
-                                  {tenant.plan.toUpperCase()}
-                                </span>
-                              </div>
-                              <div className="d-flex align-items-center">
-                                {getStatusIcon(tenant.status)}
-                                <span className={`badge bg-${getStatusColor(tenant.status)} ms-2`}>
-                                  {tenant.status.toUpperCase()}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="card-body">
-                              <h6 className="card-title">{tenant.name}</h6>
-                              <p className="card-text small text-muted mb-3">{tenant.email}</p>
-                              
-                              {/* Usage Overview */}
-                              <div className="mb-3">
-                                <h6 className="small fw-medium mb-2">Usage Overview:</h6>
-                                <div className="row">
-                                  <div className="col-6 mb-2">
-                                    <div className="d-flex justify-content-between align-items-center">
-                                      <small className="text-muted">Clients</small>
-                                      <small className="fw-medium">
-                                        {tenant.usage.clients}/{tenant.limits.clients === -1 ? '∞' : tenant.limits.clients}
-                                      </small>
-                                    </div>
-                                    <div className="progress" style={{ height: '4px' }}>
-                                      <div 
-                                        className={`progress-bar bg-${getUsageColor(getUsagePercentage(tenant.usage.clients, tenant.limits.clients))}`}
-                                        style={{ width: `${getUsagePercentage(tenant.usage.clients, tenant.limits.clients)}%` }}
-                                      ></div>
-                                    </div>
-                                  </div>
-                                  <div className="col-6 mb-2">
-                                    <div className="d-flex justify-content-between align-items-center">
-                                      <small className="text-muted">Storage</small>
-                                      <small className="fw-medium">
-                                        {Math.round(tenant.usage.storage / 1024)}GB/{tenant.limits.storage === -1 ? '∞' : Math.round(tenant.limits.storage / 1024)}GB
-                                      </small>
-                                    </div>
-                                    <div className="progress" style={{ height: '4px' }}>
-                                      <div 
-                                        className={`progress-bar bg-${getUsageColor(getUsagePercentage(tenant.usage.storage, tenant.limits.storage))}`}
-                                        style={{ width: `${getUsagePercentage(tenant.usage.storage, tenant.limits.storage)}%` }}
-                                      ></div>
-                                    </div>
-                                  </div>
+                  <div className="table-responsive">
+                    <table className="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>Tenant</th>
+                          <th>Plan</th>
+                          <th>Status</th>
+                          <th>Usage</th>
+                          <th>Billing</th>
+                          <th>Joined</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {tenants.map((tenant) => {
+                          const PlanIcon = getPlanIcon(tenant.plan)
+                          const planColor = getPlanColor(tenant.plan)
+                          const currentPlan = plans.find(p => p.id === tenant.plan)
+                          
+                          return (
+                            <tr key={tenant.id}>
+                              <td>
+                                <div>
+                                  <div className="fw-medium">{tenant.name}</div>
+                                  <small className="text-muted">{tenant.email}</small>
                                 </div>
-                              </div>
-
-                              {/* Billing Info */}
-                              <div className="mb-3">
-                                <h6 className="small fw-medium mb-2">Billing Info:</h6>
-                                <div className="small text-muted">
-                                  <div className="d-flex justify-content-between">
-                                    <span>Plan:</span>
-                                    <span className="fw-medium">{currentPlan?.name}</span>
-                                  </div>
-                                  <div className="d-flex justify-content-between">
-                                    <span>Price:</span>
+                              </td>
+                              <td>
+                                <div className="d-flex align-items-center">
+                                  <PlanIcon className={`h-4 w-4 me-2 text-${planColor}`} />
+                                  <span className={`badge bg-${planColor}`}>
+                                    {tenant.plan.toUpperCase()}
+                                  </span>
+                                </div>
+                              </td>
+                              <td>
+                                <div className="d-flex align-items-center">
+                                  {getStatusIcon(tenant.status)}
+                                  <span className={`badge bg-${getStatusColor(tenant.status)} ms-2`}>
+                                    {tenant.status.toUpperCase()}
+                                  </span>
+                                </div>
+                              </td>
+                              <td>
+                                <div className="small">
+                                  <div className="d-flex justify-content-between mb-1">
+                                    <span className="text-muted">Clients:</span>
                                     <span className="fw-medium">
-                                      {currentPlan?.price === 0 ? 'Free' : formatCurrency(currentPlan?.price || 0)}
+                                      {tenant.usage.clients}/{tenant.limits.clients === -1 ? '∞' : tenant.limits.clients}
                                     </span>
                                   </div>
+                                  <div className="progress" style={{ height: '3px' }}>
+                                    <div 
+                                      className={`progress-bar bg-${getUsageColor(getUsagePercentage(tenant.usage.clients, tenant.limits.clients))}`}
+                                      style={{ width: `${getUsagePercentage(tenant.usage.clients, tenant.limits.clients)}%` }}
+                                    ></div>
+                                  </div>
+                                  <div className="d-flex justify-content-between mt-1">
+                                    <span className="text-muted">Storage:</span>
+                                    <span className="fw-medium">
+                                      {Math.round(tenant.usage.storage / 1024)}GB/{tenant.limits.storage === -1 ? '∞' : Math.round(tenant.limits.storage / 1024)}GB
+                                    </span>
+                                  </div>
+                                </div>
+                              </td>
+                              <td>
+                                <div className="small">
+                                  <div className="fw-medium">{currentPlan?.name}</div>
+                                  <div className="text-muted">
+                                    {currentPlan?.price === 0 ? 'Free' : formatCurrency(currentPlan?.price || 0)}
+                                  </div>
                                   {tenant.nextBillingDate && (
-                                    <div className="d-flex justify-content-between">
-                                      <span>Next Billing:</span>
-                                      <span className="fw-medium">
-                                        {new Date(tenant.nextBillingDate).toLocaleDateString()}
-                                      </span>
+                                    <div className="text-muted">
+                                      Next: {new Date(tenant.nextBillingDate).toLocaleDateString()}
                                     </div>
                                   )}
                                 </div>
-                              </div>
-
-                              {/* Actions */}
-                              <div className="d-flex justify-content-between align-items-center">
+                              </td>
+                              <td>
                                 <small className="text-muted">
-                                  <Calendar className="h-3 w-3 me-1" />
-                                  Joined {new Date(tenant.createdAt).toLocaleDateString()}
+                                  {new Date(tenant.createdAt).toLocaleDateString()}
                                 </small>
+                              </td>
+                              <td>
                                 <div className="btn-group btn-group-sm">
                                   <button className="btn btn-outline-primary">
                                     <Eye className="h-4 w-4" />
@@ -646,12 +637,12 @@ export function MultiTenancyBilling() {
                                     <Trash2 className="h-4 w-4" />
                                   </button>
                                 </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    })}
+                              </td>
+                            </tr>
+                          )
+                        })}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               )}
@@ -676,73 +667,107 @@ export function MultiTenancyBilling() {
                     </div>
                   </div>
 
-                  <div className="row">
-                    {plans.map((plan) => {
-                      const PlanIcon = plan.icon
-                      const tenantCount = tenants.filter(t => t.plan === plan.id).length
-                      const monthlyRevenue = tenantCount * plan.price
-                      
-                      return (
-                        <div key={plan.id} className="col-lg-3 mb-4">
-                          <div className={`card h-100 ${plan.popular ? 'border-warning' : ''}`}>
-                            {plan.popular && (
-                              <div className="card-header bg-warning text-dark text-center">
-                                <Award className="h-4 w-4 me-1" />
-                                Most Popular
-                              </div>
-                            )}
-                            <div className="card-body text-center">
-                              <PlanIcon className={`h-8 w-8 mx-auto mb-3 text-${plan.color}`} />
-                              <h5 className="card-title">{plan.name}</h5>
-                              <p className="card-text small text-muted mb-3">{plan.description}</p>
-                              
-                              <div className="mb-3">
-                                <h3 className="text-primary">
-                                  {plan.price === 0 ? 'Free' : formatCurrency(plan.price)}
-                                </h3>
-                                <small className="text-muted">per {plan.interval}</small>
-                              </div>
-
-                              <div className="mb-3">
-                                <h6 className="small fw-medium mb-2">Features:</h6>
-                                <ul className="list-unstyled small">
-                                  {plan.features.map((feature, index) => (
-                                    <li key={index} className="mb-1">
-                                      <CheckCircle className="h-3 w-3 me-2 text-success" />
-                                      {feature}
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-
-                              <div className="mb-3">
-                                <div className="row text-center">
-                                  <div className="col-6">
-                                    <div className="small text-muted">Subscribers</div>
-                                    <div className="fw-medium">{tenantCount}</div>
-                                  </div>
-                                  <div className="col-6">
-                                    <div className="small text-muted">Monthly Revenue</div>
-                                    <div className="fw-medium">{formatCurrency(monthlyRevenue)}</div>
+                  <div className="table-responsive">
+                    <table className="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>Plan</th>
+                          <th>Price</th>
+                          <th>Features</th>
+                          <th>Limits</th>
+                          <th>Subscribers</th>
+                          <th>Revenue</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {plans.map((plan) => {
+                          const PlanIcon = plan.icon
+                          const tenantCount = tenants.filter(t => t.plan === plan.id).length
+                          const monthlyRevenue = tenantCount * plan.price
+                          
+                          return (
+                            <tr key={plan.id} className={plan.popular ? 'table-warning' : ''}>
+                              <td>
+                                <div className="d-flex align-items-center">
+                                  <PlanIcon className={`h-5 w-5 me-3 text-${plan.color}`} />
+                                  <div>
+                                    <div className="fw-medium">{plan.name}</div>
+                                    <small className="text-muted">{plan.description}</small>
+                                    {plan.popular && (
+                                      <div className="mt-1">
+                                        <span className="badge bg-warning text-dark">
+                                          <Award className="h-3 w-3 me-1" />
+                                          Most Popular
+                                        </span>
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
-                              </div>
-
-                              <div className="d-grid gap-2">
-                                <button className="btn btn-outline-primary btn-sm">
-                                  <Edit className="h-4 w-4 me-1" />
-                                  Edit Plan
-                                </button>
-                                <button className="btn btn-outline-secondary btn-sm">
-                                  <Eye className="h-4 w-4 me-1" />
-                                  View Details
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    })}
+                              </td>
+                              <td>
+                                <div>
+                                  <div className="fw-medium">
+                                    {plan.price === 0 ? 'Free' : formatCurrency(plan.price)}
+                                  </div>
+                                  <small className="text-muted">per {plan.interval}</small>
+                                </div>
+                              </td>
+                              <td>
+                                <div className="small">
+                                  <div className="mb-1">Key Features:</div>
+                                  <ul className="list-unstyled mb-0">
+                                    {plan.features.slice(0, 3).map((feature, index) => (
+                                      <li key={index} className="mb-1">
+                                        <CheckCircle className="h-3 w-3 me-2 text-success" />
+                                        {feature}
+                                      </li>
+                                    ))}
+                                    {plan.features.length > 3 && (
+                                      <li className="text-muted">
+                                        +{plan.features.length - 3} more features
+                                      </li>
+                                    )}
+                                  </ul>
+                                </div>
+                              </td>
+                              <td>
+                                <div className="small">
+                                  <div className="mb-1">Limits:</div>
+                                  <div className="text-muted">
+                                    <div>Clients: {plan.limits.clients === -1 ? '∞' : plan.limits.clients}</div>
+                                    <div>Storage: {plan.limits.storage === -1 ? '∞' : `${Math.round(plan.limits.storage / 1024)}GB`}</div>
+                                    <div>API: {plan.limits.apiCalls === -1 ? '∞' : formatNumber(plan.limits.apiCalls)}</div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td>
+                                <div className="text-center">
+                                  <div className="fw-medium">{tenantCount}</div>
+                                  <small className="text-muted">subscribers</small>
+                                </div>
+                              </td>
+                              <td>
+                                <div className="text-center">
+                                  <div className="fw-medium">{formatCurrency(monthlyRevenue)}</div>
+                                  <small className="text-muted">monthly</small>
+                                </div>
+                              </td>
+                              <td>
+                                <div className="btn-group btn-group-sm">
+                                  <button className="btn btn-outline-primary">
+                                    <Edit className="h-4 w-4" />
+                                  </button>
+                                  <button className="btn btn-outline-secondary">
+                                    <Eye className="h-4 w-4" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          )
+                        })}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               )}
@@ -870,65 +895,62 @@ export function MultiTenancyBilling() {
                   <div className="row">
                     {/* Revenue Overview */}
                     <div className="col-lg-8 mb-4">
-                      <div className="card">
-                        <div className="card-header">
+                      <div className="bg-light rounded p-4">
+                        <div className="d-flex justify-content-between align-items-center mb-3">
                           <h6 className="mb-0">Monthly Revenue</h6>
+                          <BarChart3 className="h-5 w-5 text-primary" />
                         </div>
-                        <div className="card-body">
-                          <div className="text-center py-5">
-                            <BarChart3 className="h-16 w-16 text-primary mb-3" />
-                            <h6 className="text-muted mb-2">Revenue Chart</h6>
-                            <p className="text-muted mb-0">Monthly revenue trends and projections</p>
-                          </div>
+                        <div className="text-center py-4">
+                          <h6 className="text-muted mb-2">Revenue Chart</h6>
+                          <p className="text-muted mb-0">Monthly revenue trends and projections</p>
                         </div>
                       </div>
                     </div>
 
                     {/* Key Metrics */}
                     <div className="col-lg-4 mb-4">
-                      <div className="card">
-                        <div className="card-header">
+                      <div className="bg-light rounded p-4">
+                        <div className="d-flex justify-content-between align-items-center mb-3">
                           <h6 className="mb-0">Key Metrics</h6>
+                          <Activity className="h-5 w-5 text-primary" />
                         </div>
-                        <div className="card-body">
-                          <div className="mb-3">
-                            <div className="d-flex justify-content-between align-items-center mb-1">
-                              <small className="text-muted">Total Revenue</small>
-                              <small className="fw-medium">{formatCurrency(307)}</small>
-                            </div>
-                            <div className="progress" style={{ height: '4px' }}>
-                              <div className="progress-bar bg-success" style={{ width: '85%' }}></div>
-                            </div>
+                        <div className="mb-3">
+                          <div className="d-flex justify-content-between align-items-center mb-1">
+                            <small className="text-muted">Total Revenue</small>
+                            <small className="fw-medium">{formatCurrency(307)}</small>
                           </div>
-                          
-                          <div className="mb-3">
-                            <div className="d-flex justify-content-between align-items-center mb-1">
-                              <small className="text-muted">Active Tenants</small>
-                              <small className="fw-medium">{tenants.filter(t => t.status === 'active').length}</small>
-                            </div>
-                            <div className="progress" style={{ height: '4px' }}>
-                              <div className="progress-bar bg-primary" style={{ width: '75%' }}></div>
-                            </div>
+                          <div className="progress" style={{ height: '4px' }}>
+                            <div className="progress-bar bg-success" style={{ width: '85%' }}></div>
                           </div>
-                          
-                          <div className="mb-3">
-                            <div className="d-flex justify-content-between align-items-center mb-1">
-                              <small className="text-muted">Trial Tenants</small>
-                              <small className="fw-medium">{tenants.filter(t => t.status === 'trial').length}</small>
-                            </div>
-                            <div className="progress" style={{ height: '4px' }}>
-                              <div className="progress-bar bg-warning" style={{ width: '25%' }}></div>
-                            </div>
+                        </div>
+                        
+                        <div className="mb-3">
+                          <div className="d-flex justify-content-between align-items-center mb-1">
+                            <small className="text-muted">Active Tenants</small>
+                            <small className="fw-medium">{tenants.filter(t => t.status === 'active').length}</small>
                           </div>
-                          
-                          <div className="mb-3">
-                            <div className="d-flex justify-content-between align-items-center mb-1">
-                              <small className="text-muted">Churn Rate</small>
-                              <small className="fw-medium">2.5%</small>
-                            </div>
-                            <div className="progress" style={{ height: '4px' }}>
-                              <div className="progress-bar bg-danger" style={{ width: '25%' }}></div>
-                            </div>
+                          <div className="progress" style={{ height: '4px' }}>
+                            <div className="progress-bar bg-primary" style={{ width: '75%' }}></div>
+                          </div>
+                        </div>
+                        
+                        <div className="mb-3">
+                          <div className="d-flex justify-content-between align-items-center mb-1">
+                            <small className="text-muted">Trial Tenants</small>
+                            <small className="fw-medium">{tenants.filter(t => t.status === 'trial').length}</small>
+                          </div>
+                          <div className="progress" style={{ height: '4px' }}>
+                            <div className="progress-bar bg-warning" style={{ width: '25%' }}></div>
+                          </div>
+                        </div>
+                        
+                        <div className="mb-3">
+                          <div className="d-flex justify-content-between align-items-center mb-1">
+                            <small className="text-muted">Churn Rate</small>
+                            <small className="fw-medium">2.5%</small>
+                          </div>
+                          <div className="progress" style={{ height: '4px' }}>
+                            <div className="progress-bar bg-danger" style={{ width: '25%' }}></div>
                           </div>
                         </div>
                       </div>
@@ -936,48 +958,45 @@ export function MultiTenancyBilling() {
 
                     {/* Plan Distribution */}
                     <div className="col-lg-6 mb-4">
-                      <div className="card">
-                        <div className="card-header">
+                      <div className="bg-light rounded p-4">
+                        <div className="d-flex justify-content-between align-items-center mb-3">
                           <h6 className="mb-0">Plan Distribution</h6>
+                          <PieChart className="h-5 w-5 text-primary" />
                         </div>
-                        <div className="card-body">
-                          <div className="text-center py-4">
-                            <PieChart className="h-16 w-16 text-primary mb-3" />
-                            <h6 className="text-muted mb-2">Plan Usage</h6>
-                            <p className="text-muted mb-0">Distribution of tenants across subscription plans</p>
-                          </div>
+                        <div className="text-center py-3">
+                          <h6 className="text-muted mb-2">Plan Usage</h6>
+                          <p className="text-muted mb-0">Distribution of tenants across subscription plans</p>
                         </div>
                       </div>
                     </div>
 
                     {/* Recent Activity */}
                     <div className="col-lg-6 mb-4">
-                      <div className="card">
-                        <div className="card-header">
+                      <div className="bg-light rounded p-4">
+                        <div className="d-flex justify-content-between align-items-center mb-3">
                           <h6 className="mb-0">Recent Activity</h6>
+                          <Clock className="h-5 w-5 text-primary" />
                         </div>
-                        <div className="card-body">
-                          <div className="list-group list-group-flush">
-                            {transactions.slice(0, 5).map((transaction) => {
-                              const tenant = tenants.find(t => t.id === transaction.tenantId)
-                              return (
-                                <div key={transaction.id} className="list-group-item border-0 px-0">
-                                  <div className="d-flex justify-content-between align-items-center">
-                                    <div>
-                                      <div className="small fw-medium">{tenant?.name}</div>
-                                      <small className="text-muted">{transaction.description}</small>
-                                    </div>
-                                    <div className="text-end">
-                                      <div className="small fw-medium">{formatCurrency(transaction.amount)}</div>
-                                      <small className="text-muted">
-                                        {new Date(transaction.createdAt).toLocaleDateString()}
-                                      </small>
-                                    </div>
+                        <div className="list-group list-group-flush">
+                          {transactions.slice(0, 5).map((transaction) => {
+                            const tenant = tenants.find(t => t.id === transaction.tenantId)
+                            return (
+                              <div key={transaction.id} className="list-group-item border-0 px-0 bg-transparent">
+                                <div className="d-flex justify-content-between align-items-center">
+                                  <div>
+                                    <div className="small fw-medium">{tenant?.name}</div>
+                                    <small className="text-muted">{transaction.description}</small>
+                                  </div>
+                                  <div className="text-end">
+                                    <div className="small fw-medium">{formatCurrency(transaction.amount)}</div>
+                                    <small className="text-muted">
+                                      {new Date(transaction.createdAt).toLocaleDateString()}
+                                    </small>
                                   </div>
                                 </div>
-                              )
-                            })}
-                          </div>
+                              </div>
+                            )
+                          })}
                         </div>
                       </div>
                     </div>

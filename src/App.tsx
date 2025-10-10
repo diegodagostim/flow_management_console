@@ -13,6 +13,9 @@ import { SupplierManagement } from '@/pages/Suppliers/SupplierManagement'
 import { SupplierForm } from '@/pages/Suppliers/SupplierForm'
 import { SupplierDetails } from '@/pages/Suppliers/SupplierDetails'
 import { PurchaseOrderManagement } from '@/pages/Suppliers/PurchaseOrderManagement'
+import { ProductList } from '@/pages/Products/ProductList'
+import { ProductForm } from '@/pages/Products/ProductForm'
+import { ProductDetails } from '@/pages/Products/ProductDetails'
 import { FinanceDashboard } from '@/pages/Finance/FinanceDashboard'
 import { BillsManagement } from '@/pages/Finance/BillsManagement'
 import { SalesInvoices } from '@/pages/Finance/SalesInvoices'
@@ -29,6 +32,7 @@ import { RegisterPage } from '@/pages/Auth/RegisterPage'
 import { ForgotPasswordPage } from '@/pages/Auth/ForgotPasswordPage'
 import { useClients } from '@/hooks/useClientManagement'
 import { useSuppliers } from '@/hooks/useSupplierManagement'
+import { useProducts } from '@/hooks/useProduct'
 import { PageHeader } from '@/components/navigation/PageHeader'
 import { 
   Users, 
@@ -44,16 +48,19 @@ import {
   BarChart3,
   FileText,
   CreditCard,
-  Brain
+  Brain,
+  Package
 } from 'lucide-react'
 
 function Dashboard() {
   const { data: clients = [] } = useClients({})
   const { data: suppliers = [] } = useSuppliers({})
+  const { data: products = [] } = useProducts({})
 
   // Calculate stats
   const totalClients = clients.length
   const totalSuppliers = suppliers.length
+  const totalProducts = products.length
   const recentClients = clients.filter(client => {
     if (!client.createdAt) return false
     const clientDate = new Date(client.createdAt)
@@ -102,6 +109,20 @@ function Dashboard() {
                      </div>
                    </div>
                  </div>
+        
+        <div className="col-lg-2 col-md-4 col-6 mb-2">
+          <div className="card border-0 shadow-sm h-100 dashboard-card dashboard-stats-card">
+            <div className="card-body text-center py-3">
+              <div className="avatar avatar-md mx-auto mb-2">
+                <span className="avatar-initial rounded bg-label-secondary">
+                  <Package className="h-4 w-4" />
+                </span>
+              </div>
+              <h4 className="mb-1 text-secondary">{totalProducts}</h4>
+              <p className="text-muted mb-0 small">Products</p>
+            </div>
+          </div>
+        </div>
         
         <div className="col-lg-2 col-md-4 col-6 mb-2">
           <div className="card border-0 shadow-sm h-100 dashboard-card dashboard-stats-card">
@@ -355,6 +376,26 @@ function AppContent() {
         <Route path="/suppliers/:id/orders/new" element={
           <ProtectedLayout>
             <PurchaseOrderManagement />
+          </ProtectedLayout>
+        } />
+        <Route path="/products" element={
+          <ProtectedLayout>
+            <ProductList />
+          </ProtectedLayout>
+        } />
+        <Route path="/products/new" element={
+          <ProtectedLayout>
+            <ProductForm />
+          </ProtectedLayout>
+        } />
+        <Route path="/products/:id" element={
+          <ProtectedLayout>
+            <ProductDetails />
+          </ProtectedLayout>
+        } />
+        <Route path="/products/:id/edit" element={
+          <ProtectedLayout>
+            <ProductForm />
           </ProtectedLayout>
         } />
         <Route path="/finance" element={
