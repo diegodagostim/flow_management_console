@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { setAdapter } from '@/app/store'
 import type { RootState } from '@/app/store'
+import { useTimeRegion } from '@/hooks/useTimeRegion'
 import { UserGroupManagement } from '@/components/UserGroupManagement'
 import { IntegrationSettings } from '@/components/IntegrationSettings'
+import { BackupRestore } from '@/components/BackupRestore'
 import { PageHeader } from '@/components/navigation/PageHeader'
-import { useTimeRegion } from '@/hooks/useTimeRegion'
 import { 
   Database, 
   Settings as SettingsIcon, 
@@ -26,7 +27,8 @@ import {
   Shield,
   CheckCircle,
   XCircle,
-  AlertCircle
+  AlertCircle,
+  Download
 } from 'lucide-react'
 
 export function Settings() {
@@ -175,6 +177,21 @@ export function Settings() {
                   >
                     <Plug className="h-4 w-4 me-2" />
                     Integration
+                  </button>
+                </li>
+                <li className="nav-item" role="presentation">
+                  <button 
+                    className="nav-link" 
+                    id="backup-tab" 
+                    data-bs-toggle="tab" 
+                    data-bs-target="#backup" 
+                    type="button" 
+                    role="tab"
+                    aria-controls="backup"
+                    aria-selected="false"
+                  >
+                    <Download className="h-4 w-4 me-2" />
+                    Backup & Restore
                   </button>
                 </li>
               </ul>
@@ -1050,6 +1067,10 @@ export function Settings() {
 
                 <div className="tab-pane fade" id="integration" role="tabpanel">
                   <IntegrationSettings />
+                </div>
+
+                <div className="tab-pane fade" id="backup" role="tabpanel">
+                  <BackupRestore />
                 </div>
               </div>
             </div>

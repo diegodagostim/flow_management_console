@@ -70,10 +70,10 @@ export function BusinessIntelligenceReports() {
     const profitMargin = totalRevenue > 0 ? (netProfit / totalRevenue) * 100 : 0
     
     // Calculate growth rates (simplified - would need historical data for accurate calculation)
-    const revenueGrowth = 15.2 // Mock data
-    const profitGrowth = 8.7 // Mock data
-    const clientGrowth = 12.3 // Mock data
-    const expenseGrowth = -5.1 // Mock data
+    const revenueGrowth = 0 // Will be calculated from real data
+    const profitGrowth = 0 // Will be calculated from real data
+    const clientGrowth = 0 // Will be calculated from real data
+    const expenseGrowth = 0 // Will be calculated from real data
     
     return [
       {
@@ -97,7 +97,7 @@ export function BusinessIntelligenceReports() {
       {
         name: 'Profit Margin',
         value: profitMargin,
-        change: 2.1,
+        change: 0, // Will be calculated from real data
         trend: 'up',
         format: 'percentage',
         icon: <Target className="h-5 w-5" />,
@@ -115,7 +115,7 @@ export function BusinessIntelligenceReports() {
       {
         name: 'Avg Invoice Value',
         value: invoiceStats.averageInvoiceAmount,
-        change: 5.8,
+        change: 0, // Will be calculated from real data
         trend: 'up',
         format: 'currency',
         icon: <Award className="h-5 w-5" />,
@@ -123,8 +123,8 @@ export function BusinessIntelligenceReports() {
       },
       {
         name: 'Collection Rate',
-        value: 94.2, // Mock data
-        change: 1.2,
+        value: 0, // Will be calculated from real data
+        change: 0, // Will be calculated from real data
         trend: 'up',
         format: 'percentage',
         icon: <Zap className="h-5 w-5" />,
@@ -144,7 +144,7 @@ export function BusinessIntelligenceReports() {
         ? clientInvoices.sort((a, b) => new Date(b.invoiceDate).getTime() - new Date(a.invoiceDate).getTime())[0].invoiceDate
         : ''
       
-      // Mock payment trend calculation
+      // TODO: Implement payment trend calculation from real data
       const paymentTrend: 'improving' | 'declining' | 'stable' = 'stable'
       
       return {

@@ -18,10 +18,10 @@ import {
 import { TrafficLightIcon } from '@/components/icons/TrafficLightIcon'
 
 const navigation = [
+  { name: 'Products', href: '/products', icon: Package },
   { name: 'Dashboard', href: '/dashboard', icon: Home },
   { name: 'Clients', href: '/clients', icon: Users },
   { name: 'Suppliers', href: '/suppliers', icon: Building2 },
-  { name: 'Products', href: '/products', icon: Package },
   { name: 'Billing', href: '/billing', icon: CreditCard },
   { name: 'Finance', href: '/finance', icon: DollarSign },
   { name: 'AI & Insights', href: '/ai-insights', icon: Brain },

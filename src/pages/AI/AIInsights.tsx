@@ -1,37 +1,24 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import { 
   Brain, 
   AlertTriangle, 
   TrendingUp, 
-  TrendingDown, 
-  BarChart3, 
-  PieChart, 
-  Activity,
-  Zap,
-  Target,
-  Lightbulb,
-  RefreshCw,
-  Eye,
-  Download,
-  Filter,
-  Calendar,
-  DollarSign,
-  Users,
-  Building2,
-  FileText,
-  CreditCard,
-  CheckCircle,
-  XCircle,
+  FileText, 
+  CheckCircle, 
   Clock,
-  ArrowUpRight,
-  ArrowDownRight
-} from 'lucide-react'
-import { PageHeader } from '@/components/navigation/PageHeader'
-import { useTimeRegion } from '@/hooks/useTimeRegion'
+  BarChart3,
+  Target,
+  Zap,
+  Eye,
+  Filter,
+  RefreshCw
+} from 'lucide-react';
+import { PageHeader } from '@/components/navigation/PageHeader';
+import { useTimeRegion } from '@/hooks/useTimeRegion';
 
 interface AnomalyDetection {
   id: string
-  type: 'financial' | 'operational' | 'behavioral'
+  type: 'financial' | 'operational' | 'behavioral' | 'security'
   severity: 'low' | 'medium' | 'high' | 'critical'
   title: string
   description: string
@@ -44,29 +31,29 @@ interface AnomalyDetection {
 
 interface SmartSummary {
   id: string
-  category: 'financial' | 'operational' | 'strategic'
+  type: 'daily' | 'weekly' | 'monthly' | 'custom'
+  period: string
   title: string
   summary: string
-  keyInsights: string[]
-  trends: {
-    metric: string
-    direction: 'up' | 'down' | 'stable'
-    percentage: number
-    period: string
+  keyMetrics: {
+    name: string
+    value: number
+    change: number
+    trend: 'up' | 'down' | 'stable'
   }[]
+  insights: string[]
   generatedAt: string
-  confidence: number
 }
 
 interface PredictiveAnalytics {
   id: string
+  category: 'revenue' | 'expenses' | 'clients' | 'operations'
   metric: string
   currentValue: number
   predictedValue: number
   confidence: number
   timeframe: string
   factors: string[]
-  riskLevel: 'low' | 'medium' | 'high'
   recommendation: string
   lastUpdated: string
 }
@@ -79,138 +66,12 @@ export function AIInsights() {
   const [summaries, setSummaries] = useState<SmartSummary[]>([])
   const [predictions, setPredictions] = useState<PredictiveAnalytics[]>([])
 
-  // Mock data generation
+  // Initialize empty state
   useEffect(() => {
-    generateMockData()
+    setAnomalies([])
+    setSummaries([])
+    setPredictions([])
   }, [])
-
-  const generateMockData = () => {
-    // Generate mock anomalies
-    const mockAnomalies: AnomalyDetection[] = [
-      {
-        id: '1',
-        type: 'financial',
-        severity: 'high',
-        title: 'Unusual Expense Spike Detected',
-        description: 'Office supplies expenses increased by 340% compared to last month',
-        detectedAt: new Date().toISOString(),
-        confidence: 0.92,
-        impact: 'High - Could indicate budget overrun',
-        recommendation: 'Review recent purchases and implement approval workflow',
-        status: 'new'
-      },
-      {
-        id: '2',
-        type: 'operational',
-        severity: 'medium',
-        title: 'Client Payment Delay Pattern',
-        description: 'Client ABC Corp has delayed payments 3 times in the last 2 months',
-        detectedAt: new Date(Date.now() - 86400000).toISOString(),
-        confidence: 0.78,
-        impact: 'Medium - Cash flow impact',
-        recommendation: 'Follow up with client and consider payment terms adjustment',
-        status: 'investigating'
-      },
-      {
-        id: '3',
-        type: 'behavioral',
-        severity: 'low',
-        title: 'Unusual Login Activity',
-        description: 'Multiple login attempts from new IP addresses',
-        detectedAt: new Date(Date.now() - 172800000).toISOString(),
-        confidence: 0.65,
-        impact: 'Low - Security monitoring',
-        recommendation: 'Verify user identity and consider 2FA implementation',
-        status: 'resolved'
-      }
-    ]
-
-    // Generate mock summaries
-    const mockSummaries: SmartSummary[] = [
-      {
-        id: '1',
-        category: 'financial',
-        title: 'Monthly Financial Performance Summary',
-        summary: 'Your business shows strong revenue growth of 15% month-over-month, with improved profit margins. However, operational expenses have increased significantly.',
-        keyInsights: [
-          'Revenue increased by 15% compared to last month',
-          'Profit margins improved by 3.2%',
-          'Operational expenses rose by 22%',
-          'Cash flow remains positive despite expense increases'
-        ],
-        trends: [
-          { metric: 'Revenue', direction: 'up', percentage: 15.2, period: 'vs last month' },
-          { metric: 'Profit Margin', direction: 'up', percentage: 3.2, period: 'vs last month' },
-          { metric: 'Operational Expenses', direction: 'up', percentage: 22.1, period: 'vs last month' }
-        ],
-        generatedAt: new Date().toISOString(),
-        confidence: 0.89
-      },
-      {
-        id: '2',
-        category: 'operational',
-        title: 'Client Relationship Health Analysis',
-        summary: 'Client satisfaction scores are above average, but payment delays are increasing. Focus on improving payment processes.',
-        keyInsights: [
-          'Client satisfaction score: 4.2/5.0',
-          'Payment delay rate increased by 8%',
-          'Top 3 clients account for 45% of revenue',
-          'Average payment time: 28 days'
-        ],
-        trends: [
-          { metric: 'Client Satisfaction', direction: 'stable', percentage: 0.5, period: 'vs last quarter' },
-          { metric: 'Payment Delays', direction: 'up', percentage: 8.3, period: 'vs last quarter' },
-          { metric: 'Revenue Concentration', direction: 'stable', percentage: 2.1, period: 'vs last quarter' }
-        ],
-        generatedAt: new Date(Date.now() - 3600000).toISOString(),
-        confidence: 0.76
-      }
-    ]
-
-    // Generate mock predictions
-    const mockPredictions: PredictiveAnalytics[] = [
-      {
-        id: '1',
-        metric: 'Monthly Revenue',
-        currentValue: 125000,
-        predictedValue: 142000,
-        confidence: 0.87,
-        timeframe: 'Next Month',
-        factors: ['Seasonal trends', 'Client growth', 'Market conditions'],
-        riskLevel: 'low',
-        recommendation: 'Continue current growth strategies',
-        lastUpdated: new Date().toISOString()
-      },
-      {
-        id: '2',
-        metric: 'Cash Flow',
-        currentValue: 45000,
-        predictedValue: 38000,
-        confidence: 0.73,
-        timeframe: 'Next 30 Days',
-        factors: ['Payment delays', 'Expense increases', 'Seasonal patterns'],
-        riskLevel: 'medium',
-        recommendation: 'Monitor payment collections closely',
-        lastUpdated: new Date().toISOString()
-      },
-      {
-        id: '3',
-        metric: 'Client Churn Rate',
-        currentValue: 0.05,
-        predictedValue: 0.08,
-        confidence: 0.81,
-        timeframe: 'Next Quarter',
-        factors: ['Payment delays', 'Service quality', 'Competition'],
-        riskLevel: 'high',
-        recommendation: 'Implement client retention program',
-        lastUpdated: new Date().toISOString()
-      }
-    ]
-
-    setAnomalies(mockAnomalies)
-    setSummaries(mockSummaries)
-    setPredictions(mockPredictions)
-  }
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -224,439 +85,372 @@ export function AIInsights() {
 
   const getSeverityIcon = (severity: string) => {
     switch (severity) {
-      case 'critical': return <AlertTriangle className="h-4 w-4 text-danger" />
-      case 'high': return <AlertTriangle className="h-4 w-4 text-warning" />
-      case 'medium': return <AlertTriangle className="h-4 w-4 text-info" />
-      case 'low': return <AlertTriangle className="h-4 w-4 text-secondary" />
-      default: return <AlertTriangle className="h-4 w-4 text-secondary" />
+      case 'critical': return AlertTriangle
+      case 'high': return AlertTriangle
+      case 'medium': return Clock
+      case 'low': return CheckCircle
+      default: return Clock
     }
   }
 
-  const getStatusIcon = (status: string) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
-      case 'new': return <Clock className="h-4 w-4 text-primary" />
-      case 'investigating': return <Eye className="h-4 w-4 text-warning" />
-      case 'resolved': return <CheckCircle className="h-4 w-4 text-success" />
-      case 'false_positive': return <XCircle className="h-4 w-4 text-muted" />
-      default: return <Clock className="h-4 w-4 text-primary" />
-    }
-  }
-
-  const getTrendIcon = (direction: string) => {
-    switch (direction) {
-      case 'up': return <ArrowUpRight className="h-4 w-4 text-success" />
-      case 'down': return <ArrowDownRight className="h-4 w-4 text-danger" />
-      default: return <Activity className="h-4 w-4 text-muted" />
-    }
-  }
-
-  const getRiskColor = (risk: string) => {
-    switch (risk) {
-      case 'high': return 'danger'
-      case 'medium': return 'warning'
-      case 'low': return 'success'
+      case 'new': return 'primary'
+      case 'investigating': return 'warning'
+      case 'resolved': return 'success'
+      case 'false_positive': return 'secondary'
       default: return 'secondary'
     }
   }
 
+  const getTrendIcon = (trend: string) => {
+    switch (trend) {
+      case 'up': return TrendingUp
+      case 'down': return TrendingUp
+      case 'stable': return BarChart3
+      default: return BarChart3
+    }
+  }
+
+  const getTrendColor = (trend: string) => {
+    switch (trend) {
+      case 'up': return 'success'
+      case 'down': return 'danger'
+      case 'stable': return 'info'
+      default: return 'info'
+    }
+  }
+
+  const criticalAnomalies = anomalies.filter(a => a.severity === 'critical').length
+  const highAnomalies = anomalies.filter(a => a.severity === 'high').length
+  const resolvedAnomalies = anomalies.filter(a => a.status === 'resolved').length
+  const totalInsights = summaries.length + predictions.length
+
   return (
     <div className="container-fluid ai-insights-page">
+      {/* Page Header */}
       <PageHeader 
-        title="AI & Insights"
-        subtitle="Leverage artificial intelligence for anomaly detection, smart summaries, and predictive analytics"
+        title="AI Insights & Analytics"
+        subtitle="Intelligent anomaly detection, smart summaries, and predictive analytics"
+        breadcrumbs={[
+          { label: 'Home', path: '/dashboard' },
+          { label: 'AI & Insights', active: true }
+        ]}
       />
 
+      {/* Key Metrics */}
+      <div className="row mb-4">
+        <div className="col-lg-3 col-md-6 mb-3">
+          <div className="card border-0 shadow-sm h-100">
+            <div className="card-body text-center py-3">
+              <div className="avatar avatar-md mx-auto mb-2">
+                <span className="avatar-initial rounded bg-label-danger">
+                  <AlertTriangle className="h-4 w-4" />
+                </span>
+              </div>
+              <h4 className="mb-1 text-danger">{criticalAnomalies}</h4>
+              <p className="text-muted mb-0 small">Critical Issues</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-lg-3 col-md-6 mb-3">
+          <div className="card border-0 shadow-sm h-100">
+            <div className="card-body text-center py-3">
+              <div className="avatar avatar-md mx-auto mb-2">
+                <span className="avatar-initial rounded bg-label-warning">
+                  <AlertTriangle className="h-4 w-4" />
+                </span>
+              </div>
+              <h4 className="mb-1 text-warning">{highAnomalies}</h4>
+              <p className="text-muted mb-0 small">High Priority</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-lg-3 col-md-6 mb-3">
+          <div className="card border-0 shadow-sm h-100">
+            <div className="card-body text-center py-3">
+              <div className="avatar avatar-md mx-auto mb-2">
+                <span className="avatar-initial rounded bg-label-success">
+                  <CheckCircle className="h-4 w-4" />
+                </span>
+              </div>
+              <h4 className="mb-1 text-success">{resolvedAnomalies}</h4>
+              <p className="text-muted mb-0 small">Resolved</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-lg-3 col-md-6 mb-3">
+          <div className="card border-0 shadow-sm h-100">
+            <div className="card-body text-center py-3">
+              <div className="avatar avatar-md mx-auto mb-2">
+                <span className="avatar-initial rounded bg-label-primary">
+                  <Brain className="h-4 w-4" />
+                </span>
+              </div>
+              <h4 className="mb-1 text-primary">{totalInsights}</h4>
+              <p className="text-muted mb-0 small">Total Insights</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
       <div className="row">
         <div className="col-12">
-          <div className="card border-0 shadow-lg">
-            <div className="card-header border-0 px-0 pt-4 pb-0">
-              <ul className="nav nav-tabs card-header-tabs" role="tablist">
+          <div className="card border-0 shadow-sm">
+            <div className="card-header bg-transparent border-0 pb-0">
+              <ul className="nav nav-tabs nav-fill" role="tablist">
                 <li className="nav-item" role="presentation">
-                  <button 
+                  <button
                     className={`nav-link ${activeTab === 'anomalies' ? 'active' : ''}`}
                     onClick={() => setActiveTab('anomalies')}
+                    type="button"
                   >
                     <AlertTriangle className="h-4 w-4 me-2" />
-                    Anomaly Detection
+                    Anomalies ({anomalies.length})
                   </button>
                 </li>
                 <li className="nav-item" role="presentation">
-                  <button 
+                  <button
                     className={`nav-link ${activeTab === 'summaries' ? 'active' : ''}`}
                     onClick={() => setActiveTab('summaries')}
+                    type="button"
                   >
-                    <Lightbulb className="h-4 w-4 me-2" />
-                    Smart BI Summaries
+                    <FileText className="h-4 w-4 me-2" />
+                    Summaries ({summaries.length})
                   </button>
                 </li>
                 <li className="nav-item" role="presentation">
-                  <button 
+                  <button
                     className={`nav-link ${activeTab === 'predictions' ? 'active' : ''}`}
                     onClick={() => setActiveTab('predictions')}
+                    type="button"
                   >
-                    <Target className="h-4 w-4 me-2" />
-                    Predictive Analytics
+                    <TrendingUp className="h-4 w-4 me-2" />
+                    Predictions ({predictions.length})
                   </button>
                 </li>
               </ul>
             </div>
             <div className="card-body">
-              <div className="tab-content">
-                {/* Anomaly Detection Tab */}
-                <div className={`tab-pane ${activeTab === 'anomalies' ? 'active' : ''}`}>
-                  {activeTab === 'anomalies' && (
-                <div className="anomaly-detection">
-                  <div className="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                      <h5 className="mb-1">Anomaly Detection</h5>
-                      <p className="text-muted small mb-0">AI-powered detection of unusual patterns in your business data</p>
-                    </div>
+              {/* Anomalies Tab */}
+              {activeTab === 'anomalies' && (
+                <div>
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h6 className="mb-0">Anomaly Detection</h6>
                     <div className="d-flex gap-2">
-                      <button className="btn btn-outline-primary btn-sm">
+                      <button className="btn btn-outline-secondary btn-sm">
                         <Filter className="h-4 w-4 me-1" />
                         Filter
                       </button>
-                      <button className="btn btn-outline-secondary btn-sm">
-                        <Download className="h-4 w-4 me-1" />
-                        Export
-                      </button>
-                      <button className="btn btn-primary btn-sm" onClick={generateMockData}>
+                      <button className="btn btn-outline-primary btn-sm">
                         <RefreshCw className="h-4 w-4 me-1" />
                         Refresh
                       </button>
                     </div>
                   </div>
-
-                  <div className="table-responsive">
-                    <table className="table table-hover">
-                      <thead>
-                        <tr>
-                          <th>Anomaly</th>
-                          <th>Severity</th>
-                          <th>Status</th>
-                          <th>Confidence</th>
-                          <th>Impact</th>
-                          <th>Detected</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {anomalies.map((anomaly) => (
-                          <tr key={anomaly.id}>
-                            <td>
-                              <div>
-                                <div className="fw-medium">{anomaly.title}</div>
-                                <small className="text-muted">{anomaly.description}</small>
-                                <div className="mt-1">
-                                  <small className="text-muted">
-                                    <strong>Recommendation:</strong> {anomaly.recommendation}
-                                  </small>
+                  {anomalies.length === 0 ? (
+                    <div className="text-center py-5">
+                      <AlertTriangle className="h-12 w-12 text-muted mb-2" />
+                      <p className="text-muted">No anomalies detected</p>
+                      <small className="text-muted">AI will automatically detect unusual patterns in your data</small>
+                    </div>
+                  ) : (
+                    <div className="row">
+                      {anomalies.map((anomaly) => {
+                        const SeverityIcon = getSeverityIcon(anomaly.severity)
+                        return (
+                          <div key={anomaly.id} className="col-md-6 col-lg-4 mb-3">
+                            <div className="card border h-100">
+                              <div className="card-header d-flex justify-content-between align-items-center">
+                                <div className="d-flex align-items-center">
+                                  <SeverityIcon className={`h-4 w-4 me-2 text-${getSeverityColor(anomaly.severity)}`} />
+                                  <span className={`badge bg-label-${getSeverityColor(anomaly.severity)}`}>
+                                    {anomaly.severity}
+                                  </span>
                                 </div>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="d-flex align-items-center">
-                                {getSeverityIcon(anomaly.severity)}
-                                <span className={`badge bg-${getSeverityColor(anomaly.severity)} ms-2`}>
-                                  {anomaly.severity.toUpperCase()}
+                                <span className={`badge bg-label-${getStatusColor(anomaly.status)}`}>
+                                  {anomaly.status}
                                 </span>
                               </div>
-                            </td>
-                            <td>
-                              <div className="d-flex align-items-center">
-                                {getStatusIcon(anomaly.status)}
-                                <span className="ms-2 small text-muted">{anomaly.status.replace('_', ' ')}</span>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="small">
-                                <div className="fw-medium">{(anomaly.confidence * 100).toFixed(1)}%</div>
-                                <div className="progress" style={{ height: '3px' }}>
-                                  <div 
-                                    className="progress-bar bg-primary" 
-                                    style={{ width: `${anomaly.confidence * 100}%` }}
-                                  ></div>
+                              <div className="card-body">
+                                <h6 className="card-title">{anomaly.title}</h6>
+                                <p className="card-text small text-muted mb-2">{anomaly.description}</p>
+                                <div className="mb-2">
+                                  <small className="text-muted">Confidence: </small>
+                                  <span className="fw-semibold">{Math.round(anomaly.confidence * 100)}%</span>
+                                </div>
+                                <div className="mb-2">
+                                  <small className="text-muted">Impact: </small>
+                                  <span className="fw-semibold">{anomaly.impact}</span>
+                                </div>
+                                <div className="mb-3">
+                                  <small className="text-muted">Recommendation:</small>
+                                  <p className="small mb-0">{anomaly.recommendation}</p>
+                                </div>
+                                <div className="d-flex gap-1">
+                                  <button className="btn btn-sm btn-outline-primary">
+                                    <Eye className="h-3 w-3" />
+                                  </button>
+                                  <button className="btn btn-sm btn-outline-success">
+                                    <CheckCircle className="h-3 w-3" />
+                                  </button>
                                 </div>
                               </div>
-                            </td>
-                            <td>
-                              <small className="text-dark">{anomaly.impact}</small>
-                            </td>
-                            <td>
-                              <small className="text-muted">
-                                <Calendar className="h-3 w-3 me-1" />
-                                {new Date(anomaly.detectedAt).toLocaleDateString()}
-                              </small>
-                            </td>
-                            <td>
-                              <div className="btn-group btn-group-sm">
-                                <button className="btn btn-outline-primary">Investigate</button>
-                                <button className="btn btn-outline-secondary">Dismiss</button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
                   )}
                 </div>
+              )}
 
-                {/* Smart BI Summaries Tab */}
-                <div className={`tab-pane ${activeTab === 'summaries' ? 'active' : ''}`}>
-                  {activeTab === 'summaries' && (
-                <div className="smart-summaries">
-                  <div className="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                      <h5 className="mb-1">Smart BI Summaries</h5>
-                      <p className="text-muted small mb-0">AI-generated insights and summaries of your business intelligence data</p>
-                    </div>
-                    <div className="d-flex gap-2">
-                      <button className="btn btn-outline-primary btn-sm">
-                        <Filter className="h-4 w-4 me-1" />
-                        Filter
-                      </button>
-                      <button className="btn btn-outline-secondary btn-sm">
-                        <Download className="h-4 w-4 me-1" />
-                        Export
-                      </button>
-                      <button className="btn btn-primary btn-sm" onClick={generateMockData}>
-                        <RefreshCw className="h-4 w-4 me-1" />
-                        Generate New
-                      </button>
-                    </div>
+              {/* Summaries Tab */}
+              {activeTab === 'summaries' && (
+                <div>
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h6 className="mb-0">Smart Summaries</h6>
+                    <button className="btn btn-primary btn-sm">
+                      <Brain className="h-4 w-4 me-1" />
+                      Generate Summary
+                    </button>
                   </div>
-
-                  <div className="table-responsive">
-                    <table className="table table-hover">
-                      <thead>
-                        <tr>
-                          <th>Summary</th>
-                          <th>Category</th>
-                          <th>Confidence</th>
-                          <th>Key Insights</th>
-                          <th>Trends</th>
-                          <th>Generated</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {summaries.map((summary) => (
-                          <tr key={summary.id}>
-                            <td>
-                              <div>
-                                <div className="fw-medium">{summary.title}</div>
-                                <small className="text-muted">{summary.summary}</small>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="d-flex align-items-center">
-                                <Brain className="h-4 w-4 me-2 text-primary" />
-                                <span className="badge bg-primary">{summary.category.toUpperCase()}</span>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="small">
-                                <div className="fw-medium">{(summary.confidence * 100).toFixed(1)}%</div>
-                                <div className="progress" style={{ height: '3px' }}>
-                                  <div 
-                                    className="progress-bar bg-primary" 
-                                    style={{ width: `${summary.confidence * 100}%` }}
-                                  ></div>
+                  {summaries.length === 0 ? (
+                    <div className="text-center py-5">
+                      <FileText className="h-12 w-12 text-muted mb-2" />
+                      <p className="text-muted">No summaries available</p>
+                      <small className="text-muted">Generate AI-powered summaries of your business data</small>
+                    </div>
+                  ) : (
+                    <div className="row">
+                      {summaries.map((summary) => (
+                        <div key={summary.id} className="col-md-6 mb-3">
+                          <div className="card border h-100">
+                            <div className="card-header d-flex justify-content-between align-items-center">
+                              <h6 className="mb-0">{summary.title}</h6>
+                              <span className="badge bg-label-info">{summary.type}</span>
+                            </div>
+                            <div className="card-body">
+                              <p className="card-text mb-3">{summary.summary}</p>
+                              <div className="mb-3">
+                                <h6 className="small mb-2">Key Metrics:</h6>
+                                <div className="row">
+                                  {summary.keyMetrics.map((metric, index) => {
+                                    const TrendIcon = getTrendIcon(metric.trend)
+                                    return (
+                                      <div key={index} className="col-6 mb-2">
+                                        <div className="d-flex justify-content-between align-items-center">
+                                          <small className="text-muted">{metric.name}</small>
+                                          <div className="d-flex align-items-center">
+                                            <TrendIcon className={`h-3 w-3 me-1 text-${getTrendColor(metric.trend)}`} />
+                                            <small className={`fw-semibold text-${getTrendColor(metric.trend)}`}>
+                                              {metric.change > 0 ? '+' : ''}{metric.change}%
+                                            </small>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )
+                                  })}
                                 </div>
                               </div>
-                            </td>
-                            <td>
-                              <div className="small">
-                                <ul className="list-unstyled mb-0">
-                                  {summary.keyInsights.slice(0, 2).map((insight, index) => (
+                              <div className="mb-3">
+                                <h6 className="small mb-2">Key Insights:</h6>
+                                <ul className="list-unstyled small">
+                                  {summary.insights.map((insight, index) => (
                                     <li key={index} className="mb-1">
-                                      <CheckCircle className="h-3 w-3 me-2 text-success" />
+                                      <Zap className="h-3 w-3 me-1 text-warning" />
                                       {insight}
                                     </li>
                                   ))}
-                                  {summary.keyInsights.length > 2 && (
-                                    <li className="text-muted">
-                                      +{summary.keyInsights.length - 2} more insights
-                                    </li>
-                                  )}
                                 </ul>
                               </div>
-                            </td>
-                            <td>
-                              <div className="small">
-                                {summary.trends.slice(0, 2).map((trend, index) => (
-                                  <div key={index} className="d-flex justify-content-between align-items-center mb-1">
-                                    <div className="d-flex align-items-center">
-                                      {getTrendIcon(trend.direction)}
-                                      <span className="ms-2">{trend.metric}</span>
-                                    </div>
-                                    <div className="text-end">
-                                      <span className={`small fw-medium ${trend.direction === 'up' ? 'text-success' : trend.direction === 'down' ? 'text-danger' : 'text-muted'}`}>
-                                        {trend.direction === 'up' ? '+' : trend.direction === 'down' ? '-' : ''}{trend.percentage}%
-                                      </span>
-                                    </div>
-                                  </div>
-                                ))}
-                                {summary.trends.length > 2 && (
-                                  <div className="text-muted">
-                                    +{summary.trends.length - 2} more trends
-                                  </div>
-                                )}
-                              </div>
-                            </td>
-                            <td>
                               <small className="text-muted">
-                                <Calendar className="h-3 w-3 me-1" />
-                                {new Date(summary.generatedAt).toLocaleDateString()}
+                                Generated: {new Date(summary.generatedAt).toLocaleDateString()}
                               </small>
-                            </td>
-                            <td>
-                              <button className="btn btn-outline-primary btn-sm">
-                                <Eye className="h-4 w-4 me-1" />
-                                View Details
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   )}
                 </div>
+              )}
 
-                {/* Predictive Analytics Tab */}
-                <div className={`tab-pane ${activeTab === 'predictions' ? 'active' : ''}`}>
-                  {activeTab === 'predictions' && (
-                <div className="predictive-analytics">
-                  <div className="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                      <h5 className="mb-1">Predictive Analytics</h5>
-                      <p className="text-muted small mb-0">AI-powered predictions and forecasting for your business metrics</p>
-                    </div>
-                    <div className="d-flex gap-2">
-                      <button className="btn btn-outline-primary btn-sm">
-                        <Filter className="h-4 w-4 me-1" />
-                        Filter
-                      </button>
-                      <button className="btn btn-outline-secondary btn-sm">
-                        <Download className="h-4 w-4 me-1" />
-                        Export
-                      </button>
-                      <button className="btn btn-primary btn-sm" onClick={generateMockData}>
-                        <RefreshCw className="h-4 w-4 me-1" />
-                        Update Predictions
-                      </button>
-                    </div>
+              {/* Predictions Tab */}
+              {activeTab === 'predictions' && (
+                <div>
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h6 className="mb-0">Predictive Analytics</h6>
+                    <button className="btn btn-primary btn-sm">
+                      <Target className="h-4 w-4 me-1" />
+                      Generate Predictions
+                    </button>
                   </div>
-
-                  <div className="table-responsive">
-                    <table className="table table-hover">
-                      <thead>
-                        <tr>
-                          <th>Metric</th>
-                          <th>Timeframe</th>
-                          <th>Current Value</th>
-                          <th>Predicted Value</th>
-                          <th>Confidence</th>
-                          <th>Risk Level</th>
-                          <th>Factors</th>
-                          <th>Updated</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {predictions.map((prediction) => (
-                          <tr key={prediction.id}>
-                            <td>
-                              <div className="d-flex align-items-center">
-                                <Target className="h-4 w-4 me-2 text-primary" />
-                                <div className="fw-medium">{prediction.metric}</div>
-                              </div>
-                            </td>
-                            <td>
-                              <span className="badge bg-info">{prediction.timeframe}</span>
-                            </td>
-                            <td>
-                              <div className="fw-medium">
-                                {prediction.metric.includes('Rate') || prediction.metric.includes('Rate') 
-                                  ? `${(prediction.currentValue * 100).toFixed(1)}%`
-                                  : prediction.metric.includes('Revenue') || prediction.metric.includes('Cash Flow')
-                                  ? formatCurrency(prediction.currentValue)
-                                  : formatNumber(prediction.currentValue)
-                                }
-                              </div>
-                            </td>
-                            <td>
-                              <div className="fw-medium text-primary">
-                                {prediction.metric.includes('Rate') || prediction.metric.includes('Rate') 
-                                  ? `${(prediction.predictedValue * 100).toFixed(1)}%`
-                                  : prediction.metric.includes('Revenue') || prediction.metric.includes('Cash Flow')
-                                  ? formatCurrency(prediction.predictedValue)
-                                  : formatNumber(prediction.predictedValue)
-                                }
-                              </div>
-                            </td>
-                            <td>
-                              <div className="small">
-                                <div className="fw-medium">{(prediction.confidence * 100).toFixed(1)}%</div>
-                                <div className="progress" style={{ height: '3px' }}>
-                                  <div 
-                                    className="progress-bar bg-primary" 
-                                    style={{ width: `${prediction.confidence * 100}%` }}
-                                  ></div>
+                  {predictions.length === 0 ? (
+                    <div className="text-center py-5">
+                      <TrendingUp className="h-12 w-12 text-muted mb-2" />
+                      <p className="text-muted">No predictions available</p>
+                      <small className="text-muted">Generate AI-powered predictions based on your historical data</small>
+                    </div>
+                  ) : (
+                    <div className="row">
+                      {predictions.map((prediction) => (
+                        <div key={prediction.id} className="col-md-6 col-lg-4 mb-3">
+                          <div className="card border h-100">
+                            <div className="card-header">
+                              <h6 className="mb-0">{prediction.metric}</h6>
+                              <small className="text-muted">{prediction.category}</small>
+                            </div>
+                            <div className="card-body">
+                              <div className="mb-3">
+                                <div className="d-flex justify-content-between align-items-center mb-1">
+                                  <small className="text-muted">Current</small>
+                                  <span className="fw-semibold">{formatNumber(prediction.currentValue)}</span>
+                                </div>
+                                <div className="d-flex justify-content-between align-items-center mb-1">
+                                  <small className="text-muted">Predicted</small>
+                                  <span className="fw-semibold text-primary">{formatNumber(prediction.predictedValue)}</span>
+                                </div>
+                                <div className="d-flex justify-content-between align-items-center">
+                                  <small className="text-muted">Confidence</small>
+                                  <span className="fw-semibold">{Math.round(prediction.confidence * 100)}%</span>
                                 </div>
                               </div>
-                            </td>
-                            <td>
-                              <span className={`badge bg-${getRiskColor(prediction.riskLevel)}`}>
-                                {prediction.riskLevel.toUpperCase()} RISK
-                              </span>
-                            </td>
-                            <td>
-                              <div className="small">
-                                <ul className="list-unstyled mb-0">
-                                  {prediction.factors.slice(0, 2).map((factor, index) => (
+                              <div className="mb-3">
+                                <small className="text-muted">Timeframe: {prediction.timeframe}</small>
+                              </div>
+                              <div className="mb-3">
+                                <h6 className="small mb-2">Key Factors:</h6>
+                                <ul className="list-unstyled small">
+                                  {prediction.factors.map((factor, index) => (
                                     <li key={index} className="mb-1">
-                                      <Zap className="h-3 w-3 me-2 text-warning" />
+                                      <Target className="h-3 w-3 me-1 text-info" />
                                       {factor}
                                     </li>
                                   ))}
-                                  {prediction.factors.length > 2 && (
-                                    <li className="text-muted">
-                                      +{prediction.factors.length - 2} more factors
-                                    </li>
-                                  )}
                                 </ul>
                               </div>
-                            </td>
-                            <td>
+                              <div className="mb-3">
+                                <h6 className="small mb-2">Recommendation:</h6>
+                                <p className="small mb-0">{prediction.recommendation}</p>
+                              </div>
                               <small className="text-muted">
-                                <Calendar className="h-3 w-3 me-1" />
-                                {new Date(prediction.lastUpdated).toLocaleDateString()}
+                                Updated: {new Date(prediction.lastUpdated).toLocaleDateString()}
                               </small>
-                            </td>
-                            <td>
-                              <button className="btn btn-outline-primary btn-sm">
-                                <Eye className="h-4 w-4 me-1" />
-                                View Details
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   )}
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
+

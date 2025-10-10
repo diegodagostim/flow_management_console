@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { Product, Module, Submodule } from '@/core/models/Product';
 
 // Base Client Model
 export const ClientSchema = z.object({
@@ -109,6 +110,68 @@ export type Notification = z.infer<typeof NotificationSchema>;
 export type CreateNotificationInput = Omit<Notification, 'id' | 'createdAt' | 'updatedAt'>;
 export type UpdateNotificationInput = Partial<CreateNotificationInput>;
 
+// Product Subscription Models
+export const ProductSubscriptionSchema = z.object({
+  id: z.string().uuid().optional(),
+  clientId: z.string().uuid(),
+  productId: z.string().uuid(),
+  productName: z.string().min(1, 'Product name is required'),
+  selectedModules: z.array(z.object({
+    moduleId: z.string().uuid(),
+    moduleName: z.string(),
+    isActive: z.boolean().default(true),
+    selectedSubmodules: z.array(z.object({
+      submoduleId: z.string().uuid(),
+      submoduleName: z.string(),
+      isActive: z.boolean().default(true),
+    })).default([]),
+  })).default([]),
+  contractLength: z.object({
+    duration: z.number().positive('Duration must be positive'),
+    unit: z.enum(['months', 'years']).default('months'),
+    startDate: z.string().datetime(),
+    endDate: z.string().datetime(),
+  }),
+  pricing: z.object({
+    totalAmount: z.number().positive('Total amount must be positive'),
+    currency: z.string().default('USD'),
+    billingCycle: z.enum(['monthly', 'quarterly', 'yearly']).default('monthly'),
+    oneTimeCharges: z.number().min(0).default(0),
+    recurringCharges: z.number().min(0).default(0),
+  }),
+  status: z.enum(['active', 'inactive', 'suspended', 'expired', 'pending']).default('pending'),
+  contractDocument: z.string().optional(), // URL or base64 content
+  signedAt: z.string().datetime().optional(),
+  createdAt: z.string().datetime().optional(),
+  updatedAt: z.string().datetime().optional(),
+});
+
+export type ProductSubscription = z.infer<typeof ProductSubscriptionSchema>;
+export type CreateProductSubscriptionInput = Omit<ProductSubscription, 'id' | 'createdAt' | 'updatedAt'>;
+export type UpdateProductSubscriptionInput = Partial<CreateProductSubscriptionInput>;
+
+// Contract Template Model
+export const ContractTemplateSchema = z.object({
+  id: z.string().uuid().optional(),
+  name: z.string().min(1, 'Template name is required'),
+  description: z.string().optional(),
+  template: z.string().min(1, 'Template content is required'), // HTML or Markdown template
+  variables: z.array(z.object({
+    key: z.string(),
+    label: z.string(),
+    type: z.enum(['text', 'number', 'date', 'currency', 'boolean']),
+    required: z.boolean().default(false),
+    defaultValue: z.string().optional(),
+  })).default([]),
+  isActive: z.boolean().default(true),
+  createdAt: z.string().datetime().optional(),
+  updatedAt: z.string().datetime().optional(),
+});
+
+export type ContractTemplate = z.infer<typeof ContractTemplateSchema>;
+export type CreateContractTemplateInput = Omit<ContractTemplate, 'id' | 'createdAt' | 'updatedAt'>;
+export type UpdateContractTemplateInput = Partial<CreateContractTemplateInput>;
+
 // Filter Types
 export type ClientFilters = {
   search?: string;
@@ -144,6 +207,18 @@ export type NotificationFilters = {
   type?: Notification['type'];
   status?: Notification['status'];
   priority?: Notification['priority'];
+};
+
+export type ProductSubscriptionFilters = {
+  clientId?: string;
+  productId?: string;
+  status?: ProductSubscription['status'];
+  contractLength?: number;
+};
+
+export type ContractTemplateFilters = {
+  name?: string;
+  isActive?: boolean;
 };
 
 // Dashboard Summary Types

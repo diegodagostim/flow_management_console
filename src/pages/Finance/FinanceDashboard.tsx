@@ -70,7 +70,7 @@ export function FinanceDashboard() {
       stats: {
         profit: netProfit,
         margin: profitMargin,
-        growth: 12.5 // Mock data
+        growth: 0, // Will be calculated from real data
       }
     },
     {
@@ -93,8 +93,8 @@ export function FinanceDashboard() {
       path: '/finance/business-intelligence',
       stats: {
         clients: 0, // Would be calculated
-        growth: 15.2, // Mock data
-        efficiency: 87.5 // Mock data
+        growth: 0, // Will be calculated from real data
+        efficiency: 0 // Will be calculated from real data
       }
     },
     {
@@ -106,7 +106,7 @@ export function FinanceDashboard() {
       stats: {
         matched: transactionStats?.reconciledCount || 0,
         pending: transactionStats?.unreconciledCount || 0,
-        rate: 94.2 // Mock data
+        rate: 0 // Will be calculated from real data
       }
     }
   ]

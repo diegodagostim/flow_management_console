@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useAuth } from '@/hooks/useAuth'
-import { Search, Settings, LogOut } from 'lucide-react'
+import { Search, Settings } from 'lucide-react'
 import { FlowLogo } from '@/components/icons/FlowLogo'
 import { FlowLogoAlt } from '@/components/icons/FlowLogoAlt'
 import { FlowLogoModern } from '@/components/icons/FlowLogoModern'
@@ -8,16 +7,6 @@ import { FlowLogoMinimal } from '@/components/icons/FlowLogoMinimal'
 import { TopbarDateTime } from './TopbarDateTime'
 
 export function Topbar() {
-  const { user, signOut } = useAuth()
-
-  const handleSignOut = async () => {
-    try {
-      await signOut()
-    } catch (error) {
-      console.error('Failed to sign out:', error)
-    }
-  }
-
   return (
     <div className="topbar bg-white shadow-sm border-bottom">
       <div className="container-xxl d-flex align-items-center justify-content-between py-2">
@@ -58,9 +47,7 @@ export function Topbar() {
             <a className="nav-link dropdown-toggle hide-arrow d-flex align-items-center justify-content-center h-100" href="#" data-bs-toggle="dropdown">
               <div className="avatar d-flex align-items-center justify-content-center">
                 <div className="w-px-40 h-px-40 rounded-circle bg-primary d-flex align-items-center justify-content-center">
-                  <span className="text-white fw-semibold">
-                    {user?.email?.charAt(0).toUpperCase() || 'U'}
-                  </span>
+                  <span className="text-white fw-semibold">U</span>
                 </div>
               </div>
             </a>
@@ -71,14 +58,12 @@ export function Topbar() {
                     <div className="flex-shrink-0 me-3">
                       <div className="avatar">
                         <div className="w-px-40 h-px-40 rounded-circle bg-primary d-flex align-items-center justify-content-center">
-                          <span className="text-white fw-semibold">
-                            {user?.email?.charAt(0).toUpperCase() || 'U'}
-                          </span>
+                          <span className="text-white fw-semibold">U</span>
                         </div>
                       </div>
                     </div>
                     <div className="flex-grow-1">
-                      <span className="fw-semibold d-block">{user?.email || 'User'}</span>
+                      <span className="fw-semibold d-block">User</span>
                       <small className="text-muted">Admin</small>
                     </div>
                   </div>
@@ -92,15 +77,6 @@ export function Topbar() {
                   <Settings className="h-4 w-4 me-2" />
                   <span className="align-middle">Settings</span>
                 </Link>
-              </li>
-              <li>
-                <div className="dropdown-divider"></div>
-              </li>
-              <li>
-                <button className="dropdown-item" onClick={handleSignOut}>
-                  <LogOut className="h-4 w-4 me-2" />
-                  <span className="align-middle">Log Out</span>
-                </button>
               </li>
             </ul>
           </div>

@@ -27,9 +27,6 @@ import { Settings } from '@/pages/Settings/Settings'
 import { AIInsights } from '@/pages/AI/AIInsights'
 import { MultiTenancyBilling } from '@/pages/Billing/MultiTenancyBilling'
 import { TimeRegionTest } from '@/components/TimeRegionTest'
-import { LoginPage } from '@/pages/Auth/LoginPage'
-import { RegisterPage } from '@/pages/Auth/RegisterPage'
-import { ForgotPasswordPage } from '@/pages/Auth/ForgotPasswordPage'
 import { useClients } from '@/hooks/useClientManagement'
 import { useSuppliers } from '@/hooks/useSupplierManagement'
 import { useProducts } from '@/hooks/useProduct'
@@ -307,15 +304,10 @@ function AppContent() {
   return (
     <Router>
       <Routes>
-        {/* Root route - handles initial authentication state */}
+        {/* Root route - redirects directly to dashboard */}
         <Route path="/" element={<AuthRedirect />} />
         
-        {/* Public Routes - No Layout */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        
-        {/* Protected Routes - With Layout */}
+        {/* All Routes - With Layout (no authentication required) */}
         <Route path="/dashboard" element={
           <ProtectedLayout>
             <Dashboard />

@@ -57,7 +57,7 @@ export function AutomatedReconciliation() {
   const markAsReconciled = useMarkTransactionAsReconciled()
   const { formatCurrency } = useTimeRegion()
 
-  // Mock reconciliation rules
+  // Reconciliation rules will be loaded from API
   const reconciliationRules: ReconciliationRule[] = [
     {
       id: '1',
@@ -97,43 +97,8 @@ export function AutomatedReconciliation() {
     }
   ]
 
-  // Mock external transactions (would come from API)
-  const externalTransactions: ExternalTransaction[] = [
-    {
-      id: 'ext-1',
-      processor: 'stripe',
-      processorTransactionId: 'pi_1234567890',
-      amount: 150.00,
-      currency: 'USD',
-      description: 'Payment for Invoice #INV-2024-0001',
-      transactionDate: '2024-01-15T10:30:00Z',
-      status: 'succeeded',
-      reconciliationStatus: 'pending'
-    },
-    {
-      id: 'ext-2',
-      processor: 'paypal',
-      processorTransactionId: 'PP-1234567890',
-      amount: 75.50,
-      currency: 'USD',
-      description: 'Service payment',
-      transactionDate: '2024-01-14T14:20:00Z',
-      status: 'completed',
-      reconciliationStatus: 'pending'
-    },
-    {
-      id: 'ext-3',
-      processor: 'stripe',
-      processorTransactionId: 'pi_0987654321',
-      amount: 200.00,
-      currency: 'USD',
-      description: 'Payment for Invoice #INV-2024-0002',
-      transactionDate: '2024-01-13T09:15:00Z',
-      status: 'succeeded',
-      reconciliationStatus: 'matched',
-      matchedTransactionId: 'txn-1'
-    }
-  ]
+  // External transactions will be loaded from API
+  const externalTransactions: ExternalTransaction[] = []
 
   // Filter external transactions
   const filteredExternalTransactions = useMemo(() => {
@@ -205,12 +170,12 @@ export function AutomatedReconciliation() {
   }
 
   const handleAutoReconcile = () => {
-    // Mock auto-reconciliation process
+    // TODO: Implement auto-reconciliation process
     console.log('Starting auto-reconciliation...')
   }
 
   const handleManualMatch = (externalTransactionId: string, transactionId: string) => {
-    // Mock manual matching
+    // TODO: Implement manual matching process
     console.log(`Matching external transaction ${externalTransactionId} with transaction ${transactionId}`)
   }
 

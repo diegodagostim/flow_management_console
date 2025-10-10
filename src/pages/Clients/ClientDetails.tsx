@@ -20,22 +20,27 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
-  XCircle
+  XCircle,
+  Package
 } from 'lucide-react';
 import { PageHeader } from '@/components/navigation/PageHeader';
 import { useClient, useContractsByClient, usePaymentsByClient, useUsageMetricsByClient, useNotificationsByClient } from '@/hooks/useClientManagement';
+import { useProductSubscriptionsByClient } from '@/hooks/useProductSubscription';
 import { useTimeRegion } from '@/hooks/useTimeRegion';
+import { ProductSelectionModal } from '@/components/modals/ProductSelectionModal';
 import type { Contract, Payment, UsageMetrics, Notification } from '@/core/models/ClientManagement';
 
 export function ClientDetails() {
   const { id } = useParams<{ id: string }>();
-  const [activeTab, setActiveTab] = useState<'overview' | 'contracts' | 'billing' | 'metrics' | 'notifications'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'contracts' | 'billing' | 'metrics' | 'notifications' | 'products'>('overview');
+  const [showProductSelectionModal, setShowProductSelectionModal] = useState(false);
 
   const { data: client, isLoading: clientLoading } = useClient(id || '');
   const { data: contracts = [] } = useContractsByClient(id || '');
   const { data: payments = [] } = usePaymentsByClient(id || '');
   const { data: metrics = [] } = useUsageMetricsByClient(id || '');
   const { data: notifications = [] } = useNotificationsByClient(id || '');
+  const { data: productSubscriptions = [] } = useProductSubscriptionsByClient(id || '');
   const { formatDate, formatCurrency, formatNumber } = useTimeRegion();
 
   if (clientLoading) {
@@ -130,7 +135,7 @@ export function ClientDetails() {
   const pendingPayments = payments.filter(payment => payment.status === 'pending').length;
 
   return (
-    <div className="container-fluid details-page">
+    <div className="container-fluid details-page" style={{ paddingTop: '2rem' }}>
       {/* Page Header */}
       <PageHeader 
         title={client.name}
@@ -318,6 +323,16 @@ export function ClientDetails() {
                   >
                     <Bell className="h-4 w-4 me-2" />
                     Notifications ({notifications.length})
+                  </button>
+                </li>
+                <li className="nav-item" role="presentation">
+                  <button
+                    className={`nav-link ${activeTab === 'products' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('products')}
+                    type="button"
+                  >
+                    <Package className="h-4 w-4 me-2" />
+                    Products ({productSubscriptions.length})
                   </button>
                 </li>
               </ul>
@@ -647,10 +662,99 @@ export function ClientDetails() {
                   )}
                 </div>
               )}
+
+              {/* Products Tab */}
+              {activeTab === 'products' && (
+                <div>
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h6 className="mb-0">Product Subscriptions</h6>
+                    <button 
+                      type="button"
+                      className="btn btn-primary btn-sm"
+                      onClick={() => setShowProductSelectionModal(true)}
+                    >
+                      <Plus className="h-4 w-4 me-1" />
+                      Add Product
+                    </button>
+                  </div>
+                  {productSubscriptions.length === 0 ? (
+                    <div className="text-center py-4">
+                      <Package className="h-12 w-12 text-muted mb-2" />
+                      <p className="text-muted">No product subscriptions found</p>
+                      <button 
+                        type="button"
+                        className="btn btn-primary btn-sm"
+                        onClick={() => setShowProductSelectionModal(true)}
+                      >
+                        <Plus className="h-4 w-4 me-1" />
+                        Add First Product
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="row">
+                      {productSubscriptions.map((subscription) => (
+                        <div key={subscription.id} className="col-md-6 mb-3">
+                          <div className="card border h-100">
+                            <div className="card-header d-flex justify-content-between align-items-center">
+                              <h6 className="mb-0">{subscription.productName}</h6>
+                              <span className={`badge ${subscription.status === 'active' ? 'bg-label-success' : 'bg-label-warning'}`}>
+                                {subscription.status}
+                              </span>
+                            </div>
+                            <div className="card-body">
+                              <div className="mb-2">
+                                <small className="text-muted">Contract Duration:</small>
+                                <div className="fw-semibold">
+                                  {subscription.contractLength.duration} {subscription.contractLength.unit}
+                                </div>
+                              </div>
+                              <div className="mb-2">
+                                <small className="text-muted">Total Amount:</small>
+                                <div className="fw-semibold text-success">
+                                  {formatCurrency(subscription.pricing.totalAmount)}
+                                </div>
+                              </div>
+                              <div className="mb-2">
+                                <small className="text-muted">Selected Modules:</small>
+                                <div className="small">
+                                  {subscription.selectedModules.length} module(s)
+                                </div>
+                              </div>
+                              <div className="d-flex gap-1 mt-3">
+                                <button className="btn btn-sm btn-outline-primary">
+                                  <Eye className="h-3 w-3" />
+                                </button>
+                                <button className="btn btn-sm btn-outline-secondary">
+                                  <Edit className="h-3 w-3" />
+                                </button>
+                                <button className="btn btn-sm btn-outline-success">
+                                  <FileText className="h-3 w-3" />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
+
+      {/* Product Selection Modal */}
+      {showProductSelectionModal && (
+        <ProductSelectionModal
+          clientId={id!}
+          onClose={() => setShowProductSelectionModal(false)}
+          onSuccess={() => {
+            setShowProductSelectionModal(false);
+            // The subscription will be automatically refetched due to React Query invalidation
+          }}
+        />
+      )}
     </div>
   );
 }

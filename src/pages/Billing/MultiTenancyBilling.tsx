@@ -1,74 +1,26 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import { 
-  CreditCard as CreditCardIcon, 
   Users, 
-  Building2, 
-  DollarSign, 
-  Calendar,
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-  TrendingUp,
-  TrendingDown,
-  BarChart3,
-  PieChart,
-  Activity,
-  Zap,
-  Target,
-  Lightbulb,
-  RefreshCw,
-  Eye,
-  Download,
-  Filter,
-  Settings,
+  CreditCard, 
+  TrendingUp, 
+  AlertCircle, 
+  CheckCircle, 
+  Clock,
   Plus,
   Edit,
   Trash2,
-  ExternalLink,
-  Shield,
-  Clock,
+  Eye,
   Star,
   Crown,
   Gem,
-  Award,
   Gift,
-  ArrowUpRight,
-  ArrowDownRight,
-  Play,
-  Pause,
-  PlayCircle,
-  PauseCircle
-} from 'lucide-react'
-import { PageHeader } from '@/components/navigation/PageHeader'
-import { useTimeRegion } from '@/hooks/useTimeRegion'
-
-interface Tenant {
-  id: string
-  name: string
-  email: string
-  plan: 'free' | 'starter' | 'professional' | 'enterprise'
-  status: 'active' | 'trial' | 'suspended' | 'cancelled'
-  trialEndsAt: string | null
-  subscriptionId: string | null
-  paymentMethod: 'stripe' | 'paypal' | 'none'
-  createdAt: string
-  lastBillingDate: string | null
-  nextBillingDate: string | null
-  usage: {
-    clients: number
-    suppliers: number
-    invoices: number
-    storage: number // in MB
-    apiCalls: number
-  }
-  limits: {
-    clients: number
-    suppliers: number
-    invoices: number
-    storage: number // in MB
-    apiCalls: number
-  }
-}
+  DollarSign,
+  Calendar,
+  BarChart3,
+  Settings
+} from 'lucide-react';
+import { PageHeader } from '@/components/navigation/PageHeader';
+import { useTimeRegion } from '@/hooks/useTimeRegion';
 
 interface SubscriptionPlan {
   id: string
@@ -81,7 +33,7 @@ interface SubscriptionPlan {
     clients: number
     suppliers: number
     invoices: number
-    storage: number
+    storage: number // in MB
     apiCalls: number
   }
   popular?: boolean
@@ -89,13 +41,42 @@ interface SubscriptionPlan {
   color: string
 }
 
+interface Tenant {
+  id: string
+  name: string
+  email: string
+  plan: string
+  status: 'active' | 'trial' | 'suspended' | 'cancelled'
+  trialEndsAt: string | null
+  subscriptionId: string | null
+  paymentMethod: string
+  createdAt: string
+  lastBillingDate: string | null
+  nextBillingDate: string | null
+  usage: {
+    clients: number
+    suppliers: number
+    invoices: number
+    storage: number
+    apiCalls: number
+  }
+  limits: {
+    clients: number
+    suppliers: number
+    invoices: number
+    storage: number
+    apiCalls: number
+  }
+}
+
 interface BillingTransaction {
   id: string
   tenantId: string
+  tenantName?: string
   amount: number
   currency: string
-  status: 'pending' | 'completed' | 'failed' | 'refunded'
-  type: 'subscription' | 'usage' | 'upgrade' | 'refund'
+  status: 'completed' | 'pending' | 'failed' | 'refunded'
+  type: 'subscription' | 'usage' | 'upgrade' | 'trial'
   description: string
   createdAt: string
   paymentMethod: string
@@ -113,282 +94,12 @@ export function MultiTenancyBilling() {
   const [showPlanModal, setShowPlanModal] = useState(false)
   const [showTenantModal, setShowTenantModal] = useState(false)
 
-  // Mock data generation
+  // Initialize empty state
   useEffect(() => {
-    generateMockData()
+    setPlans([])
+    setTenants([])
+    setTransactions([])
   }, [])
-
-  const generateMockData = () => {
-    // Generate subscription plans
-    const mockPlans: SubscriptionPlan[] = [
-      {
-        id: 'free',
-        name: 'Free',
-        description: 'Perfect for getting started',
-        price: 0,
-        interval: 'monthly',
-        features: [
-          'Up to 5 clients',
-          'Up to 3 suppliers',
-          'Basic reporting',
-          'Email support',
-          '1GB storage'
-        ],
-        limits: {
-          clients: 5,
-          suppliers: 3,
-          invoices: 50,
-          storage: 1024,
-          apiCalls: 1000
-        },
-        icon: Gift,
-        color: 'secondary'
-      },
-      {
-        id: 'starter',
-        name: 'Starter',
-        description: 'Great for small businesses',
-        price: 29,
-        interval: 'monthly',
-        features: [
-          'Up to 25 clients',
-          'Up to 15 suppliers',
-          'Advanced reporting',
-          'Priority support',
-          '10GB storage',
-          'API access'
-        ],
-        limits: {
-          clients: 25,
-          suppliers: 15,
-          invoices: 500,
-          storage: 10240,
-          apiCalls: 10000
-        },
-        icon: Star,
-        color: 'primary'
-      },
-      {
-        id: 'professional',
-        name: 'Professional',
-        description: 'For growing businesses',
-        price: 79,
-        interval: 'monthly',
-        features: [
-          'Up to 100 clients',
-          'Up to 50 suppliers',
-          'Advanced analytics',
-          'Phone support',
-          '50GB storage',
-          'Full API access',
-          'Custom integrations'
-        ],
-        limits: {
-          clients: 100,
-          suppliers: 50,
-          invoices: 2000,
-          storage: 51200,
-          apiCalls: 50000
-        },
-        popular: true,
-        icon: Crown,
-        color: 'warning'
-      },
-      {
-        id: 'enterprise',
-        name: 'Enterprise',
-        description: 'For large organizations',
-        price: 199,
-        interval: 'monthly',
-        features: [
-          'Unlimited clients',
-          'Unlimited suppliers',
-          'Custom analytics',
-          'Dedicated support',
-          'Unlimited storage',
-          'Full API access',
-          'Custom integrations',
-          'White-label options'
-        ],
-        limits: {
-          clients: -1, // unlimited
-          suppliers: -1,
-          invoices: -1,
-          storage: -1,
-          apiCalls: -1
-        },
-        icon: Gem,
-        color: 'danger'
-      }
-    ]
-
-    // Generate tenants
-    const mockTenants: Tenant[] = [
-      {
-        id: '1',
-        name: 'Acme Corporation',
-        email: 'admin@acme.com',
-        plan: 'professional',
-        status: 'active',
-        trialEndsAt: null,
-        subscriptionId: 'sub_1234567890',
-        paymentMethod: 'stripe',
-        createdAt: new Date(Date.now() - 86400000 * 30).toISOString(),
-        lastBillingDate: new Date(Date.now() - 86400000 * 15).toISOString(),
-        nextBillingDate: new Date(Date.now() + 86400000 * 15).toISOString(),
-        usage: {
-          clients: 45,
-          suppliers: 23,
-          invoices: 156,
-          storage: 12500,
-          apiCalls: 12500
-        },
-        limits: {
-          clients: 100,
-          suppliers: 50,
-          invoices: 2000,
-          storage: 51200,
-          apiCalls: 50000
-        }
-      },
-      {
-        id: '2',
-        name: 'TechStart Inc',
-        email: 'billing@techstart.com',
-        plan: 'starter',
-        status: 'trial',
-        trialEndsAt: new Date(Date.now() + 86400000 * 7).toISOString(),
-        subscriptionId: null,
-        paymentMethod: 'none',
-        createdAt: new Date(Date.now() - 86400000 * 7).toISOString(),
-        lastBillingDate: null,
-        nextBillingDate: null,
-        usage: {
-          clients: 8,
-          suppliers: 5,
-          invoices: 23,
-          storage: 450,
-          apiCalls: 850
-        },
-        limits: {
-          clients: 25,
-          suppliers: 15,
-          invoices: 500,
-          storage: 10240,
-          apiCalls: 10000
-        }
-      },
-      {
-        id: '3',
-        name: 'Global Enterprises',
-        email: 'finance@global.com',
-        plan: 'enterprise',
-        status: 'active',
-        trialEndsAt: null,
-        subscriptionId: 'sub_0987654321',
-        paymentMethod: 'paypal',
-        createdAt: new Date(Date.now() - 86400000 * 90).toISOString(),
-        lastBillingDate: new Date(Date.now() - 86400000 * 5).toISOString(),
-        nextBillingDate: new Date(Date.now() + 86400000 * 25).toISOString(),
-        usage: {
-          clients: 250,
-          suppliers: 120,
-          invoices: 1250,
-          storage: 45000,
-          apiCalls: 45000
-        },
-        limits: {
-          clients: -1,
-          suppliers: -1,
-          invoices: -1,
-          storage: -1,
-          apiCalls: -1
-        }
-      },
-      {
-        id: '4',
-        name: 'Small Business Co',
-        email: 'owner@smallbiz.com',
-        plan: 'free',
-        status: 'active',
-        trialEndsAt: null,
-        subscriptionId: null,
-        paymentMethod: 'none',
-        createdAt: new Date(Date.now() - 86400000 * 15).toISOString(),
-        lastBillingDate: null,
-        nextBillingDate: null,
-        usage: {
-          clients: 3,
-          suppliers: 2,
-          invoices: 12,
-          storage: 150,
-          apiCalls: 200
-        },
-        limits: {
-          clients: 5,
-          suppliers: 3,
-          invoices: 50,
-          storage: 1024,
-          apiCalls: 1000
-        }
-      }
-    ]
-
-    // Generate transactions
-    const mockTransactions: BillingTransaction[] = [
-      {
-        id: '1',
-        tenantId: '1',
-        amount: 79,
-        currency: 'USD',
-        status: 'completed',
-        type: 'subscription',
-        description: 'Professional Plan - Monthly',
-        createdAt: new Date(Date.now() - 86400000 * 15).toISOString(),
-        paymentMethod: 'stripe',
-        invoiceId: 'inv_123456'
-      },
-      {
-        id: '2',
-        tenantId: '3',
-        amount: 199,
-        currency: 'USD',
-        status: 'completed',
-        type: 'subscription',
-        description: 'Enterprise Plan - Monthly',
-        createdAt: new Date(Date.now() - 86400000 * 5).toISOString(),
-        paymentMethod: 'paypal',
-        invoiceId: 'inv_789012'
-      },
-      {
-        id: '3',
-        tenantId: '1',
-        amount: 15,
-        currency: 'USD',
-        status: 'completed',
-        type: 'usage',
-        description: 'Overage - API Calls (5,000 calls)',
-        createdAt: new Date(Date.now() - 86400000 * 10).toISOString(),
-        paymentMethod: 'stripe',
-        invoiceId: 'inv_345678'
-      },
-      {
-        id: '4',
-        tenantId: '2',
-        amount: 29,
-        currency: 'USD',
-        status: 'pending',
-        type: 'upgrade',
-        description: 'Upgrade to Starter Plan',
-        createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-        paymentMethod: 'stripe'
-      }
-    ]
-
-    setPlans(mockPlans)
-    setTenants(mockTenants)
-    setTransactions(mockTransactions)
-  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -402,33 +113,12 @@ export function MultiTenancyBilling() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'active': return <CheckCircle className="h-4 w-4 text-success" />
-      case 'trial': return <Clock className="h-4 w-4 text-warning" />
-      case 'suspended': return <XCircle className="h-4 w-4 text-danger" />
-      case 'cancelled': return <XCircle className="h-4 w-4 text-secondary" />
-      default: return <AlertTriangle className="h-4 w-4 text-secondary" />
+      case 'active': return CheckCircle
+      case 'trial': return Clock
+      case 'suspended': return AlertCircle
+      case 'cancelled': return AlertCircle
+      default: return Clock
     }
-  }
-
-  const getPlanIcon = (planId: string) => {
-    const plan = plans.find(p => p.id === planId)
-    return plan ? plan.icon : Star
-  }
-
-  const getPlanColor = (planId: string) => {
-    const plan = plans.find(p => p.id === planId)
-    return plan ? plan.color : 'primary'
-  }
-
-  const getUsagePercentage = (used: number, limit: number) => {
-    if (limit === -1) return 0 // unlimited
-    return Math.min((used / limit) * 100, 100)
-  }
-
-  const getUsageColor = (percentage: number) => {
-    if (percentage >= 90) return 'danger'
-    if (percentage >= 75) return 'warning'
-    return 'success'
   }
 
   const getTransactionStatusColor = (status: string) => {
@@ -441,75 +131,143 @@ export function MultiTenancyBilling() {
     }
   }
 
-  const getTransactionTypeIcon = (type: string) => {
-    switch (type) {
-      case 'subscription': return <CreditCardIcon className="h-4 w-4" />
-      case 'usage': return <Activity className="h-4 w-4" />
-      case 'upgrade': return <TrendingUp className="h-4 w-4" />
-      case 'refund': return <TrendingDown className="h-4 w-4" />
-      default: return <DollarSign className="h-4 w-4" />
+  const getPlanIcon = (planId: string) => {
+    switch (planId) {
+      case 'free': return Gift
+      case 'starter': return Star
+      case 'professional': return Crown
+      case 'enterprise': return Gem
+      default: return Star
     }
   }
 
-  const handlePlanChange = (tenantId: string, newPlan: string) => {
-    setTenants(prev => prev.map(tenant => 
-      tenant.id === tenantId 
-        ? { ...tenant, plan: newPlan as any }
-        : tenant
-    ))
+  const getPlanColor = (planId: string) => {
+    switch (planId) {
+      case 'free': return 'secondary'
+      case 'starter': return 'primary'
+      case 'professional': return 'warning'
+      case 'enterprise': return 'danger'
+      default: return 'primary'
+    }
   }
 
-  const handleStatusChange = (tenantId: string, newStatus: string) => {
-    setTenants(prev => prev.map(tenant => 
-      tenant.id === tenantId 
-        ? { ...tenant, status: newStatus as any }
-        : tenant
-    ))
-  }
+  const totalRevenue = transactions
+    .filter(t => t.status === 'completed')
+    .reduce((sum, t) => sum + t.amount, 0)
+
+  const activeTenants = tenants.filter(t => t.status === 'active').length
+  const trialTenants = tenants.filter(t => t.status === 'trial').length
+  const pendingTransactions = transactions.filter(t => t.status === 'pending').length
 
   return (
     <div className="container-fluid billing-page">
+      {/* Page Header */}
       <PageHeader 
         title="Multi-Tenancy Billing"
-        subtitle="Manage tenant subscriptions, billing, and usage across all clients"
+        subtitle="Manage subscription plans, tenants, and billing transactions"
+        breadcrumbs={[
+          { label: 'Home', path: '/dashboard' },
+          { label: 'Billing', active: true }
+        ]}
       />
 
+      {/* Key Metrics */}
+      <div className="row mb-4">
+        <div className="col-lg-3 col-md-6 mb-3">
+          <div className="card border-0 shadow-sm h-100">
+            <div className="card-body text-center py-3">
+              <div className="avatar avatar-md mx-auto mb-2">
+                <span className="avatar-initial rounded bg-label-success">
+                  <Users className="h-4 w-4" />
+                </span>
+              </div>
+              <h4 className="mb-1 text-success">{activeTenants}</h4>
+              <p className="text-muted mb-0 small">Active Tenants</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-lg-3 col-md-6 mb-3">
+          <div className="card border-0 shadow-sm h-100">
+            <div className="card-body text-center py-3">
+              <div className="avatar avatar-md mx-auto mb-2">
+                <span className="avatar-initial rounded bg-label-warning">
+                  <Clock className="h-4 w-4" />
+                </span>
+              </div>
+              <h4 className="mb-1 text-warning">{trialTenants}</h4>
+              <p className="text-muted mb-0 small">Trial Tenants</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-lg-3 col-md-6 mb-3">
+          <div className="card border-0 shadow-sm h-100">
+            <div className="card-body text-center py-3">
+              <div className="avatar avatar-md mx-auto mb-2">
+                <span className="avatar-initial rounded bg-label-primary">
+                  <DollarSign className="h-4 w-4" />
+                </span>
+              </div>
+              <h4 className="mb-1 text-primary">{formatCurrency(totalRevenue)}</h4>
+              <p className="text-muted mb-0 small">Total Revenue</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-lg-3 col-md-6 mb-3">
+          <div className="card border-0 shadow-sm h-100">
+            <div className="card-body text-center py-3">
+              <div className="avatar avatar-md mx-auto mb-2">
+                <span className="avatar-initial rounded bg-label-info">
+                  <CreditCard className="h-4 w-4" />
+                </span>
+              </div>
+              <h4 className="mb-1 text-info">{pendingTransactions}</h4>
+              <p className="text-muted mb-0 small">Pending Payments</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
       <div className="row">
         <div className="col-12">
-          <div className="card border-0 shadow-lg">
-            <div className="card-header border-0 px-0 pt-4 pb-0">
-              <ul className="nav nav-tabs card-header-tabs" role="tablist">
+          <div className="card border-0 shadow-sm">
+            <div className="card-header bg-transparent border-0 pb-0">
+              <ul className="nav nav-tabs nav-fill" role="tablist">
                 <li className="nav-item" role="presentation">
-                  <button 
+                  <button
                     className={`nav-link ${activeTab === 'tenants' ? 'active' : ''}`}
                     onClick={() => setActiveTab('tenants')}
+                    type="button"
                   >
                     <Users className="h-4 w-4 me-2" />
-                    Tenants
+                    Tenants ({tenants.length})
                   </button>
                 </li>
                 <li className="nav-item" role="presentation">
-                  <button 
+                  <button
                     className={`nav-link ${activeTab === 'plans' ? 'active' : ''}`}
                     onClick={() => setActiveTab('plans')}
+                    type="button"
                   >
-                    <Crown className="h-4 w-4 me-2" />
-                    Plans & Pricing
+                    <Star className="h-4 w-4 me-2" />
+                    Plans ({plans.length})
                   </button>
                 </li>
                 <li className="nav-item" role="presentation">
-                  <button 
+                  <button
                     className={`nav-link ${activeTab === 'transactions' ? 'active' : ''}`}
                     onClick={() => setActiveTab('transactions')}
+                    type="button"
                   >
-                    <CreditCardIcon className="h-4 w-4 me-2" />
-                    Transactions
+                    <CreditCard className="h-4 w-4 me-2" />
+                    Transactions ({transactions.length})
                   </button>
                 </li>
                 <li className="nav-item" role="presentation">
-                  <button 
+                  <button
                     className={`nav-link ${activeTab === 'analytics' ? 'active' : ''}`}
                     onClick={() => setActiveTab('analytics')}
+                    type="button"
                   >
                     <BarChart3 className="h-4 w-4 me-2" />
                     Analytics
@@ -520,486 +278,240 @@ export function MultiTenancyBilling() {
             <div className="card-body">
               {/* Tenants Tab */}
               {activeTab === 'tenants' && (
-                <div className="tenants-management">
-                  <div className="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                      <h5 className="mb-1">Tenant Management</h5>
-                      <p className="text-muted small mb-0">Manage client subscriptions, usage, and billing</p>
-                    </div>
-                    <div className="d-flex gap-2">
-                      <button className="btn btn-outline-primary btn-sm">
-                        <Filter className="h-4 w-4 me-1" />
-                        Filter
-                      </button>
-                      <button className="btn btn-outline-secondary btn-sm">
-                        <Download className="h-4 w-4 me-1" />
-                        Export
-                      </button>
-                      <button className="btn btn-primary btn-sm" onClick={() => setShowTenantModal(true)}>
+                <div>
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h6 className="mb-0">Tenants</h6>
+                    <button className="btn btn-primary btn-sm">
+                      <Plus className="h-4 w-4 me-1" />
+                      Add Tenant
+                    </button>
+                  </div>
+                  {tenants.length === 0 ? (
+                    <div className="text-center py-5">
+                      <Users className="h-12 w-12 text-muted mb-2" />
+                      <p className="text-muted">No tenants found</p>
+                      <button className="btn btn-primary btn-sm">
                         <Plus className="h-4 w-4 me-1" />
-                        Add Tenant
+                        Add First Tenant
                       </button>
                     </div>
-                  </div>
-
-                  <div className="table-responsive">
-                    <table className="table table-hover">
-                      <thead>
-                        <tr>
-                          <th>Tenant</th>
-                          <th>Plan</th>
-                          <th>Status</th>
-                          <th>Usage</th>
-                          <th>Billing</th>
-                          <th>Joined</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {tenants.map((tenant) => {
-                          const PlanIcon = getPlanIcon(tenant.plan)
-                          const planColor = getPlanColor(tenant.plan)
-                          const currentPlan = plans.find(p => p.id === tenant.plan)
-                          
-                          return (
-                            <tr key={tenant.id}>
-                              <td>
-                                <div>
-                                  <div className="fw-medium">{tenant.name}</div>
-                                  <small className="text-muted">{tenant.email}</small>
-                                </div>
-                              </td>
-                              <td>
-                                <div className="d-flex align-items-center">
-                                  <PlanIcon className={`h-4 w-4 me-2 text-${planColor}`} />
-                                  <span className={`badge bg-${planColor}`}>
-                                    {tenant.plan.toUpperCase()}
+                  ) : (
+                    <div className="table-responsive">
+                      <table className="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>Tenant</th>
+                            <th>Plan</th>
+                            <th>Status</th>
+                            <th>Usage</th>
+                            <th>Next Billing</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {tenants.map((tenant) => {
+                            const StatusIcon = getStatusIcon(tenant.status)
+                            const PlanIcon = getPlanIcon(tenant.plan)
+                            return (
+                              <tr key={tenant.id}>
+                                <td>
+                                  <div>
+                                    <h6 className="mb-0">{tenant.name}</h6>
+                                    <small className="text-muted">{tenant.email}</small>
+                                  </div>
+                                </td>
+                                <td>
+                                  <div className="d-flex align-items-center">
+                                    <PlanIcon className={`h-4 w-4 me-2 text-${getPlanColor(tenant.plan)}`} />
+                                    <span className="text-capitalize">{tenant.plan}</span>
+                                  </div>
+                                </td>
+                                <td>
+                                  <span className={`badge bg-label-${getStatusColor(tenant.status)}`}>
+                                    <StatusIcon className="h-3 w-3 me-1" />
+                                    {tenant.status}
                                   </span>
-                                </div>
-                              </td>
-                              <td>
-                                <div className="d-flex align-items-center">
-                                  {getStatusIcon(tenant.status)}
-                                  <span className={`badge bg-${getStatusColor(tenant.status)} ms-2`}>
-                                    {tenant.status.toUpperCase()}
-                                  </span>
-                                </div>
-                              </td>
-                              <td>
-                                <div className="small">
-                                  <div className="d-flex justify-content-between mb-1">
-                                    <span className="text-muted">Clients:</span>
-                                    <span className="fw-medium">
-                                      {tenant.usage.clients}/{tenant.limits.clients === -1 ? '∞' : tenant.limits.clients}
-                                    </span>
+                                </td>
+                                <td>
+                                  <div className="small">
+                                    <div>{tenant.usage.clients}/{tenant.limits.clients === -1 ? '∞' : tenant.limits.clients} clients</div>
+                                    <div>{tenant.usage.suppliers}/{tenant.limits.suppliers === -1 ? '∞' : tenant.limits.suppliers} suppliers</div>
                                   </div>
-                                  <div className="progress" style={{ height: '3px' }}>
-                                    <div 
-                                      className={`progress-bar bg-${getUsageColor(getUsagePercentage(tenant.usage.clients, tenant.limits.clients))}`}
-                                      style={{ width: `${getUsagePercentage(tenant.usage.clients, tenant.limits.clients)}%` }}
-                                    ></div>
-                                  </div>
-                                  <div className="d-flex justify-content-between mt-1">
-                                    <span className="text-muted">Storage:</span>
-                                    <span className="fw-medium">
-                                      {Math.round(tenant.usage.storage / 1024)}GB/{tenant.limits.storage === -1 ? '∞' : Math.round(tenant.limits.storage / 1024)}GB
-                                    </span>
-                                  </div>
-                                </div>
-                              </td>
-                              <td>
-                                <div className="small">
-                                  <div className="fw-medium">{currentPlan?.name}</div>
-                                  <div className="text-muted">
-                                    {currentPlan?.price === 0 ? 'Free' : formatCurrency(currentPlan?.price || 0)}
-                                  </div>
-                                  {tenant.nextBillingDate && (
-                                    <div className="text-muted">
-                                      Next: {new Date(tenant.nextBillingDate).toLocaleDateString()}
-                                    </div>
+                                </td>
+                                <td>
+                                  {tenant.nextBillingDate ? (
+                                    <small>{new Date(tenant.nextBillingDate).toLocaleDateString()}</small>
+                                  ) : (
+                                    <small className="text-muted">N/A</small>
                                   )}
-                                </div>
-                              </td>
-                              <td>
-                                <small className="text-muted">
-                                  {new Date(tenant.createdAt).toLocaleDateString()}
-                                </small>
-                              </td>
-                              <td>
-                                <div className="btn-group btn-group-sm">
-                                  <button className="btn btn-outline-primary">
-                                    <Eye className="h-4 w-4" />
-                                  </button>
-                                  <button className="btn btn-outline-secondary">
-                                    <Edit className="h-4 w-4" />
-                                  </button>
-                                  <button className="btn btn-outline-danger">
-                                    <Trash2 className="h-4 w-4" />
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          )
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
+                                </td>
+                                <td>
+                                  <div className="d-flex gap-1">
+                                    <button className="btn btn-sm btn-outline-primary">
+                                      <Eye className="h-3 w-3" />
+                                    </button>
+                                    <button className="btn btn-sm btn-outline-secondary">
+                                      <Edit className="h-3 w-3" />
+                                    </button>
+                                    <button className="btn btn-sm btn-outline-danger">
+                                      <Trash2 className="h-3 w-3" />
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               )}
 
-              {/* Plans & Pricing Tab */}
+              {/* Plans Tab */}
               {activeTab === 'plans' && (
-                <div className="plans-pricing">
-                  <div className="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                      <h5 className="mb-1">Subscription Plans</h5>
-                      <p className="text-muted small mb-0">Manage subscription tiers and pricing</p>
-                    </div>
-                    <div className="d-flex gap-2">
-                      <button className="btn btn-outline-primary btn-sm">
-                        <Settings className="h-4 w-4 me-1" />
-                        Configure
-                      </button>
-                      <button className="btn btn-primary btn-sm" onClick={() => setShowPlanModal(true)}>
+                <div>
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h6 className="mb-0">Subscription Plans</h6>
+                    <button className="btn btn-primary btn-sm">
+                      <Plus className="h-4 w-4 me-1" />
+                      Add Plan
+                    </button>
+                  </div>
+                  {plans.length === 0 ? (
+                    <div className="text-center py-5">
+                      <Star className="h-12 w-12 text-muted mb-2" />
+                      <p className="text-muted">No subscription plans found</p>
+                      <button className="btn btn-primary btn-sm">
                         <Plus className="h-4 w-4 me-1" />
-                        Add Plan
+                        Add First Plan
                       </button>
                     </div>
-                  </div>
-
-                  <div className="table-responsive">
-                    <table className="table table-hover">
-                      <thead>
-                        <tr>
-                          <th>Plan</th>
-                          <th>Price</th>
-                          <th>Features</th>
-                          <th>Limits</th>
-                          <th>Subscribers</th>
-                          <th>Revenue</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {plans.map((plan) => {
-                          const PlanIcon = plan.icon
-                          const tenantCount = tenants.filter(t => t.plan === plan.id).length
-                          const monthlyRevenue = tenantCount * plan.price
-                          
-                          return (
-                            <tr key={plan.id} className={plan.popular ? 'table-warning' : ''}>
-                              <td>
-                                <div className="d-flex align-items-center">
-                                  <PlanIcon className={`h-5 w-5 me-3 text-${plan.color}`} />
-                                  <div>
-                                    <div className="fw-medium">{plan.name}</div>
-                                    <small className="text-muted">{plan.description}</small>
-                                    {plan.popular && (
-                                      <div className="mt-1">
-                                        <span className="badge bg-warning text-dark">
-                                          <Award className="h-3 w-3 me-1" />
-                                          Most Popular
-                                        </span>
-                                      </div>
-                                    )}
-                                  </div>
+                  ) : (
+                    <div className="row">
+                      {plans.map((plan) => {
+                        const PlanIcon = plan.icon
+                        return (
+                          <div key={plan.id} className="col-md-6 col-lg-3 mb-4">
+                            <div className={`card border h-100 ${plan.popular ? 'border-primary' : ''}`}>
+                              {plan.popular && (
+                                <div className="card-header bg-primary text-white text-center">
+                                  <small className="fw-semibold">Most Popular</small>
                                 </div>
-                              </td>
-                              <td>
-                                <div>
-                                  <div className="fw-medium">
-                                    {plan.price === 0 ? 'Free' : formatCurrency(plan.price)}
-                                  </div>
-                                  <small className="text-muted">per {plan.interval}</small>
+                              )}
+                              <div className="card-body text-center">
+                                <PlanIcon className={`h-8 w-8 mx-auto mb-3 text-${plan.color}`} />
+                                <h5 className="card-title">{plan.name}</h5>
+                                <p className="text-muted small mb-3">{plan.description}</p>
+                                <div className="mb-3">
+                                  <span className="h4 text-primary">{formatCurrency(plan.price)}</span>
+                                  <small className="text-muted">/{plan.interval}</small>
                                 </div>
-                              </td>
-                              <td>
-                                <div className="small">
-                                  <div className="mb-1">Key Features:</div>
-                                  <ul className="list-unstyled mb-0">
-                                    {plan.features.slice(0, 3).map((feature, index) => (
-                                      <li key={index} className="mb-1">
-                                        <CheckCircle className="h-3 w-3 me-2 text-success" />
-                                        {feature}
-                                      </li>
-                                    ))}
-                                    {plan.features.length > 3 && (
-                                      <li className="text-muted">
-                                        +{plan.features.length - 3} more features
-                                      </li>
-                                    )}
-                                  </ul>
-                                </div>
-                              </td>
-                              <td>
-                                <div className="small">
-                                  <div className="mb-1">Limits:</div>
-                                  <div className="text-muted">
-                                    <div>Clients: {plan.limits.clients === -1 ? '∞' : plan.limits.clients}</div>
-                                    <div>Storage: {plan.limits.storage === -1 ? '∞' : `${Math.round(plan.limits.storage / 1024)}GB`}</div>
-                                    <div>API: {plan.limits.apiCalls === -1 ? '∞' : formatNumber(plan.limits.apiCalls)}</div>
-                                  </div>
-                                </div>
-                              </td>
-                              <td>
-                                <div className="text-center">
-                                  <div className="fw-medium">{tenantCount}</div>
-                                  <small className="text-muted">subscribers</small>
-                                </div>
-                              </td>
-                              <td>
-                                <div className="text-center">
-                                  <div className="fw-medium">{formatCurrency(monthlyRevenue)}</div>
-                                  <small className="text-muted">monthly</small>
-                                </div>
-                              </td>
-                              <td>
-                                <div className="btn-group btn-group-sm">
-                                  <button className="btn btn-outline-primary">
-                                    <Edit className="h-4 w-4" />
-                                  </button>
-                                  <button className="btn btn-outline-secondary">
-                                    <Eye className="h-4 w-4" />
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          )
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
+                                <ul className="list-unstyled small mb-3">
+                                  {plan.features.slice(0, 3).map((feature, index) => (
+                                    <li key={index} className="mb-1">
+                                      <CheckCircle className="h-3 w-3 me-1 text-success" />
+                                      {feature}
+                                    </li>
+                                  ))}
+                                  {plan.features.length > 3 && (
+                                    <li className="text-muted">+{plan.features.length - 3} more features</li>
+                                  )}
+                                </ul>
+                                <button className="btn btn-outline-primary w-100">
+                                  Choose Plan
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
                 </div>
               )}
 
               {/* Transactions Tab */}
               {activeTab === 'transactions' && (
-                <div className="transactions-management">
-                  <div className="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                      <h5 className="mb-1">Billing Transactions</h5>
-                      <p className="text-muted small mb-0">Track all billing transactions and payments</p>
-                    </div>
-                    <div className="d-flex gap-2">
-                      <button className="btn btn-outline-primary btn-sm">
-                        <Filter className="h-4 w-4 me-1" />
-                        Filter
-                      </button>
-                      <button className="btn btn-outline-secondary btn-sm">
-                        <Download className="h-4 w-4 me-1" />
-                        Export
-                      </button>
-                      <button className="btn btn-primary btn-sm">
-                        <RefreshCw className="h-4 w-4 me-1" />
-                        Refresh
-                      </button>
-                    </div>
+                <div>
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h6 className="mb-0">Billing Transactions</h6>
+                    <button className="btn btn-primary btn-sm">
+                      <Plus className="h-4 w-4 me-1" />
+                      Add Transaction
+                    </button>
                   </div>
-
-                  <div className="table-responsive">
-                    <table className="table table-hover">
-                      <thead>
-                        <tr>
-                          <th>Transaction</th>
-                          <th>Tenant</th>
-                          <th>Amount</th>
-                          <th>Status</th>
-                          <th>Type</th>
-                          <th>Date</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {transactions.map((transaction) => {
-                          const tenant = tenants.find(t => t.id === transaction.tenantId)
-                          const TypeIcon = getTransactionTypeIcon(transaction.type)
-                          
-                          return (
+                  {transactions.length === 0 ? (
+                    <div className="text-center py-5">
+                      <CreditCard className="h-12 w-12 text-muted mb-2" />
+                      <p className="text-muted">No transactions found</p>
+                      <button className="btn btn-primary btn-sm">
+                        <Plus className="h-4 w-4 me-1" />
+                        Add First Transaction
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="table-responsive">
+                      <table className="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>Transaction</th>
+                            <th>Tenant</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {transactions.map((transaction) => (
                             <tr key={transaction.id}>
                               <td>
-                                <div className="d-flex align-items-center">
-                                  <TypeIcon className="h-4 w-4 me-2 text-muted" />
-                                  <div>
-                                    <div className="fw-medium">{transaction.description}</div>
-                                    <small className="text-muted">#{transaction.id}</small>
-                                  </div>
-                                </div>
-                              </td>
-                              <td>
                                 <div>
-                                  <div className="fw-medium">{tenant?.name}</div>
-                                  <small className="text-muted">{tenant?.email}</small>
+                                  <h6 className="mb-0">{transaction.description}</h6>
+                                  <small className="text-muted">{transaction.type}</small>
                                 </div>
                               </td>
                               <td>
-                                <div className="fw-medium">
-                                  {formatCurrency(transaction.amount)} {transaction.currency}
-                                </div>
+                                <span>{transaction.tenantName || `Tenant ${transaction.tenantId}`}</span>
                               </td>
                               <td>
-                                <span className={`badge bg-${getTransactionStatusColor(transaction.status)}`}>
-                                  {transaction.status.toUpperCase()}
+                                <span className="fw-semibold">{formatCurrency(transaction.amount)}</span>
+                              </td>
+                              <td>
+                                <span className={`badge bg-label-${getTransactionStatusColor(transaction.status)}`}>
+                                  {transaction.status}
                                 </span>
                               </td>
                               <td>
-                                <span className="badge bg-info">
-                                  {transaction.type.toUpperCase()}
-                                </span>
+                                <small>{new Date(transaction.createdAt).toLocaleDateString()}</small>
                               </td>
                               <td>
-                                <small className="text-muted">
-                                  {new Date(transaction.createdAt).toLocaleDateString()}
-                                </small>
-                              </td>
-                              <td>
-                                <div className="btn-group btn-group-sm">
-                                  <button className="btn btn-outline-primary">
-                                    <Eye className="h-4 w-4" />
+                                <div className="d-flex gap-1">
+                                  <button className="btn btn-sm btn-outline-primary">
+                                    <Eye className="h-3 w-3" />
                                   </button>
-                                  {transaction.invoiceId && (
-                                    <button className="btn btn-outline-secondary">
-                                      <ExternalLink className="h-4 w-4" />
-                                    </button>
-                                  )}
+                                  <button className="btn btn-sm btn-outline-secondary">
+                                    <Edit className="h-3 w-3" />
+                                  </button>
                                 </div>
                               </td>
                             </tr>
-                          )
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               )}
 
               {/* Analytics Tab */}
               {activeTab === 'analytics' && (
-                <div className="billing-analytics">
-                  <div className="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                      <h5 className="mb-1">Billing Analytics</h5>
-                      <p className="text-muted small mb-0">Revenue insights and tenant analytics</p>
-                    </div>
-                    <div className="d-flex gap-2">
-                      <button className="btn btn-outline-primary btn-sm">
-                        <Calendar className="h-4 w-4 me-1" />
-                        Date Range
-                      </button>
-                      <button className="btn btn-outline-secondary btn-sm">
-                        <Download className="h-4 w-4 me-1" />
-                        Export Report
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="row">
-                    {/* Revenue Overview */}
-                    <div className="col-lg-8 mb-4">
-                      <div className="bg-light rounded p-4">
-                        <div className="d-flex justify-content-between align-items-center mb-3">
-                          <h6 className="mb-0">Monthly Revenue</h6>
-                          <BarChart3 className="h-5 w-5 text-primary" />
-                        </div>
-                        <div className="text-center py-4">
-                          <h6 className="text-muted mb-2">Revenue Chart</h6>
-                          <p className="text-muted mb-0">Monthly revenue trends and projections</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Key Metrics */}
-                    <div className="col-lg-4 mb-4">
-                      <div className="bg-light rounded p-4">
-                        <div className="d-flex justify-content-between align-items-center mb-3">
-                          <h6 className="mb-0">Key Metrics</h6>
-                          <Activity className="h-5 w-5 text-primary" />
-                        </div>
-                        <div className="mb-3">
-                          <div className="d-flex justify-content-between align-items-center mb-1">
-                            <small className="text-muted">Total Revenue</small>
-                            <small className="fw-medium">{formatCurrency(307)}</small>
-                          </div>
-                          <div className="progress" style={{ height: '4px' }}>
-                            <div className="progress-bar bg-success" style={{ width: '85%' }}></div>
-                          </div>
-                        </div>
-                        
-                        <div className="mb-3">
-                          <div className="d-flex justify-content-between align-items-center mb-1">
-                            <small className="text-muted">Active Tenants</small>
-                            <small className="fw-medium">{tenants.filter(t => t.status === 'active').length}</small>
-                          </div>
-                          <div className="progress" style={{ height: '4px' }}>
-                            <div className="progress-bar bg-primary" style={{ width: '75%' }}></div>
-                          </div>
-                        </div>
-                        
-                        <div className="mb-3">
-                          <div className="d-flex justify-content-between align-items-center mb-1">
-                            <small className="text-muted">Trial Tenants</small>
-                            <small className="fw-medium">{tenants.filter(t => t.status === 'trial').length}</small>
-                          </div>
-                          <div className="progress" style={{ height: '4px' }}>
-                            <div className="progress-bar bg-warning" style={{ width: '25%' }}></div>
-                          </div>
-                        </div>
-                        
-                        <div className="mb-3">
-                          <div className="d-flex justify-content-between align-items-center mb-1">
-                            <small className="text-muted">Churn Rate</small>
-                            <small className="fw-medium">2.5%</small>
-                          </div>
-                          <div className="progress" style={{ height: '4px' }}>
-                            <div className="progress-bar bg-danger" style={{ width: '25%' }}></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Plan Distribution */}
-                    <div className="col-lg-6 mb-4">
-                      <div className="bg-light rounded p-4">
-                        <div className="d-flex justify-content-between align-items-center mb-3">
-                          <h6 className="mb-0">Plan Distribution</h6>
-                          <PieChart className="h-5 w-5 text-primary" />
-                        </div>
-                        <div className="text-center py-3">
-                          <h6 className="text-muted mb-2">Plan Usage</h6>
-                          <p className="text-muted mb-0">Distribution of tenants across subscription plans</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Recent Activity */}
-                    <div className="col-lg-6 mb-4">
-                      <div className="bg-light rounded p-4">
-                        <div className="d-flex justify-content-between align-items-center mb-3">
-                          <h6 className="mb-0">Recent Activity</h6>
-                          <Clock className="h-5 w-5 text-primary" />
-                        </div>
-                        <div className="list-group list-group-flush">
-                          {transactions.slice(0, 5).map((transaction) => {
-                            const tenant = tenants.find(t => t.id === transaction.tenantId)
-                            return (
-                              <div key={transaction.id} className="list-group-item border-0 px-0 bg-transparent">
-                                <div className="d-flex justify-content-between align-items-center">
-                                  <div>
-                                    <div className="small fw-medium">{tenant?.name}</div>
-                                    <small className="text-muted">{transaction.description}</small>
-                                  </div>
-                                  <div className="text-end">
-                                    <div className="small fw-medium">{formatCurrency(transaction.amount)}</div>
-                                    <small className="text-muted">
-                                      {new Date(transaction.createdAt).toLocaleDateString()}
-                                    </small>
-                                  </div>
-                                </div>
-                              </div>
-                            )
-                          })}
-                        </div>
-                      </div>
-                    </div>
+                <div>
+                  <h6 className="mb-3">Billing Analytics</h6>
+                  <div className="text-center py-5">
+                    <BarChart3 className="h-12 w-12 text-muted mb-2" />
+                    <p className="text-muted">Analytics will be available when you have billing data</p>
                   </div>
                 </div>
               )}
@@ -1008,5 +520,6 @@ export function MultiTenancyBilling() {
         </div>
       </div>
     </div>
-  )
+  );
 }
+

@@ -108,25 +108,27 @@ export function IntegrationSettings() {
   const testConnection = async (service: string) => {
     setTesting(prev => ({ ...prev, [service]: true }))
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    // Mock success/failure based on configuration
-    const isConfigured = service === 'supabase' 
-      ? config.supabase.url && config.supabase.anonKey
-      : service === 'email'
-      ? config.email.smtpHost && config.email.smtpUser
-      : true
+    try {
+      // TODO: Implement actual API testing logic
+      // This would make real API calls to test the connection
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      
+      // For now, just set to connected if basic config is present
+      const isConfigured = service === 'supabase' 
+        ? config.supabase.url && config.supabase.anonKey
+        : service === 'email'
+        ? config.email.smtpHost && config.email.smtpUser
+        : false
 
-    if (isConfigured) {
       setConfig(prev => ({
         ...prev,
         [service]: {
           ...prev[service as keyof IntegrationConfig],
-          status: 'connected'
+          status: isConfigured ? 'connected' : 'error'
         }
       }))
-    } else {
+    } catch (error) {
+      console.error(`Failed to test ${service} connection:`, error)
       setConfig(prev => ({
         ...prev,
         [service]: {
@@ -134,10 +136,10 @@ export function IntegrationSettings() {
           status: 'error'
         }
       }))
+    } finally {
+      setTesting(prev => ({ ...prev, [service]: false }))
+      saveConfig()
     }
-
-    setTesting(prev => ({ ...prev, [service]: false }))
-    saveConfig()
   }
 
   const toggleKeyVisibility = (key: string) => {

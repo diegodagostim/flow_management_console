@@ -36,33 +36,8 @@ export function AuthProvider({ children, supabaseUrl, supabaseKey }: AuthProvide
 
   useEffect(() => {
     if (!supabase) {
-      // If no Supabase client, simulate a logged-in user for development
-      const mockUser = {
-        id: 'dev-user-123',
-        email: 'dev@example.com',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        aud: 'authenticated',
-        role: 'authenticated',
-        email_confirmed_at: new Date().toISOString(),
-        last_sign_in_at: new Date().toISOString(),
-        app_metadata: {},
-        user_metadata: {},
-        identities: [],
-        factors: [],
-      } as User
-
-      const mockSession = {
-        access_token: 'mock-token',
-        refresh_token: 'mock-refresh-token',
-        expires_in: 3600,
-        expires_at: Math.floor(Date.now() / 1000) + 3600,
-        token_type: 'bearer',
-        user: mockUser,
-      } as Session
-
-      setUser(mockUser)
-      setSession(mockSession)
+      setUser(null)
+      setSession(null)
       setLoading(false)
       return
     }
@@ -88,34 +63,7 @@ export function AuthProvider({ children, supabaseUrl, supabaseKey }: AuthProvide
 
   const signIn = async (email: string, password: string) => {
     if (!supabase) {
-      // Mock authentication for development
-      const mockUser = {
-        id: 'dev-user-123',
-        email: email,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        aud: 'authenticated',
-        role: 'authenticated',
-        email_confirmed_at: new Date().toISOString(),
-        last_sign_in_at: new Date().toISOString(),
-        app_metadata: {},
-        user_metadata: {},
-        identities: [],
-        factors: [],
-      } as User
-
-      const mockSession = {
-        access_token: 'mock-token',
-        refresh_token: 'mock-refresh-token',
-        expires_in: 3600,
-        expires_at: Math.floor(Date.now() / 1000) + 3600,
-        token_type: 'bearer',
-        user: mockUser,
-      } as Session
-
-      setUser(mockUser)
-      setSession(mockSession)
-      return
+      throw new Error('Supabase client not configured. Please check your environment variables.')
     }
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -126,34 +74,7 @@ export function AuthProvider({ children, supabaseUrl, supabaseKey }: AuthProvide
 
   const signUp = async (email: string, password: string) => {
     if (!supabase) {
-      // Mock registration for development
-      const mockUser = {
-        id: 'dev-user-123',
-        email: email,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        aud: 'authenticated',
-        role: 'authenticated',
-        email_confirmed_at: new Date().toISOString(),
-        last_sign_in_at: new Date().toISOString(),
-        app_metadata: {},
-        user_metadata: {},
-        identities: [],
-        factors: [],
-      } as User
-
-      const mockSession = {
-        access_token: 'mock-token',
-        refresh_token: 'mock-refresh-token',
-        expires_in: 3600,
-        expires_at: Math.floor(Date.now() / 1000) + 3600,
-        token_type: 'bearer',
-        user: mockUser,
-      } as Session
-
-      setUser(mockUser)
-      setSession(mockSession)
-      return
+      throw new Error('Supabase client not configured. Please check your environment variables.')
     }
     const { error } = await supabase.auth.signUp({
       email,
@@ -164,10 +85,7 @@ export function AuthProvider({ children, supabaseUrl, supabaseKey }: AuthProvide
 
   const signOut = async () => {
     if (!supabase) {
-      // If no Supabase, just clear local state
-      setUser(null)
-      setSession(null)
-      return
+      throw new Error('Supabase client not configured. Please check your environment variables.')
     }
     const { error } = await supabase.auth.signOut()
     if (error) throw error

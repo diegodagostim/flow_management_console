@@ -434,8 +434,18 @@ export function ProductForm() {
                                 <small className="text-muted">Submodules:</small>
                                 <ul className="list-unstyled mt-1">
                                   {module.submodules.map((submodule, submoduleIndex) => (
-                                    <li key={submoduleIndex} className="d-flex justify-content-between align-items-center py-1">
-                                      <span className="small">{submodule.name}</span>
+                                    <li key={submoduleIndex} className="d-flex justify-content-between align-items-center py-2 border-bottom">
+                                      <div className="flex-grow-1">
+                                        <div className="fw-semibold small">{submodule.name}</div>
+                                        <div className="d-flex align-items-center mt-1">
+                                          <span className="small text-success me-2">
+                                            {formatCurrency(submodule.pricing.amount)}
+                                          </span>
+                                          <span className={`badge badge-sm ${submodule.pricing.type === 'one-time' ? 'bg-label-info' : 'bg-label-warning'}`}>
+                                            {submodule.pricing.type === 'one-time' ? 'One-time' : 'Recurring'}
+                                          </span>
+                                        </div>
+                                      </div>
                                       <div className="d-flex gap-1">
                                         <button
                                           type="button"
