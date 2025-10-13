@@ -46,7 +46,7 @@ export function Topbar() {
           <div className="dropdown">
             <a className="nav-link dropdown-toggle hide-arrow d-flex align-items-center justify-content-center h-100" href="#" data-bs-toggle="dropdown">
               <div className="avatar d-flex align-items-center justify-content-center">
-                <div className="w-px-40 h-px-40 rounded-circle bg-primary d-flex align-items-center justify-content-center">
+                <div className="w-px-40 h-px-40 rounded-circle bg-success d-flex align-items-center justify-content-center">
                   <span className="text-white fw-semibold">U</span>
                 </div>
               </div>
@@ -57,7 +57,7 @@ export function Topbar() {
                   <div className="d-flex">
                     <div className="flex-shrink-0 me-3">
                       <div className="avatar">
-                        <div className="w-px-40 h-px-40 rounded-circle bg-primary d-flex align-items-center justify-content-center">
+                        <div className="w-px-40 h-px-40 rounded-circle bg-success d-flex align-items-center justify-content-center">
                           <span className="text-white fw-semibold">U</span>
                         </div>
                       </div>
